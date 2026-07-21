@@ -1,119 +1,78 @@
 import React, { useState, useEffect } from 'react';
 import {
-  LogOut, Edit2, Save, X, User, BookOpen, ClipboardList, Award, Languages,
-  Home, Compass, Star, ChevronDown, ChevronUp, Microscope, Cpu, Dna,
-  Activity, FlaskConical, ScanLine, Stethoscope
+  LogOut, Edit2, Save, X, User, ClipboardList, Award, Languages,
+  Home, Compass, Star, ChevronDown, ChevronUp, ArrowLeft
 } from 'lucide-react';
+import {
+  hollandTypes, specialties, quizQuestions, forcedChoiceQuestions, computeHollandResult
+} from './quizData.js';
 
 /* ============ الترجمة ============ */
 const translations = {
   ar: {
     dir: 'rtl',
-    appName: 'Bio Path',
-    appSubtitle: 'اكتشف مسارك في الهندسة الحيوية',
+    appName: 'Bio Path', appSubtitle: 'اكتشف مسارك في الهندسة الحيوية',
     email: 'البريد الإلكتروني', password: 'كلمة المرور', fullName: 'الاسم الكامل',
     bio: 'النبذة الشخصية', bioPlaceholder: 'أخبرنا عن نفسك...',
     login: 'تسجيل الدخول', signup: 'إنشاء حساب',
     noAccount: 'ليس لديك حساب؟', signupNow: 'اشترك الآن',
     haveAccount: 'لديك حساب بالفعل؟', loginNow: 'تسجيل الدخول',
-    logout: 'خروج', profile: 'ملفي الشخصي',
-    navHome: 'الرئيسية', navSpecialties: 'المسارات', navQuiz: 'الاختبار', navResults: 'النتائج',
-    welcomeBack: 'أهلاً', homeIntro: 'هذا الموقع يساعدك تكتشف أي مسار دقيق داخل الهندسة الحيوية يناسب ميولك وشخصيتك، عن طريق اختبار بسيط ونتيجة واضحة.',
-    startJourney: 'ابدأ الاختبار الآن', seeMyResult: 'شوف نتيجتك الأخيرة', browseSpecialties: 'تصفح المسارات',
-    specialtiesTitle: 'المسارات الدقيقة', specialtiesDesc: 'تعرف على كل مسار بلغة بسيطة قبل أو بعد الاختبار',
-    inShort: 'باختصار', aroundYou: 'تشوفه حولك', funFact: 'هل تعلم؟', careerPath: 'وين توديك؟', suitableFor: 'مناسب لمين؟',
-    yourMatch: 'الأقرب لك', profileInfo: 'معلومات الملف الشخصي', edit: 'تعديل', name: 'الاسم', notEntered: 'لم يتم إدخاله',
-    joinDate: 'تاريخ الانضمام', save: 'حفظ التغييرات', cancel: 'إلغاء',
-    quizTitle: 'اختبار اكتشاف المسار', quizDesc: 'أجب بصراحة — ما فيه إجابات صح أو غلط، فقط ميولك الحقيقية',
-    startQuiz: 'ابدأ الاختبار', agree: 'أتفق', disagree: 'لا أتفق', submitQuiz: 'أظهر نتيجتي',
-    quizFinished: 'هذي أقرب مساراتك!', yourTopMatches: 'أعلى 3 مسارات مناسبة لك',
-    recommendations: 'توصيات وتواصل', internalUni: '🏫 داخل الجامعة', externalUni: '🌍 خارج الجامعة',
-    comingSoon: 'سيتم إضافة تفاصيل حقيقية هنا قريباً', date: 'التاريخ', time: 'الوقت',
-    backToMenu: 'العودة', resultsLog: 'سجل محاولاتك السابقة', noQuizzes: 'لم تأخذ الاختبار بعد',
-    startFirst: 'ابدأ اختبارك الأول من تبويب الاختبار', attempt: 'محاولة',
-    fillRequired: 'يرجى ملء البيانات المطلوبة!', emailExists: 'البريد الإلكتروني مسجل بالفعل!',
-    invalidLogin: 'بيانات دخول غير صحيحة!', questionCounter: 'من', placeholderNote: '⚙️ محتوى مبدئي — سيُستبدل بالمحتوى النهائي'
+    profile: 'ملفي', navHome: 'الرئيسية', navSpecialties: 'المسارات', navQuiz: 'الاختبار', navResults: 'النتائج',
+    welcomeBack: 'أهلاً', homeIntro: 'هذا الموقع يساعدك تكتشف أي مسار دقيق داخل الهندسة الحيوية يناسب ميولك وشخصيتك، عن طريق اختبار علمي يعتمد على نموذج هولاند للميول المهنية.',
+    startJourney: 'ابدأ الاختبار الآن', retakeQuiz: 'أعد الاختبار', seeMyResult: 'شوف نتيجتك', browseSpecialties: 'تصفح المسارات',
+    specialtiesTitle: 'المسارات الدقيقة', specialtiesDesc: 'تعرف على كل مسار بلغة بسيطة — قبل أو بعد الاختبار',
+    suitableType: 'يناسب النمط', inShort: 'باختصار', around: 'تراه حولك في', fact: 'هل تعلم؟', career: 'أين تعمل؟',
+    field: 'المجال', example: 'مثال', takeTestForThis: 'خذ الاختبار لتعرف مدى ملاءمتك لهذا المسار',
+    yourMatch: 'الأقرب لك', profileInfo: 'الملف الشخصي', edit: 'تعديل', name: 'الاسم', notEntered: 'لم يُدخل',
+    joinDate: 'تاريخ الانضمام', save: 'حفظ', cancel: 'إلغاء',
+    quizTitle: 'اختبار اكتشاف المسار', quizIntro: 'اختبار الميول المهنية (نموذج هولاند)',
+    quizDesc: 'أجب بصراحة حسب ميولك الحقيقية — ما فيه إجابة صح أو غلط. اختر ما يمثلك أكثر في كل موقف.',
+    quizNote: 'الاختبار 33 موقف. آخر 3 مواقف اختيار إجباري بين خيارين.',
+    startQuiz: 'ابدأ الاختبار', forcedSection: 'أسئلة المفاضلة — اختر واحداً فقط',
+    submitQuiz: 'أظهر نتيجتي', answered: 'أُجيب', of: 'من',
+    yourCode: 'رمز شخصيتك المهنية', yourTopMatches: 'أقرب المسارات لك',
+    resultTitle: 'نتيجتك', recommendations: 'توصيات وتواصل', internalUni: '🏫 داخل الجامعة', externalUni: '🌍 خارج الجامعة',
+    comingSoon: 'سيتم إضافة التوصيات وحسابات المختصين هنا قريباً', date: 'التاريخ', time: 'الوقت',
+    viewResult: 'اعرض النتيجة كاملة', backToMenu: 'تم', resultsLog: 'محاولاتك السابقة',
+    noQuizzes: 'لم تأخذ الاختبار بعد', startFirst: 'ابدأ من تبويب الاختبار', attempt: 'محاولة',
+    fillRequired: 'يرجى ملء البيانات المطلوبة!', emailExists: 'البريد مسجّل بالفعل!', invalidLogin: 'بيانات دخول غير صحيحة!',
+    mustAnswerAll: 'يرجى الإجابة على جميع المواقف أولاً'
   },
   en: {
     dir: 'ltr',
-    appName: 'Bio Path',
-    appSubtitle: 'Discover your path in Bioengineering',
+    appName: 'Bio Path', appSubtitle: 'Discover your path in Bioengineering',
     email: 'Email', password: 'Password', fullName: 'Full Name',
     bio: 'Bio', bioPlaceholder: 'Tell us about yourself...',
     login: 'Login', signup: 'Sign Up',
     noAccount: "Don't have an account?", signupNow: 'Sign up now',
     haveAccount: 'Already have an account?', loginNow: 'Login',
-    logout: 'Logout', profile: 'My Profile',
-    navHome: 'Home', navSpecialties: 'Specialties', navQuiz: 'Quiz', navResults: 'Results',
-    welcomeBack: 'Welcome', homeIntro: 'This site helps you discover which precise bioengineering specialty fits your interests and personality, through a simple quiz with a clear result.',
-    startJourney: 'Start the Quiz', seeMyResult: 'See Your Last Result', browseSpecialties: 'Browse Specialties',
-    specialtiesTitle: 'Precise Specialties', specialtiesDesc: 'Learn about each specialty in simple terms, before or after the quiz',
-    inShort: 'In Short', aroundYou: 'Around You', funFact: 'Did You Know?', careerPath: 'Where It Leads', suitableFor: 'Suited For',
-    yourMatch: 'Your Match', profileInfo: 'Profile Information', edit: 'Edit', name: 'Name', notEntered: 'Not entered',
-    joinDate: 'Join Date', save: 'Save Changes', cancel: 'Cancel',
-    quizTitle: 'Discover Your Path Quiz', quizDesc: "Answer honestly — there's no right or wrong, just your real interests",
-    startQuiz: 'Start Quiz', agree: 'Agree', disagree: 'Disagree', submitQuiz: 'Show My Result',
-    quizFinished: 'Here are your closest paths!', yourTopMatches: 'Your Top 3 Matching Specialties',
-    recommendations: 'Recommendations & Contacts', internalUni: '🏫 Inside University', externalUni: '🌍 Outside University',
-    comingSoon: 'Real details will be added here soon', date: 'Date', time: 'Time',
-    backToMenu: 'Back', resultsLog: 'Your Past Attempts', noQuizzes: "You haven't taken the quiz yet",
-    startFirst: 'Start your first quiz from the Quiz tab', attempt: 'Attempt',
-    fillRequired: 'Please fill in the required fields!', emailExists: 'This email is already registered!',
-    invalidLogin: 'Invalid login credentials!', questionCounter: 'of', placeholderNote: '⚙️ Placeholder content — will be replaced with final content'
+    profile: 'Profile', navHome: 'Home', navSpecialties: 'Specialties', navQuiz: 'Quiz', navResults: 'Results',
+    welcomeBack: 'Welcome', homeIntro: 'This site helps you discover which precise bioengineering specialty fits your interests and personality, through a scientific quiz based on the Holland career-interest model.',
+    startJourney: 'Start the Quiz', retakeQuiz: 'Retake Quiz', seeMyResult: 'See Your Result', browseSpecialties: 'Browse Specialties',
+    specialtiesTitle: 'Precise Specialties', specialtiesDesc: 'Learn about each specialty in simple terms — before or after the quiz',
+    suitableType: 'Suits the', inShort: 'Overview', around: 'Real-world examples', fact: 'Did You Know?', career: 'Career Opportunities',
+    field: 'Field', example: 'Example', takeTestForThis: 'Take the quiz to see how well this path suits you',
+    yourMatch: 'Your Match', profileInfo: 'Profile', edit: 'Edit', name: 'Name', notEntered: 'Not entered',
+    joinDate: 'Join Date', save: 'Save', cancel: 'Cancel',
+    quizTitle: 'Discover Your Path Quiz', quizIntro: 'Career Interest Assessment (Holland Model)',
+    quizDesc: "Answer honestly based on your real interests — there's no right or wrong. Choose what represents you most in each situation.",
+    quizNote: 'The quiz has 33 situations. The last 3 are forced choices between two options.',
+    startQuiz: 'Start Quiz', forcedSection: 'Forced-choice questions — pick only one',
+    submitQuiz: 'Show My Result', answered: 'Answered', of: 'of',
+    yourCode: 'Your Career Personality Code', yourTopMatches: 'Your Closest Specialties',
+    resultTitle: 'Your Result', recommendations: 'Recommendations & Contacts', internalUni: '🏫 Inside University', externalUni: '🌍 Outside University',
+    comingSoon: 'Recommendations and expert contacts will be added here soon', date: 'Date', time: 'Time',
+    viewResult: 'View Full Result', backToMenu: 'Done', resultsLog: 'Your Past Attempts',
+    noQuizzes: "You haven't taken the quiz yet", startFirst: 'Start from the Quiz tab', attempt: 'Attempt',
+    fillRequired: 'Please fill in the required fields!', emailExists: 'Email already registered!', invalidLogin: 'Invalid login credentials!',
+    mustAnswerAll: 'Please answer all situations first'
   }
 };
 
-/* ============ بيانات المسارات (محتوى مبدئي مؤقت) ============ */
-const specialties = [
-  { id: 'tissue', icon: Microscope, color: '#059669',
-    ar: { name: 'هندسة الأنسجة', short: 'زراعة وبناء أنسجة حية بديلة في المختبر.', aroundYou: 'الجلد الصناعي للحروق، غضاريف مزروعة.', fact: 'فيه علماء نجحوا يطبعون أنسجة بسيطة بطابعات ثلاثية الأبعاد!', career: 'مختبرات بحثية، شركات التقنية الحيوية.', suitable: 'تحب الصبر على التجارب الدقيقة بالمختبر.' },
-    en: { name: 'Tissue Engineering', short: 'Growing and building living replacement tissue in the lab.', aroundYou: 'Artificial skin for burns, grown cartilage.', fact: 'Scientists have successfully 3D-printed simple tissues!', career: 'Research labs, biotech companies.', suitable: 'You enjoy patient, precise lab work.' } },
-  { id: 'devices', icon: Cpu, color: '#2563eb',
-    ar: { name: 'الأجهزة الطبية', short: 'تصميم أجهزة تساعد أو تراقب جسم الإنسان.', aroundYou: 'منظم ضربات القلب، أجهزة قياس السكر.', fact: 'بعض الأجهزة الحديثة توصل بياناتك للطبيب لحظياً عبر الجوال!', career: 'شركات تصنيع أجهزة طبية، مستشفيات.', suitable: 'تحب الجمع بين الهندسة والإلكترونيات.' },
-    en: { name: 'Medical Devices', short: 'Designing devices that help or monitor the human body.', aroundYou: 'Pacemakers, glucose monitors.', fact: 'Some modern devices send your data to your doctor live via phone!', career: 'Device manufacturers, hospitals.', suitable: 'You like combining engineering with electronics.' } },
-  { id: 'bioinfo', icon: Dna, color: '#7c3aed',
-    ar: { name: 'المعلوماتية الحيوية', short: 'استخدام البرمجة لتحليل البيانات الجينية والطبية.', aroundYou: 'فحوصات تحديد النسب الجينية، أبحاث الأمراض الوراثية.', fact: 'الذكاء الاصطناعي صار يتوقع شكل البروتينات خلال ثواني!', career: 'شركات تقنية، مراكز أبحاث جينية.', suitable: 'تحب البرمجة والتحليل أكثر من العمل اليدوي.' },
-    en: { name: 'Bioinformatics', short: 'Using programming to analyze genetic and medical data.', aroundYou: 'Ancestry DNA tests, genetic disease research.', fact: 'AI can now predict protein shapes within seconds!', career: 'Tech companies, genetic research centers.', suitable: 'You prefer coding and analysis over manual work.' } },
-  { id: 'biomech', icon: Activity, color: '#dc2626',
-    ar: { name: 'الميكانيكا الحيوية', short: 'دراسة حركة الجسم بمبادئ هندسية وفيزيائية.', aroundYou: 'الأطراف الصناعية، تحليل حركة الرياضيين.', fact: 'بعض الأطراف الصناعية الحديثة تتحرك بإشارات من الدماغ مباشرة!', career: 'مراكز التأهيل، شركات الأطراف الصناعية.', suitable: 'تحب الفيزياء والحركة والرياضة.' },
-    en: { name: 'Biomechanics', short: 'Studying body movement using engineering and physics principles.', aroundYou: 'Prosthetic limbs, athlete movement analysis.', fact: 'Some modern prosthetics move directly from brain signals!', career: 'Rehab centers, prosthetics companies.', suitable: 'You like physics, movement, and sports.' } },
-  { id: 'biomat', icon: FlaskConical, color: '#ea580c',
-    ar: { name: 'المواد الحيوية', short: 'تصميم مواد آمنة تتوافق مع جسم الإنسان.', aroundYou: 'الغرز الجراحية القابلة للذوبان، حشوات الأسنان.', fact: 'فيه مواد حديثة تلتئم مع العظم وتختفي بعد ما يشفى!', career: 'شركات المستلزمات الطبية، مختبرات المواد.', suitable: 'تحب الكيمياء وتجربة مواد جديدة.' },
-    en: { name: 'Biomaterials', short: 'Designing safe materials compatible with the human body.', aroundYou: 'Dissolvable surgical stitches, dental fillings.', fact: 'Some new materials bond with bone and disappear after healing!', career: 'Medical supply companies, materials labs.', suitable: 'You like chemistry and testing new materials.' } },
-  { id: 'imaging', icon: ScanLine, color: '#0891b2',
-    ar: { name: 'التصوير الطبي', short: 'تطوير تقنيات لتصوير داخل الجسم دون جراحة.', aroundYou: 'الأشعة المقطعية، الرنين المغناطيسي، السونار.', fact: 'أجهزة حديثة تقدر تصور القلب وهو ينبض بدقة عالية جداً!', career: 'مستشفيات، شركات تصنيع أجهزة التصوير.', suitable: 'تحب الفيزياء والتفاصيل الدقيقة بالصور.' },
-    en: { name: 'Medical Imaging', short: 'Developing techniques to see inside the body without surgery.', aroundYou: 'CT scans, MRI, ultrasound.', fact: 'Modern machines can image a beating heart in high precision!', career: 'Hospitals, imaging device manufacturers.', suitable: 'You like physics and fine visual detail.' } },
-  { id: 'clinical', icon: Stethoscope, color: '#4f46e5',
-    ar: { name: 'الهندسة السريرية', short: 'صيانة وإدارة الأجهزة الطبية داخل المستشفيات.', aroundYou: 'الفريق اللي يصلح ويعاير أجهزة المستشفى يومياً.', fact: 'هذا التخصص يجمع بين الهندسة والتعامل المباشر مع فرق طبية!', career: 'إدارات هندسية بالمستشفيات.', suitable: 'تحب حل المشاكل العملية والتعامل مع فرق العمل.' },
-    en: { name: 'Clinical Engineering', short: 'Maintaining and managing medical devices inside hospitals.', aroundYou: 'The team that fixes and calibrates hospital equipment daily.', fact: 'This field blends engineering with direct work alongside medical teams!', career: 'Hospital engineering departments.', suitable: 'You like practical problem-solving and teamwork.' } }
-];
+// اسم المسار ثنائي اللغة دائماً
+const bilingualName = (s) => `${s.emoji} ${s.ar.name} | ${s.en.name}`;
 
-/* ============ أسئلة اختبار الميول (محتوى مبدئي مؤقت، 3 لكل مسار) ============ */
-const quizQuestions = [
-  { id: 1, specialty: 'tissue', ar: 'أستمتع بتجارب طويلة النفس أحتاج فيها صبر ودقة', en: 'I enjoy long, patient, detail-heavy experiments' },
-  { id: 2, specialty: 'tissue', ar: 'يشدني موضوع زراعة الخلايا والأنسجة الحية', en: 'I find growing cells and living tissue fascinating' },
-  { id: 3, specialty: 'tissue', ar: 'أفضل العمل بالمختبر على العمل المكتبي', en: 'I prefer lab work over desk work' },
-  { id: 4, specialty: 'devices', ar: 'أحب فك وتركيب الأجهزة الإلكترونية لفهمها', en: 'I like taking apart and rebuilding electronics to understand them' },
-  { id: 5, specialty: 'devices', ar: 'يعجبني الجمع بين البرمجة والدوائر الإلكترونية', en: 'I like combining programming with electronic circuits' },
-  { id: 6, specialty: 'devices', ar: 'أفكر دائماً كيف أصمم جهاز يسهل حياة الناس', en: 'I often think about designing devices that make life easier' },
-  { id: 7, specialty: 'bioinfo', ar: 'أفضل تحليل البيانات على التجارب اليدوية', en: 'I prefer analyzing data over hands-on experiments' },
-  { id: 8, specialty: 'bioinfo', ar: 'تشدني فكرة أن الكمبيوتر يفك رموز الجينات', en: "I'm drawn to the idea of computers decoding genes" },
-  { id: 9, specialty: 'bioinfo', ar: 'أستمتع بالبرمجة وحل المسائل المنطقية', en: 'I enjoy programming and logical problem-solving' },
-  { id: 10, specialty: 'biomech', ar: 'أهتم بكيفية تحرك جسم الإنسان أثناء الرياضة', en: 'I am interested in how the body moves during sports' },
-  { id: 11, specialty: 'biomech', ar: 'يعجبني تصميم أطراف صناعية تساعد الناس على الحركة', en: 'I like the idea of designing prosthetics that help people move' },
-  { id: 12, specialty: 'biomech', ar: 'أحب مواد الفيزياء والميكانيكا أكثر من الكيمياء', en: 'I prefer physics and mechanics over chemistry' },
-  { id: 13, specialty: 'biomat', ar: 'تستهويني تجربة مواد جديدة ومعرفة خصائصها', en: 'I love testing new materials and learning their properties' },
-  { id: 14, specialty: 'biomat', ar: 'أهتم بمادة الكيمياء أكثر من باقي المواد', en: 'I am more interested in chemistry than other subjects' },
-  { id: 15, specialty: 'biomat', ar: 'يعجبني موضوع صناعة مواد آمنة تدخل جسم الإنسان', en: 'I like the idea of creating safe materials for the human body' },
-  { id: 16, specialty: 'imaging', ar: 'أحب التفاصيل الدقيقة في الصور والأشكال', en: 'I love fine detail in images and shapes' },
-  { id: 17, specialty: 'imaging', ar: 'يثير فضولي كيف نشوف داخل الجسم بدون جراحة', en: "I'm curious how we can see inside the body without surgery" },
-  { id: 18, specialty: 'imaging', ar: 'أهتم بمادة الفيزياء وتطبيقاتها العملية', en: 'I am interested in physics and its practical applications' },
-  { id: 19, specialty: 'clinical', ar: 'أفضل حل المشاكل العملية على الأبحاث النظرية', en: 'I prefer practical problem-solving over theoretical research' },
-  { id: 20, specialty: 'clinical', ar: 'أستمتع بالعمل ضمن فريق والتواصل مع الآخرين', en: 'I enjoy working within a team and communicating with others' },
-  { id: 21, specialty: 'clinical', ar: 'يعجبني التواجد بجو المستشفى والتعامل مع أجهزته', en: 'I like being in a hospital setting working with its equipment' }
-];
-
-export default function StudentPortal() {
+export default function BioPath() {
   const [lang, setLang] = useState('ar');
   const t = translations[lang];
 
@@ -126,24 +85,20 @@ export default function StudentPortal() {
   const [isQuizStarted, setIsQuizStarted] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState({});
   const [quizResult, setQuizResult] = useState(null);
-  const [expandedSpecialty, setExpandedSpecialty] = useState(null);
+  const [expanded, setExpanded] = useState(null);
 
   const [formData, setFormData] = useState({ email: '', password: '', name: '', bio: '' });
 
   useEffect(() => {
     const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-      setCurrentUser(JSON.parse(savedUser));
-      setIsLoggedIn(true);
-    }
+    if (savedUser) { setCurrentUser(JSON.parse(savedUser)); setIsLoggedIn(true); }
     const savedLang = localStorage.getItem('appLang');
     if (savedLang) setLang(savedLang);
   }, []);
 
   const toggleLang = () => {
-    const newLang = lang === 'ar' ? 'en' : 'ar';
-    setLang(newLang);
-    localStorage.setItem('appLang', newLang);
+    const n = lang === 'ar' ? 'en' : 'ar';
+    setLang(n); localStorage.setItem('appLang', n);
   };
 
   const handleInputChange = (e) => {
@@ -155,165 +110,110 @@ export default function StudentPortal() {
     e.preventDefault();
     const users = JSON.parse(localStorage.getItem('users') || '{}');
     if (users[formData.email] && users[formData.email].password === formData.password) {
-      const user = users[formData.email];
-      setCurrentUser(user);
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      setIsLoggedIn(true);
-      setFormData({ email: '', password: '', name: '', bio: '' });
-    } else {
-      alert(t.invalidLogin);
-    }
+      const u = users[formData.email];
+      setCurrentUser(u); localStorage.setItem('currentUser', JSON.stringify(u));
+      setIsLoggedIn(true); setFormData({ email: '', password: '', name: '', bio: '' });
+    } else alert(t.invalidLogin);
   };
 
   const handleSignUp = (e) => {
     e.preventDefault();
-    if (!formData.email || !formData.password || !formData.name) {
-      alert(t.fillRequired);
-      return;
-    }
+    if (!formData.email || !formData.password || !formData.name) { alert(t.fillRequired); return; }
     const users = JSON.parse(localStorage.getItem('users') || '{}');
-    if (users[formData.email]) {
-      alert(t.emailExists);
-      return;
-    }
-    const newUser = {
-      email: formData.email, password: formData.password, name: formData.name, bio: formData.bio,
-      quizAttempts: [], createdAt: new Date().toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US')
-    };
-    users[formData.email] = newUser;
+    if (users[formData.email]) { alert(t.emailExists); return; }
+    const u = { email: formData.email, password: formData.password, name: formData.name, bio: formData.bio,
+      quizAttempts: [], createdAt: new Date().toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US') };
+    users[formData.email] = u;
     localStorage.setItem('users', JSON.stringify(users));
-    setCurrentUser(newUser);
-    localStorage.setItem('currentUser', JSON.stringify(newUser));
-    setIsLoggedIn(true);
-    setIsSignUp(false);
-    setFormData({ email: '', password: '', name: '', bio: '' });
+    setCurrentUser(u); localStorage.setItem('currentUser', JSON.stringify(u));
+    setIsLoggedIn(true); setIsSignUp(false); setFormData({ email: '', password: '', name: '', bio: '' });
   };
 
   const handleLogout = () => {
-    setCurrentUser(null);
-    setIsLoggedIn(false);
-    localStorage.removeItem('currentUser');
-    setIsEditing(false);
-    setIsProfileOpen(false);
-    setCurrentPage('home');
+    setCurrentUser(null); setIsLoggedIn(false); localStorage.removeItem('currentUser');
+    setIsEditing(false); setIsProfileOpen(false); setCurrentPage('home');
   };
 
   const handleUpdateProfile = (e) => {
     e.preventDefault();
     const users = JSON.parse(localStorage.getItem('users') || '{}');
-    const updatedUser = { ...currentUser, name: formData.name, bio: formData.bio };
-    users[currentUser.email] = updatedUser;
+    const u = { ...currentUser, name: formData.name, bio: formData.bio };
+    users[currentUser.email] = u;
     localStorage.setItem('users', JSON.stringify(users));
-    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-    setCurrentUser(updatedUser);
-    setIsEditing(false);
+    localStorage.setItem('currentUser', JSON.stringify(u));
+    setCurrentUser(u); setIsEditing(false);
   };
 
-  const handleQuizAnswer = (questionId, answer) => {
-    setQuizAnswers(prev => ({ ...prev, [questionId]: answer }));
-  };
-
-  const computeMatches = () => {
-    const bySpecialty = {};
-    specialties.forEach(s => { bySpecialty[s.id] = { agree: 0, total: 0 }; });
-    quizQuestions.forEach(q => {
-      bySpecialty[q.specialty].total += 1;
-      if (quizAnswers[q.id] === true) bySpecialty[q.specialty].agree += 1;
-    });
-    return specialties
-      .map(s => ({ id: s.id, percentage: Math.round((bySpecialty[s.id].agree / bySpecialty[s.id].total) * 100) }))
-      .sort((a, b) => b.percentage - a.percentage);
-  };
+  const allQuestions = [...quizQuestions, ...forcedChoiceQuestions];
+  const answeredCount = Object.keys(quizAnswers).length;
+  const allAnswered = answeredCount >= allQuestions.length;
 
   const handleSubmitQuiz = () => {
-    const matches = computeMatches();
+    if (!allAnswered) { alert(t.mustAnswerAll); return; }
+    const result = computeHollandResult(quizAnswers);
     const attempt = {
       date: new Date().toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US'),
       time: new Date().toLocaleTimeString(lang === 'ar' ? 'ar-SA' : 'en-US'),
-      matches
+      ...result
     };
     setQuizResult(attempt);
     const users = JSON.parse(localStorage.getItem('users') || '{}');
-    const updatedUser = { ...currentUser, quizAttempts: [...(currentUser.quizAttempts || []), attempt] };
-    users[currentUser.email] = updatedUser;
+    const u = { ...currentUser, quizAttempts: [...(currentUser.quizAttempts || []), attempt] };
+    users[currentUser.email] = u;
     localStorage.setItem('users', JSON.stringify(users));
-    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-    setCurrentUser(updatedUser);
+    localStorage.setItem('currentUser', JSON.stringify(u));
+    setCurrentUser(u);
   };
 
   const getSpecialty = (id) => specialties.find(s => s.id === id);
-  const hasAttempts = currentUser && currentUser.quizAttempts && currentUser.quizAttempts.length > 0;
-  const topMatchId = hasAttempts ? currentUser.quizAttempts[currentUser.quizAttempts.length - 1].matches[0].id : null;
+  const hasAttempts = currentUser?.quizAttempts?.length > 0;
+  const lastAttempt = hasAttempts ? currentUser.quizAttempts[currentUser.quizAttempts.length - 1] : null;
+  const topMatchId = lastAttempt ? lastAttempt.matches[0].id : null;
 
   const LangToggle = ({ dark }) => (
-    <button onClick={toggleLang} className={`flex items-center gap-1 px-3 py-2 rounded-lg font-semibold text-sm transition ${dark ? 'bg-white/20 hover:bg-white/30 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}>
-      <Languages className="w-4 h-4" />
-      {lang === 'ar' ? 'EN' : 'ع'}
+    <button onClick={toggleLang} className={`flex items-center gap-1 px-3 py-2 rounded-lg font-semibold text-sm transition ${dark ? 'bg-white/20 hover:bg-white/30 text-white' : 'text-white hover:opacity-90'}`} style={dark ? {} : { backgroundColor: '#10B981' }}>
+      <Languages className="w-4 h-4" />{lang === 'ar' ? 'EN' : 'ع'}
     </button>
   );
 
-  /* ============ صفحة تسجيل الدخول ============ */
+  /* ============ تسجيل الدخول ============ */
   if (!isLoggedIn) {
     return (
-      <div dir={t.dir} className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center p-4">
+      <div dir={t.dir} className="min-h-screen flex items-center justify-center p-4" style={{ background: 'linear-gradient(135deg, #0A392B 0%, #047857 100%)' }}>
         <div className="w-full max-w-md">
           <div className="flex justify-end mb-4"><LangToggle dark /></div>
           <div className="bg-white rounded-2xl shadow-2xl p-8">
             <div className="text-center mb-8">
-              <div className="flex justify-center mb-4"><BookOpen className="w-12 h-12 text-blue-600" /></div>
-              <h1 className="text-3xl font-bold text-gray-800">{t.appName}</h1>
+              <div className="flex justify-center mb-3">
+                <img src="/logo.jpg" alt="Bio Path" className="w-28 h-28 object-contain" />
+              </div>
+              <h1 className="text-3xl font-bold" style={{ color: '#0A392B' }}>{t.appName}</h1>
               <p className="text-gray-500 mt-2">{t.appSubtitle}</p>
             </div>
 
             {!isSignUp ? (
               <form onSubmit={handleLogin} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{t.email}</label>
-                  <input type="email" name="email" value={formData.email} onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" required />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{t.password}</label>
-                  <input type="password" name="password" value={formData.password} onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" required />
-                </div>
-                <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition">{t.login}</button>
-                <div className="text-center">
-                  <p className="text-gray-600 text-sm">
-                    {t.noAccount}{' '}
-                    <button type="button" onClick={() => { setIsSignUp(true); setFormData({ email: '', password: '', name: '', bio: '' }); }} className="text-blue-600 hover:text-blue-700 font-semibold">{t.signupNow}</button>
-                  </p>
-                </div>
+                <Field label={t.email} name="email" type="email" value={formData.email} onChange={handleInputChange} required />
+                <Field label={t.password} name="password" type="password" value={formData.password} onChange={handleInputChange} required />
+                <button type="submit" className="w-full text-white font-bold py-2.5 rounded-lg transition hover:opacity-90" style={{ backgroundColor: '#0A392B' }}>{t.login}</button>
+                <p className="text-center text-gray-600 text-sm">{t.noAccount}{' '}
+                  <button type="button" onClick={() => { setIsSignUp(true); setFormData({ email: '', password: '', name: '', bio: '' }); }} className="font-semibold" style={{ color: '#059669' }}>{t.signupNow}</button>
+                </p>
               </form>
             ) : (
               <form onSubmit={handleSignUp} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{t.fullName} *</label>
-                  <input type="text" name="name" value={formData.name} onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" required />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{t.email} *</label>
-                  <input type="email" name="email" value={formData.email} onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" required />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{t.password} *</label>
-                  <input type="password" name="password" value={formData.password} onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" required />
-                </div>
+                <Field label={`${t.fullName} *`} name="name" value={formData.name} onChange={handleInputChange} required />
+                <Field label={`${t.email} *`} name="email" type="email" value={formData.email} onChange={handleInputChange} required />
+                <Field label={`${t.password} *`} name="password" type="password" value={formData.password} onChange={handleInputChange} required />
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">{t.bio}</label>
-                  <textarea name="bio" value={formData.bio} onChange={handleInputChange} rows="3"
-                    placeholder={t.bioPlaceholder} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" />
+                  <textarea name="bio" value={formData.bio} onChange={handleInputChange} rows="3" placeholder={t.bioPlaceholder}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent" style={{ '--tw-ring-color': '#10B981' }} />
                 </div>
-                <button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition">{t.signup}</button>
-                <div className="text-center">
-                  <p className="text-gray-600 text-sm">
-                    {t.haveAccount}{' '}
-                    <button type="button" onClick={() => { setIsSignUp(false); setFormData({ email: '', password: '', name: '', bio: '' }); }} className="text-blue-600 hover:text-blue-700 font-semibold">{t.loginNow}</button>
-                  </p>
-                </div>
+                <button type="submit" className="w-full text-white font-bold py-2.5 rounded-lg transition hover:opacity-90" style={{ backgroundColor: '#059669' }}>{t.signup}</button>
+                <p className="text-center text-gray-600 text-sm">{t.haveAccount}{' '}
+                  <button type="button" onClick={() => { setIsSignUp(false); setFormData({ email: '', password: '', name: '', bio: '' }); }} className="font-semibold" style={{ color: '#059669' }}>{t.loginNow}</button>
+                </p>
               </form>
             )}
           </div>
@@ -324,76 +224,70 @@ export default function StudentPortal() {
 
   /* ============ لوحة التحكم ============ */
   return (
-    <div dir={t.dir} className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-lg sticky top-0 z-20">
+    <div dir={t.dir} className="min-h-screen" style={{ backgroundColor: '#F9FAFB' }}>
+      {/* Navbar */}
+      <nav className="sticky top-0 z-20 shadow-lg" style={{ backgroundColor: '#0A392B' }}>
         <div className="max-w-6xl mx-auto px-4 py-3">
           <div className="flex justify-between items-center mb-3">
             <div className="flex items-center gap-2">
-              <BookOpen className="w-7 h-7 text-blue-600" />
-              <h1 className="text-xl font-bold text-gray-800">{t.appName}</h1>
+              <img src="/logo.jpg" alt="Bio Path" className="w-9 h-9 object-contain rounded-lg" />
+              <h1 className="text-xl font-bold text-white">{t.appName}</h1>
             </div>
             <div className="flex items-center gap-2">
-              <LangToggle />
-              <button onClick={() => setIsProfileOpen(!isProfileOpen)} className="p-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition">
-                <User className="w-5 h-5 text-gray-700" />
-              </button>
-              <button onClick={handleLogout} className="p-2 rounded-lg bg-red-600 hover:bg-red-700 transition">
-                <LogOut className="w-5 h-5 text-white" />
-              </button>
+              <LangToggle dark />
+              <button onClick={() => setIsProfileOpen(!isProfileOpen)} className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition"><User className="w-5 h-5 text-white" /></button>
+              <button onClick={handleLogout} className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition"><LogOut className="w-5 h-5 text-white" /></button>
             </div>
           </div>
 
-          <div className="flex gap-2 border-t pt-3 overflow-x-auto">
+          <div className="flex gap-2 overflow-x-auto pb-1">
             {[
               { key: 'home', label: t.navHome, icon: Home },
               { key: 'specialties', label: t.navSpecialties, icon: Compass },
               { key: 'quiz', label: t.navQuiz, icon: ClipboardList },
               { key: 'results', label: t.navResults, icon: Award }
-            ].map(tab => (
-              <button key={tab.key} onClick={() => { setCurrentPage(tab.key); setIsQuizStarted(false); }}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg whitespace-nowrap text-sm transition ${currentPage === tab.key ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
-                <tab.icon className="w-4 h-4" />{tab.label}
-              </button>
-            ))}
+            ].map(tab => {
+              const active = currentPage === tab.key;
+              return (
+                <button key={tab.key} onClick={() => { setCurrentPage(tab.key); setIsQuizStarted(false); }}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg whitespace-nowrap text-sm font-medium transition"
+                  style={active ? { backgroundColor: '#10B981', color: '#04231A' } : { backgroundColor: 'rgba(255,255,255,0.08)', color: 'white' }}>
+                  <tab.icon className="w-4 h-4" />{tab.label}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* لوحة الملف الشخصي المنسدلة */}
         {isProfileOpen && (
           <div className="max-w-6xl mx-auto px-4 pb-4">
-            <div className="bg-white border rounded-xl shadow-lg p-6 mt-2">
+            <div className="bg-white rounded-xl shadow-lg p-6 mt-2">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-bold text-gray-800">{t.profileInfo}</h3>
+                <h3 className="text-lg font-bold" style={{ color: '#0A392B' }}>{t.profileInfo}</h3>
                 <div className="flex gap-2">
                   {!isEditing && (
                     <button onClick={() => { setIsEditing(true); setFormData({ email: currentUser.email, password: currentUser.password, name: currentUser.name, bio: currentUser.bio || '' }); }}
-                      className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-sm transition">
-                      <Edit2 className="w-4 h-4" />{t.edit}
-                    </button>
+                      className="flex items-center gap-1 text-white px-3 py-1.5 rounded-lg text-sm transition hover:opacity-90" style={{ backgroundColor: '#059669' }}><Edit2 className="w-4 h-4" />{t.edit}</button>
                   )}
                   <button onClick={() => setIsProfileOpen(false)} className="p-1.5 rounded-lg bg-gray-200 hover:bg-gray-300 transition"><X className="w-4 h-4" /></button>
                 </div>
               </div>
-
               {!isEditing ? (
-                <div className="space-y-3 text-sm">
+                <div className="space-y-2 text-sm">
                   <div><span className="text-gray-500">{t.name}: </span><span className="font-semibold text-gray-800">{currentUser.name}</span></div>
                   <div><span className="text-gray-500">{t.email}: </span><span className="font-semibold text-gray-800">{currentUser.email}</span></div>
                   {currentUser.bio && <div><span className="text-gray-500">{t.bio}: </span><span className="text-gray-800">{currentUser.bio}</span></div>}
                   <div className="text-gray-400 text-xs pt-2">{t.joinDate}: {currentUser.createdAt}</div>
                 </div>
               ) : (
-                <form onSubmit={handleUpdateProfile} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">{t.fullName}</label>
-                    <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-                  </div>
+                <form onSubmit={handleUpdateProfile} className="space-y-3">
+                  <Field label={t.fullName} name="name" value={formData.name} onChange={handleInputChange} small />
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">{t.bio}</label>
                     <textarea name="bio" value={formData.bio} onChange={handleInputChange} rows="3" className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
                   </div>
                   <div className="flex gap-2">
-                    <button type="submit" className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-4 py-1.5 rounded-lg text-sm transition"><Save className="w-4 h-4" />{t.save}</button>
+                    <button type="submit" className="flex items-center gap-1 text-white px-4 py-1.5 rounded-lg text-sm transition hover:opacity-90" style={{ backgroundColor: '#059669' }}><Save className="w-4 h-4" />{t.save}</button>
                     <button type="button" onClick={() => setIsEditing(false)} className="flex items-center gap-1 bg-gray-400 hover:bg-gray-500 text-white px-4 py-1.5 rounded-lg text-sm transition"><X className="w-4 h-4" />{t.cancel}</button>
                   </div>
                 </form>
@@ -407,18 +301,21 @@ export default function StudentPortal() {
 
         {/* ============ الرئيسية ============ */}
         {currentPage === 'home' && (
-          <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl shadow-xl p-8 text-white text-center">
-            <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-90" />
-            <h2 className="text-3xl font-bold mb-2">{t.welcomeBack}, {currentUser.name}! 👋</h2>
-            <p className="text-blue-100 max-w-xl mx-auto mb-8">{t.homeIntro}</p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <button onClick={() => setCurrentPage('quiz')} className="bg-white text-blue-700 font-bold px-6 py-3 rounded-lg hover:bg-blue-50 transition">
-                {hasAttempts ? t.startQuiz : t.startJourney}
-              </button>
-              {hasAttempts && (
-                <button onClick={() => setCurrentPage('results')} className="bg-white/20 hover:bg-white/30 font-bold px-6 py-3 rounded-lg transition">{t.seeMyResult}</button>
-              )}
-              <button onClick={() => setCurrentPage('specialties')} className="bg-white/20 hover:bg-white/30 font-bold px-6 py-3 rounded-lg transition">{t.browseSpecialties}</button>
+          <div className="rounded-2xl shadow-xl p-8 md:p-12 text-white text-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0A392B 0%, #047857 100%)' }}>
+            <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-10" style={{ backgroundColor: '#10B981', transform: 'translate(30%,-30%)' }}></div>
+            <div className="relative">
+              <div className="inline-flex mb-4">
+                <img src="/logo.jpg" alt="Bio Path" className="w-32 h-32 object-contain drop-shadow-lg" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-3">{t.welcomeBack}، {currentUser.name}! 👋</h2>
+              <p className="text-emerald-50 max-w-xl mx-auto mb-8 leading-relaxed">{t.homeIntro}</p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onClick={() => setCurrentPage('quiz')} className="font-bold px-6 py-3 rounded-lg transition hover:opacity-90" style={{ backgroundColor: '#10B981', color: '#04231A' }}>
+                  {hasAttempts ? t.retakeQuiz : t.startJourney}
+                </button>
+                {hasAttempts && <button onClick={() => setCurrentPage('results')} className="bg-white/15 hover:bg-white/25 font-bold px-6 py-3 rounded-lg transition">{t.seeMyResult}</button>}
+                <button onClick={() => setCurrentPage('specialties')} className="bg-white/15 hover:bg-white/25 font-bold px-6 py-3 rounded-lg transition">{t.browseSpecialties}</button>
+              </div>
             </div>
           </div>
         )}
@@ -427,39 +324,53 @@ export default function StudentPortal() {
         {currentPage === 'specialties' && (
           <div>
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">{t.specialtiesTitle}</h2>
+              <h2 className="text-2xl font-bold" style={{ color: '#0A392B' }}>{t.specialtiesTitle}</h2>
               <p className="text-gray-500">{t.specialtiesDesc}</p>
-              <p className="text-amber-600 text-xs mt-1">{t.placeholderNote}</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
               {specialties.map(s => {
-                const Icon = s.icon;
-                const isExpanded = expandedSpecialty === s.id;
+                const isExp = expanded === s.id;
                 const isTop = topMatchId === s.id;
                 const d = s[lang];
+                const primaryType = hollandTypes[s.codes[0]];
                 return (
-                  <div key={s.id} className="bg-white rounded-xl shadow-md overflow-hidden border" style={{ borderColor: isTop ? s.color : '#e5e7eb', borderWidth: isTop ? 2 : 1 }}>
-                    <button onClick={() => setExpandedSpecialty(isExpanded ? null : s.id)} className="w-full flex items-center justify-between p-4">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg" style={{ backgroundColor: s.color + '20' }}>
-                          <Icon className="w-6 h-6" style={{ color: s.color }} />
+                  <div key={s.id}
+                    className="rounded-2xl overflow-hidden transition-all duration-300 backdrop-blur-sm"
+                    style={{
+                      background: 'rgba(255,255,255,0.75)',
+                      border: `1.5px solid ${isTop ? '#10B981' : 'rgba(10,57,43,0.12)'}`,
+                      boxShadow: isTop ? '0 8px 30px rgba(16,185,129,0.25)' : '0 4px 20px rgba(10,57,43,0.06)'
+                    }}>
+                    {/* Badge نمط الشخصية */}
+                    <div className="px-4 pt-4 flex items-center justify-between">
+                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ backgroundColor: primaryType.color + '18', color: primaryType.color }}>
+                        🧬 {t.suitableType} {lang === 'ar' ? primaryType.ar : primaryType.en}
+                      </span>
+                      {isTop && <Star className="w-4 h-4 fill-emerald-400 text-emerald-400" />}
+                    </div>
+
+                    <button onClick={() => setExpanded(isExp ? null : s.id)} className="w-full px-4 py-3 text-start">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <p className="font-bold leading-snug" style={{ color: '#0A392B' }}>{s.emoji} {d.name}</p>
+                          <p className="text-xs text-gray-400 mt-0.5" dir="ltr">{s.en.name}</p>
+                          {isTop && <p className="text-xs font-semibold mt-1" style={{ color: '#059669' }}>⭐ {t.yourMatch}</p>}
                         </div>
-                        <div className="text-start">
-                          <p className="font-bold text-gray-800 flex items-center gap-1">
-                            {d.name} {isTop && <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />}
-                          </p>
-                          {isTop && <p className="text-xs" style={{ color: s.color }}>{t.yourMatch}</p>}
-                        </div>
+                        {isExp ? <ChevronUp className="w-5 h-5 text-gray-400 shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 shrink-0" />}
                       </div>
-                      {isExpanded ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
                     </button>
-                    {isExpanded && (
-                      <div className="px-4 pb-4 space-y-3 text-sm">
-                        <div><p className="font-semibold text-gray-700">{t.inShort}</p><p className="text-gray-600">{d.short}</p></div>
-                        <div><p className="font-semibold text-gray-700">{t.aroundYou}</p><p className="text-gray-600">{d.aroundYou}</p></div>
-                        <div><p className="font-semibold text-gray-700">🔬 {t.funFact}</p><p className="text-gray-600">{d.fact}</p></div>
-                        <div><p className="font-semibold text-gray-700">{t.careerPath}</p><p className="text-gray-600">{d.career}</p></div>
-                        <div><p className="font-semibold text-gray-700">{t.suitableFor}</p><p className="text-gray-600">{d.suitable}</p></div>
+
+                    {isExp && (
+                      <div className="px-4 pb-4 space-y-2.5">
+                        <MiniCard title={t.inShort} text={d.short} color="#0A392B" />
+                        <MiniCard title={`📍 ${t.around}`} text={d.around} color="#047857" />
+                        <MiniCard title={`🔬 ${t.fact}`} text={d.fact} color="#059669" />
+                        <MiniCard title={`💼 ${t.career}`} text={d.career} color="#10B981" />
+                        <button onClick={() => { setCurrentPage('quiz'); setExpanded(null); }}
+                          className="w-full mt-2 text-white text-sm font-semibold py-2.5 rounded-lg transition hover:opacity-90 flex items-center justify-center gap-1"
+                          style={{ backgroundColor: '#0A392B' }}>
+                          {t.takeTestForThis} <ArrowLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
+                        </button>
                       </div>
                     )}
                   </div>
@@ -471,40 +382,49 @@ export default function StudentPortal() {
 
         {/* ============ الاختبار ============ */}
         {currentPage === 'quiz' && (
-          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+          <div>
             {!isQuizStarted && !quizResult ? (
-              <div className="text-center mb-8">
-                <ClipboardList className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-                <h2 className="text-3xl font-bold text-gray-800 mb-4">{t.quizTitle}</h2>
-                <p className="text-gray-600 mb-6">{t.quizDesc}</p>
-                <p className="text-amber-600 text-xs mb-4">{t.placeholderNote}</p>
-                <button onClick={() => { setIsQuizStarted(true); setQuizAnswers({}); }} className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-bold transition">{t.startQuiz}</button>
+              <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+                <div className="inline-flex p-3 rounded-2xl mb-4" style={{ backgroundColor: 'rgba(16,185,129,0.12)' }}>
+                  <ClipboardList className="w-14 h-14" style={{ color: '#059669' }} />
+                </div>
+                <h2 className="text-3xl font-bold mb-2" style={{ color: '#0A392B' }}>{t.quizTitle}</h2>
+                <p className="font-semibold mb-3" style={{ color: '#059669' }}>{t.quizIntro}</p>
+                <p className="text-gray-600 mb-2 max-w-lg mx-auto">{t.quizDesc}</p>
+                <p className="text-gray-400 text-sm mb-6">{t.quizNote}</p>
+                <button onClick={() => { setIsQuizStarted(true); setQuizAnswers({}); }} className="text-white px-8 py-3 rounded-lg font-bold transition hover:opacity-90" style={{ backgroundColor: '#059669' }}>{t.startQuiz}</button>
               </div>
             ) : isQuizStarted && !quizResult ? (
-              <>
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">{t.quizTitle}</h2>
+              <div className="bg-white rounded-2xl shadow-lg p-5 md:p-8">
+                <h2 className="text-2xl font-bold mb-6" style={{ color: '#0A392B' }}>{t.quizTitle}</h2>
                 <div className="space-y-5">
                   {quizQuestions.map((q, index) => (
-                    <div key={q.id} className="border border-gray-300 rounded-lg p-5">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="bg-blue-600 text-white px-2.5 py-1 rounded-full text-xs font-bold">{index + 1}/{quizQuestions.length}</div>
-                        <p className="font-semibold text-gray-800 flex-1">{q[lang]}</p>
-                      </div>
-                      <div className="flex gap-3">
-                        <button onClick={() => handleQuizAnswer(q.id, true)} className={`flex-1 py-2 rounded-lg font-semibold transition ${quizAnswers[q.id] === true ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>✓ {t.agree}</button>
-                        <button onClick={() => handleQuizAnswer(q.id, false)} className={`flex-1 py-2 rounded-lg font-semibold transition ${quizAnswers[q.id] === false ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>✗ {t.disagree}</button>
-                      </div>
-                    </div>
+                    <QuestionCard key={q.id} q={q} index={index} total={allQuestions.length} lang={lang}
+                      selected={quizAnswers[q.id]} onSelect={(type) => setQuizAnswers(prev => ({ ...prev, [q.id]: type }))} />
                   ))}
+
+                  {/* قسم المفاضلة */}
+                  <div className="pt-4">
+                    <div className="rounded-xl p-4 mb-4" style={{ backgroundColor: '#0A392B' }}>
+                      <p className="text-white font-bold text-center">⚖️ {t.forcedSection}</p>
+                    </div>
+                    {forcedChoiceQuestions.map((q, i) => (
+                      <QuestionCard key={q.id} q={q} index={quizQuestions.length + i} total={allQuestions.length} lang={lang} forced
+                        selected={quizAnswers[q.id]} onSelect={(type) => setQuizAnswers(prev => ({ ...prev, [q.id]: type }))} />
+                    ))}
+                  </div>
                 </div>
-                <button onClick={handleSubmitQuiz} disabled={Object.keys(quizAnswers).length < quizQuestions.length}
-                  className="w-full mt-8 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-bold py-3 rounded-lg transition">
-                  {t.submitQuiz} ({Object.keys(quizAnswers).length}/{quizQuestions.length})
+
+                <button onClick={handleSubmitQuiz} disabled={!allAnswered}
+                  className="w-full mt-8 text-white font-bold py-3 rounded-lg transition disabled:opacity-40" style={{ backgroundColor: allAnswered ? '#059669' : '#9CA3AF' }}>
+                  {t.submitQuiz} ({answeredCount}/{allQuestions.length})
                 </button>
-              </>
+              </div>
             ) : quizResult && (
-              <ResultView t={t} lang={lang} result={quizResult} getSpecialty={getSpecialty}
-                onBack={() => { setIsQuizStarted(false); setQuizResult(null); setQuizAnswers({}); setCurrentPage('results'); }} />
+              <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                <ResultView t={t} lang={lang} result={quizResult} getSpecialty={getSpecialty}
+                  onBack={() => { setIsQuizStarted(false); setQuizResult(null); setQuizAnswers({}); setCurrentPage('results'); }} />
+              </div>
             )}
           </div>
         )}
@@ -515,23 +435,22 @@ export default function StudentPortal() {
             {hasAttempts ? (
               <>
                 <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-                  <ResultView t={t} lang={lang} result={currentUser.quizAttempts[currentUser.quizAttempts.length - 1]} getSpecialty={getSpecialty} hideBack />
+                  <ResultView t={t} lang={lang} result={lastAttempt} getSpecialty={getSpecialty} hideBack />
                 </div>
-
                 <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-                  <h3 className="text-xl font-bold text-gray-800 mb-4">{t.resultsLog}</h3>
+                  <h3 className="text-xl font-bold mb-4" style={{ color: '#0A392B' }}>{t.resultsLog}</h3>
                   <div className="space-y-3">
-                    {currentUser.quizAttempts.slice().reverse().map((attempt, idx) => {
-                      const top = getSpecialty(attempt.matches[0].id);
+                    {currentUser.quizAttempts.slice().reverse().map((a, idx) => {
+                      const top = getSpecialty(a.matches[0].id);
                       return (
-                        <div key={idx} className="border border-gray-300 rounded-lg p-4 flex justify-between items-center text-sm">
+                        <div key={idx} className="border rounded-lg p-4 flex justify-between items-center text-sm" style={{ borderColor: 'rgba(10,57,43,0.1)' }}>
                           <div>
-                            <p className="text-gray-500">{attempt.date} - {attempt.time}</p>
-                            <p className="font-semibold text-gray-800">{t.attempt} #{currentUser.quizAttempts.length - idx}</p>
+                            <p className="text-gray-500">{a.date} - {a.time}</p>
+                            <p className="font-semibold text-gray-800">{t.attempt} #{currentUser.quizAttempts.length - idx} · {a.topCode.join('·')}</p>
                           </div>
                           <div className="text-end">
-                            <p className="font-bold" style={{ color: top.color }}>{top[lang].name}</p>
-                            <p className="text-gray-600">{attempt.matches[0].percentage}%</p>
+                            <p className="font-bold" style={{ color: top.color }}>{top.emoji} {top[lang].name}</p>
+                            <p className="text-gray-600">{a.matches[0].percentage}%</p>
                           </div>
                         </div>
                       );
@@ -553,37 +472,91 @@ export default function StudentPortal() {
   );
 }
 
-/* ============ عرض النتيجة (يُستخدم بعد الاختبار وبصفحة النتائج) ============ */
+/* ============ مكوّنات مساعدة ============ */
+function Field({ label, name, type = 'text', value, onChange, required, small }) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <input type={type} name={name} value={value} onChange={onChange} required={required}
+        className={`w-full ${small ? 'px-3 py-2 text-sm' : 'px-4 py-2'} border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent outline-none`}
+        style={{ '--tw-ring-color': '#10B981' }} />
+    </div>
+  );
+}
+
+function MiniCard({ title, text, color }) {
+  return (
+    <div className="rounded-lg p-3" style={{ backgroundColor: color + '0D' }}>
+      <p className="font-semibold text-sm mb-0.5" style={{ color }}>{title}</p>
+      <p className="text-gray-600 text-sm leading-relaxed">{text}</p>
+    </div>
+  );
+}
+
+function QuestionCard({ q, index, total, lang, selected, onSelect, forced }) {
+  return (
+    <div className="border rounded-xl p-5" style={{ borderColor: forced ? '#10B981' : 'rgba(10,57,43,0.12)', backgroundColor: forced ? 'rgba(16,185,129,0.03)' : 'white' }}>
+      <div className="flex items-center gap-3 mb-4">
+        <div className="text-white px-2.5 py-1 rounded-full text-xs font-bold shrink-0" style={{ backgroundColor: '#0A392B' }}>{index + 1}/{total}</div>
+        <p className="font-semibold text-gray-800 flex-1">{q[lang]}</p>
+      </div>
+      <div className="grid grid-cols-1 gap-2">
+        {q.options.map((opt, i) => {
+          const isSel = selected === opt.type;
+          return (
+            <button key={i} onClick={() => onSelect(opt.type)}
+              className="text-start px-4 py-2.5 rounded-lg text-sm font-medium transition border"
+              style={isSel
+                ? { backgroundColor: '#10B981', color: '#04231A', borderColor: '#10B981' }
+                : { backgroundColor: '#F9FAFB', color: '#374151', borderColor: 'rgba(10,57,43,0.08)' }}>
+              {opt[lang]}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function ResultView({ t, lang, result, getSpecialty, onBack, hideBack }) {
   const top3 = result.matches.slice(0, 3);
   const topSpecialty = getSpecialty(top3[0].id);
 
   return (
     <div>
-      <div className="text-center mb-8">
-        <Award className="w-20 h-20 text-yellow-500 mx-auto mb-3" />
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-800">{t.quizFinished}</h2>
+      <div className="text-center mb-6">
+        <div className="inline-flex p-3 rounded-2xl mb-3" style={{ backgroundColor: 'rgba(16,185,129,0.12)' }}>
+          <Award className="w-16 h-16" style={{ color: '#10B981' }} />
+        </div>
+        <h2 className="text-2xl md:text-3xl font-bold" style={{ color: '#0A392B' }}>{t.resultTitle}</h2>
       </div>
 
-      <div className="mb-8">
-        <h3 className="font-bold text-gray-700 mb-4">{t.yourTopMatches}</h3>
+      {/* رمز الشخصية */}
+      <div className="rounded-xl p-5 mb-6 text-center" style={{ background: 'linear-gradient(135deg, #0A392B 0%, #047857 100%)' }}>
+        <p className="text-emerald-100 text-sm mb-2">{t.yourCode}</p>
+        <div className="flex justify-center gap-2">
+          {result.topCode.map(code => (
+            <div key={code} className="px-4 py-2 rounded-lg font-bold text-lg" style={{ backgroundColor: 'rgba(16,185,129,0.25)', color: 'white' }}>
+              {code} · {lang === 'ar' ? hollandTypes[code].ar : hollandTypes[code].en}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* أقرب المسارات */}
+      <div className="mb-6">
+        <h3 className="font-bold mb-4" style={{ color: '#0A392B' }}>{t.yourTopMatches}</h3>
         <div className="space-y-3">
           {top3.map((m, i) => {
             const s = getSpecialty(m.id);
-            const Icon = s.icon;
             return (
-              <div key={m.id} className="flex items-center gap-3">
-                <div className="p-2 rounded-lg shrink-0" style={{ backgroundColor: s.color + '20' }}>
-                  <Icon className="w-5 h-5" style={{ color: s.color }} />
+              <div key={m.id}>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="font-semibold text-gray-800">{i === 0 && '🏆 '}{s.emoji} {s[lang].name}</span>
+                  <span className="font-bold" style={{ color: s.color }}>{m.percentage}%</span>
                 </div>
-                <div className="flex-1">
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="font-semibold text-gray-800">{i === 0 && '🏆 '}{s[lang].name}</span>
-                    <span className="font-bold" style={{ color: s.color }}>{m.percentage}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5">
-                    <div className="h-2.5 rounded-full transition-all" style={{ width: `${m.percentage}%`, backgroundColor: s.color }}></div>
-                  </div>
+                <div className="w-full bg-gray-200 rounded-full h-2.5">
+                  <div className="h-2.5 rounded-full transition-all" style={{ width: `${m.percentage}%`, backgroundColor: s.color }}></div>
                 </div>
               </div>
             );
@@ -591,14 +564,15 @@ function ResultView({ t, lang, result, getSpecialty, onBack, hideBack }) {
         </div>
       </div>
 
-      <div className="bg-gray-50 rounded-xl p-5 mb-6">
-        <h3 className="font-bold text-gray-800 mb-3">{t.recommendations} — {topSpecialty[lang].name}</h3>
+      {/* توصيات */}
+      <div className="rounded-xl p-5 mb-6" style={{ backgroundColor: '#F9FAFB' }}>
+        <h3 className="font-bold mb-3" style={{ color: '#0A392B' }}>{t.recommendations} — {topSpecialty.emoji} {topSpecialty[lang].name}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-          <div className="bg-white rounded-lg p-4 border">
+          <div className="bg-white rounded-lg p-4 border" style={{ borderColor: 'rgba(10,57,43,0.1)' }}>
             <p className="font-semibold text-gray-700 mb-2">{t.internalUni}</p>
             <p className="text-gray-400 text-xs">{t.comingSoon}</p>
           </div>
-          <div className="bg-white rounded-lg p-4 border">
+          <div className="bg-white rounded-lg p-4 border" style={{ borderColor: 'rgba(10,57,43,0.1)' }}>
             <p className="font-semibold text-gray-700 mb-2">{t.externalUni}</p>
             <p className="text-gray-400 text-xs">{t.comingSoon}</p>
           </div>
@@ -606,10 +580,7 @@ function ResultView({ t, lang, result, getSpecialty, onBack, hideBack }) {
       </div>
 
       <div className="text-xs text-gray-400 mb-4">{result.date} - {result.time}</div>
-
-      {!hideBack && (
-        <button onClick={onBack} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">{t.backToMenu}</button>
-      )}
+      {!hideBack && <button onClick={onBack} className="w-full text-white font-bold py-3 rounded-lg transition hover:opacity-90" style={{ backgroundColor: '#059669' }}>{t.backToMenu}</button>}
     </div>
   );
 }
