@@ -5,11 +5,11 @@
 
 export const interestTypes = {
   R: { ar: 'الواقعي', en: 'Realistic', color: '#0A392B', desc_ar: 'عملي، يحب بناء وتشغيل الأشياء بيده', desc_en: 'Practical, likes building and operating things' },
-  I: { ar: 'التحليلي', en: 'Investigative', color: '#047857', desc_ar: 'فضولي، يحب البحث والفهم العميق', desc_en: 'Curious, likes research and deep understanding' },
-  A: { ar: 'الابتكاري', en: 'Artistic', color: '#059669', desc_ar: 'مبدع، يحب التصميم والأفكار الجديدة', desc_en: 'Creative, likes design and new ideas' },
-  S: { ar: 'الاجتماعي', en: 'Social', color: '#10B981', desc_ar: 'متعاون، يحب مساعدة وتعليم الناس', desc_en: 'Cooperative, likes helping and teaching people' },
-  E: { ar: 'الريادي', en: 'Enterprising', color: '#34D399', desc_ar: 'قيادي، يحب المشاريع والإقناع', desc_en: 'Leader, likes projects and persuasion' },
-  C: { ar: 'المنظّم', en: 'Conventional', color: '#6EE7B7', desc_ar: 'دقيق، يحب التنظيم والمعايير', desc_en: 'Precise, likes organization and standards' }
+  I: { ar: 'التحليلي', en: 'Investigative', color: '#7C3AED', desc_ar: 'فضولي، يحب البحث والفهم العميق', desc_en: 'Curious, likes research and deep understanding' },
+  A: { ar: 'الابتكاري', en: 'Artistic', color: '#8B5CF6', desc_ar: 'مبدع، يحب التصميم والأفكار الجديدة', desc_en: 'Creative, likes design and new ideas' },
+  S: { ar: 'الاجتماعي', en: 'Social', color: '#059669', desc_ar: 'متعاون، يحب مساعدة وتعليم الناس', desc_en: 'Cooperative, likes helping and teaching people' },
+  E: { ar: 'الريادي', en: 'Enterprising', color: '#A78BFA', desc_ar: 'قيادي، يحب المشاريع والإقناع', desc_en: 'Leader, likes projects and persuasion' },
+  C: { ar: 'المنظّم', en: 'Conventional', color: '#10B981', desc_ar: 'دقيق، يحب التنظيم والمعايير', desc_en: 'Precise, likes organization and standards' }
 };
 
 // ============================================================
@@ -18,7 +18,7 @@ export const interestTypes = {
 // ============================================================
 export const specialties = [
   {
-    id: 'genetic', codes: ['I', 'A', 'R'], emoji: '🧬', color: '#0A392B',
+    id: 'genetic', codes: ['I', 'A', 'R'], emoji: '🧬', color: '#8B5CF6',
     ar: { name: 'الهندسة الوراثية والتخليقية', field: 'أحياء جزيئية', model: 'بكتيريا تنتج الأنسولين',
       imagine: 'أنت مُبرمِج — لكن لغتك ليست بايثون بل الحمض النووي، وجهازك ليس حاسوباً بل خليّة حيّة.',
       yourDay: ['تصمّم مقطعاً جينياً على الحاسب', 'تُدخله في بكتيريا', 'تزرعها في حاضنة', 'تقيس: هل أنتجت ما أردت؟'],
@@ -33,7 +33,7 @@ export const specialties = [
       career: 'Biopharmaceutical companies, genetic research labs.' }
   },
   {
-    id: 'tissue', codes: ['I', 'S', 'R'], emoji: '🧪', color: '#047857',
+    id: 'tissue', codes: ['I', 'S', 'R'], emoji: '🧪', color: '#F43F5E',
     ar: { name: 'هندسة الأنسجة والطب التجديدي', field: 'أحياء خلوية / طب', model: 'جلد صناعي للحروق',
       imagine: 'أنت بُستانيّ — تبني تعريشة تذوب مع الوقت، وتترك خلايا المريض تتسلّقها حتى تنمو بالشكل الذي رسمته.',
       yourDay: ['تعزل خلايا المريض', 'تصنع دعامة مسامية', 'تزرع الخلايا عليها', 'تراقب نموّها تحت المجهر أسابيع'],
@@ -48,7 +48,7 @@ export const specialties = [
       career: 'Hospitals, regenerative medicine centers, biotech companies.' }
   },
   {
-    id: 'biomat', codes: ['R', 'I', 'C'], emoji: '🔩', color: '#059669',
+    id: 'biomat', codes: ['R', 'I', 'C'], emoji: '🔩', color: '#F59E0B',
     ar: { name: 'المواد الحيوية', field: 'كيمياء / مواد', model: 'غرسة لا يرفضها الجسم',
       imagine: 'أنت دبلوماسي — مهمتك أن يقبل الجسمُ غريباً، لا بالقوّة بل بتصميم يجعله يبدو من أهل البيت.',
       yourDay: ['تختبر موادّ مرشّحة', 'تقيس كيف تلتصق بها الخلايا', 'تعدّل سطحها كيميائياً', 'تفحص: هل تتآكل بعد سنوات؟'],
@@ -63,7 +63,7 @@ export const specialties = [
       career: 'Medical supply companies, advanced materials labs.' }
   },
   {
-    id: 'process', codes: ['R', 'C', 'E'], emoji: '⚙️', color: '#10B981',
+    id: 'process', codes: ['R', 'C', 'E'], emoji: '⚙️', color: '#2563EB',
     ar: { name: 'هندسة العمليات والتصنيع الحيوي', field: 'صناعة حيوية', model: 'مفاعل ينتج لقاحاً',
       imagine: 'أنت مدير مصنع — لكن عمّالك كائنات حيّة: تضبط لهم الحرارة والغذاء والأكسجين، وإن أخطأت في درجة واحدة توقّف الخط.',
       yourDay: ['تضبط ظروف المفاعل الحيوي', 'تسحب عيّنات وتقيسها', 'ترفع الإنتاجية دون قتل الخلايا', 'تنقّي المنتج النهائي'],
@@ -78,7 +78,7 @@ export const specialties = [
       career: 'Pharmaceutical plants, bio-production facilities.' }
   },
   {
-    id: 'bioinfo', codes: ['I', 'C', 'A'], emoji: '💻', color: '#34D399',
+    id: 'bioinfo', codes: ['I', 'C', 'A'], emoji: '💻', color: '#06B6D4',
     ar: { name: 'المعلوماتية الحيوية والبيولوجيا الحاسوبية', field: 'حوسبة', model: 'تحليل DNA لاكتشاف طفرة',
       imagine: 'أنت مُحقّق — أمامك كتاب من ثلاثة مليارات حرف، وتبحث عن خطأ مطبعي واحد. عينك لن تكفي، تحتاج خوارزمية.',
       yourDay: ['تكتب كوداً لتحليل التسلسلات', 'تقارنها بقواعد بيانات عالمية', 'تستخرج النمط المتكرر', 'تفسّر علاقته بالمرض'],
@@ -93,7 +93,7 @@ export const specialties = [
       career: 'Tech companies, genome centers, drug research.' }
   },
   {
-    id: 'biomech', codes: ['R', 'I', 'A'], emoji: '🦾', color: '#0A392B',
+    id: 'biomech', codes: ['R', 'I', 'A'], emoji: '🦾', color: '#EA580C',
     ar: { name: 'الميكانيكا الحيوية', field: 'فيزياء / حركة', model: 'طرف اصطناعي',
       imagine: 'أنت مهندس ميكانيكا — لكن الآلة التي تدرسها جسمُ إنسان: العظام روافع، والمفاصل مفصّلات، والعضلات محرّكات.',
       yourDay: ['تصوّر الحركة بكاميرات وحسّاسات', 'تحسب القوى على كل مفصل', 'تصمّم الطرف أو الجهاز', 'تختبره على أرض الواقع'],
@@ -108,7 +108,7 @@ export const specialties = [
       career: 'Rehab centers, prosthetics and medical robotics companies.' }
   },
   {
-    id: 'environ', codes: ['R', 'I', 'E'], emoji: '🌱', color: '#047857',
+    id: 'environ', codes: ['R', 'I', 'E'], emoji: '🌱', color: '#10B981',
     ar: { name: 'الهندسة الحيوية البيئية والزراعية', field: 'بيئة / زراعة', model: 'ميكروبات تنقّي المياه',
       imagine: 'أنت تُوظّف عمال نظافة — لكنهم كائنات دقيقة: تأكل التلوّث وتترك ماءً أنظف، وأجرها الوجبة نفسها.',
       yourDay: ['تعزل ميكروبات من البيئة', 'تختبر ما تستطيع هضمه', 'تصمّم النظام حولها', 'تقيس أداءه في الميدان لا في المختبر'],

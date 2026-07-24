@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   LogOut, Edit2, Save, X, User, ClipboardList, Award, Languages,
-  Home, Compass, Star, ChevronDown, ChevronUp, ArrowLeft
+  Home, Compass, Star, ChevronDown, ChevronUp, ArrowLeft, Mail, Linkedin, Heart
 } from 'lucide-react';
 import {
   interestTypes, specialties, quizQuestions, forcedChoiceQuestions, computeResult
@@ -48,6 +48,12 @@ const translations = {
     purposeTitle: 'ما الذي يفعله هذا الموقع؟',
     purposeP1: 'هو بوصلة، لا خريطة. لن يقرّر عنك، ولن يقول لك «ادرس هذا». وظيفته أبسط وأهم: أن يجعل الخيارات السبعة واضحة في ذهنك، وأن يريك أيّها يشبه ميولك أنت.',
     purposeP2: 'لهذا يقوم على جزأين: بطاقات تشرح كل مسار بلغة يفهمها من لا خلفية له، واختبار مبنيّ على مقياس علمي للميول المهنية، مُكيّف خصيصاً لهذا المجال، يقرأ نمط ميولك ويدلّك على أقرب مسار إليه.',
+    aboutTitle: 'عن المشروع',
+    aboutBody: 'طالبة هندسة حيوية في جامعة الملك فهد للبترول والمعادن. أنشأتُ Bio Path لمساعدة الطلاب على اكتشاف المسار الدقيق الذي يناسب ميولهم داخل الهندسة الحيوية — قبل أن يفوت وقت الاختيار. أؤمن أن معرفة الاتجاه مبكراً تُوفّر سنوات من التردد.',
+    aboutMaker: 'رندا الوادعي',
+    aboutRole: 'طالبة هندسة حيوية · جامعة الملك فهد للبترول والمعادن',
+    footerMade: 'صُمّم بواسطة رندا الوادعي',
+    contactMe: 'تواصل معي',
     field: 'المجال', example: 'مثال', takeTestForThis: 'خذ الاختبار لتعرف مدى ملاءمتك لهذا المسار',
     yourMatch: 'الأقرب لك', profileInfo: 'الملف الشخصي', edit: 'تعديل', name: 'الاسم', notEntered: 'لم يُدخل',
     joinDate: 'تاريخ الانضمام', save: 'حفظ', cancel: 'إلغاء',
@@ -106,6 +112,12 @@ const translations = {
     purposeTitle: 'What does this site do?',
     purposeP1: 'It is a compass, not a map. It will not decide for you, and it will not tell you \u201cstudy this.\u201d Its job is simpler and more important: to make the seven options clear in your mind, and to show you which one resembles your own interests.',
     purposeP2: 'That is why it has two parts: cards explaining each path in language anyone can follow, and an assessment built on a scientific career-interest scale, adapted specifically for this field, that reads your interest profile and points you to the closest path.',
+    aboutTitle: 'About the Project',
+    aboutBody: 'A bioengineering student at King Fahd University of Petroleum and Minerals. I created Bio Path to help students discover the precise specialty that fits their interests within bioengineering — before the choice is made for them. I believe knowing your direction early saves years of hesitation.',
+    aboutMaker: 'Randa Alwadai',
+    aboutRole: 'Bioengineering Student · KFUPM',
+    footerMade: 'Made by Randa Alwadai',
+    contactMe: 'Contact me',
     field: 'Field', example: 'Example', takeTestForThis: 'Take the quiz to see how well this path suits you',
     yourMatch: 'Your Match', profileInfo: 'Profile', edit: 'Edit', name: 'Name', notEntered: 'Not entered',
     joinDate: 'Join Date', save: 'Save', cancel: 'Cancel',
@@ -282,11 +294,11 @@ export default function BioPath() {
   if (!isLoggedIn) {
     return (
       <div dir={t.dir} className="min-h-screen flex flex-col items-center justify-center p-5 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #0A392B 0%, #047857 50%, #10B981 100%)' }}>
+        style={{ background: 'linear-gradient(160deg, #0A392B 0%, #3B1F6B 55%, #7C3AED 100%)' }}>
 
         {/* توهج زمردي ناعم */}
-        <div className="absolute rounded-full pointer-events-none" style={{ width: 560, height: 560, top: '-16%', insetInlineEnd: '-18%', background: 'radial-gradient(circle, rgba(52,211,153,0.45) 0%, transparent 68%)' }} />
-        <div className="absolute rounded-full pointer-events-none" style={{ width: 460, height: 460, bottom: '-14%', insetInlineStart: '-14%', background: 'radial-gradient(circle, rgba(16,185,129,0.4) 0%, transparent 70%)' }} />
+        <div className="absolute rounded-full pointer-events-none" style={{ width: 560, height: 560, top: '-16%', insetInlineEnd: '-18%', background: 'radial-gradient(circle, rgba(167,139,250,0.5) 0%, transparent 68%)' }} />
+        <div className="absolute rounded-full pointer-events-none" style={{ width: 460, height: 460, bottom: '-14%', insetInlineStart: '-14%', background: 'radial-gradient(circle, rgba(52,211,153,0.4) 0%, transparent 70%)' }} />
 
         <div className="absolute top-5" style={{ insetInlineEnd: 20 }}>
           <LangToggle dark />
@@ -311,12 +323,12 @@ export default function BioPath() {
                   type="text" name="name" value={formData.name} onChange={handleInputChange}
                   placeholder={t.namePlaceholder} autoFocus
                   className="w-full px-5 py-4 rounded-2xl text-center text-lg outline-none transition"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.97)', border: '2px solid #34D399', boxShadow: '0 4px 20px rgba(4,35,26,0.25)' }} />
+                  style={{ backgroundColor: 'rgba(255,255,255,0.97)', border: '2px solid #A78BFA', boxShadow: '0 4px 20px rgba(124,58,237,0.25)' }} />
               </div>
 
               <button type="submit"
                 className="w-full font-bold py-4 rounded-2xl text-lg transition hover:opacity-95 active:scale-[0.99]"
-                style={{ background: 'linear-gradient(90deg, #10B981 0%, #34D399 100%)', color: '#04231A', boxShadow: '0 12px 30px rgba(4,35,26,0.35)' }}>
+                style={{ background: 'linear-gradient(90deg, #10B981 0%, #8B5CF6 100%)', color: '#ffffff', boxShadow: '0 12px 30px rgba(124,58,237,0.4)' }}>
                 {t.startNow} ✨
               </button>
 
@@ -337,7 +349,7 @@ export default function BioPath() {
               <input type="password" name="password" value={formData.password} onChange={handleInputChange} placeholder={t.password} required
                 className="w-full px-5 py-3.5 rounded-2xl outline-none" style={{ backgroundColor: 'rgba(255,255,255,0.97)', border: '2px solid #34D399' }} />
               <button type="submit" className="w-full font-bold py-3.5 rounded-2xl transition hover:opacity-95"
-                style={{ background: 'linear-gradient(90deg, #10B981 0%, #34D399 100%)', color: '#04231A' }}>{t.login}</button>
+                style={{ background: 'linear-gradient(90deg, #10B981 0%, #8B5CF6 100%)', color: '#ffffff' }}>{t.login}</button>
               <div className="text-center pt-2">
                 <button type="button" onClick={() => { setIsSignUp(false); setFormData({ email: '', password: '', name: '', bio: '' }); }}
                   className="text-white/85 text-sm hover:text-white transition">{t.backToQuickStart}</button>
@@ -378,7 +390,7 @@ export default function BioPath() {
               return (
                 <button key={tab.key} onClick={() => { setCurrentPage(tab.key); setIsQuizStarted(false); }}
                   className="flex items-center gap-1.5 px-3 py-2 rounded-lg whitespace-nowrap text-sm font-medium transition"
-                  style={active ? { backgroundColor: '#10B981', color: '#04231A' } : { backgroundColor: 'rgba(255,255,255,0.08)', color: 'white' }}>
+                  style={active ? { backgroundColor: '#8B5CF6', color: '#ffffff' } : { backgroundColor: 'rgba(255,255,255,0.08)', color: '#DDD6FE' }}>
                   <tab.icon className="w-4 h-4" />{tab.label}
                 </button>
               );
@@ -457,15 +469,16 @@ export default function BioPath() {
           <div className="space-y-6">
 
             {/* القسم ب — العنوان الرئيسي */}
-            <div className="rounded-2xl shadow-xl p-8 md:p-12 text-white text-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0A392B 0%, #047857 55%, #10B981 100%)' }}>
-              <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-10" style={{ backgroundColor: '#10B981', transform: 'translate(30%,-30%)' }}></div>
+            <div className="rounded-2xl shadow-xl p-8 md:p-12 text-white text-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0A392B 0%, #3B1F6B 60%, #7C3AED 100%)' }}>
+              <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-20" style={{ backgroundColor: '#A78BFA', transform: 'translate(30%,-30%)' }}></div>
+              <div className="absolute bottom-0 left-0 w-56 h-56 rounded-full opacity-15" style={{ backgroundColor: '#34D399', transform: 'translate(-30%,30%)' }}></div>
               <div className="relative">
                 <div className="inline-flex mb-3">
                   <img src="/logo.png" alt="Bio Path" className="w-40 object-contain" style={{ filter: 'drop-shadow(0 16px 32px rgba(16,185,129,0.5))' }} />
                 </div>
-                <p className="text-emerald-100 mb-2">{t.welcomeBack}، {currentUser.name} 👋</p>
+                <p className="text-purple-100 mb-2">{t.welcomeBack}، {currentUser.name} 👋</p>
                 <h2 className="text-3xl md:text-4xl font-bold mb-4">{t.heroTitle}</h2>
-                <p className="text-emerald-50 max-w-2xl mx-auto leading-relaxed">{t.heroBody}</p>
+                <p className="text-purple-50 max-w-2xl mx-auto leading-relaxed">{t.heroBody}</p>
               </div>
             </div>
 
@@ -499,11 +512,36 @@ export default function BioPath() {
               <p className="text-gray-700 leading-relaxed mb-3">{t.purposeP1}</p>
               <p className="text-gray-700 leading-relaxed mb-6">{t.purposeP2}</p>
               <div className="flex flex-col sm:flex-row gap-3">
-                <button onClick={() => setCurrentPage('quiz')} className="font-bold px-6 py-3 rounded-xl transition hover:opacity-90 text-white" style={{ background: 'linear-gradient(90deg, #0A392B 0%, #059669 100%)' }}>
+                <button onClick={() => setCurrentPage('quiz')} className="font-bold px-6 py-3 rounded-xl transition hover:opacity-90 text-white" style={{ background: 'linear-gradient(90deg, #059669 0%, #8B5CF6 100%)' }}>
                   {hasAttempts ? t.retakeQuiz : t.startJourney}
                 </button>
-                {hasAttempts && <button onClick={() => setCurrentPage('results')} className="font-bold px-6 py-3 rounded-xl transition" style={{ backgroundColor: 'rgba(16,185,129,0.12)', color: '#047857' }}>{t.seeMyResult}</button>}
-                <button onClick={() => setCurrentPage('specialties')} className="font-bold px-6 py-3 rounded-xl transition" style={{ backgroundColor: 'rgba(16,185,129,0.12)', color: '#047857' }}>{t.browseSpecialties}</button>
+                {hasAttempts && <button onClick={() => setCurrentPage('results')} className="font-bold px-6 py-3 rounded-xl transition" style={{ backgroundColor: 'rgba(139,92,246,0.12)', color: '#7C3AED' }}>{t.seeMyResult}</button>}
+                <button onClick={() => setCurrentPage('specialties')} className="font-bold px-6 py-3 rounded-xl transition" style={{ backgroundColor: 'rgba(139,92,246,0.12)', color: '#7C3AED' }}>{t.browseSpecialties}</button>
+              </div>
+            </div>
+
+            {/* عن المشروع */}
+            <div className="rounded-2xl shadow-lg p-6 md:p-8 text-white relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #1E1B4B 0%, #4C1D95 100%)' }}>
+              <div className="absolute top-0 left-0 w-48 h-48 rounded-full opacity-20" style={{ backgroundColor: '#34D399', transform: 'translate(-30%,-30%)' }}></div>
+              <div className="relative">
+                <h3 className="text-2xl font-bold mb-4">{t.aboutTitle}</h3>
+                <p className="text-purple-50 leading-relaxed mb-5">{t.aboutBody}</p>
+                <div className="flex flex-wrap items-center gap-4">
+                  <div>
+                    <p className="font-bold text-lg">{t.aboutMaker}</p>
+                    <p className="text-purple-200 text-sm">{t.aboutRole}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <a href="https://www.linkedin.com/in/randa-alwadai-b4baa8359" target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-lg font-semibold text-sm transition hover:opacity-90" style={{ backgroundColor: '#34D399', color: '#04231A' }}>
+                      <Linkedin className="w-4 h-4" /> LinkedIn
+                    </a>
+                    <a href="mailto:s202338470@kfupm.edu.sa"
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-lg font-semibold text-sm transition hover:opacity-90" style={{ backgroundColor: 'rgba(255,255,255,0.15)', color: '#ffffff' }}>
+                      <Mail className="w-4 h-4" /> {t.contactMe}
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -524,12 +562,14 @@ export default function BioPath() {
                 const primaryType = interestTypes[s.codes[0]];
                 return (
                   <div key={s.id}
-                    className="rounded-2xl overflow-hidden transition-all duration-300 backdrop-blur-sm"
+                    className="rounded-2xl overflow-hidden transition-all duration-300"
                     style={{
-                      background: 'rgba(255,255,255,0.75)',
-                      border: `1.5px solid ${isTop ? '#10B981' : 'rgba(10,57,43,0.12)'}`,
-                      boxShadow: isTop ? '0 8px 30px rgba(16,185,129,0.25)' : '0 4px 20px rgba(10,57,43,0.06)'
+                      background: '#ffffff',
+                      border: `1.5px solid ${isTop ? s.color : 'rgba(10,57,43,0.1)'}`,
+                      boxShadow: isTop ? `0 8px 30px ${s.color}33` : '0 2px 12px rgba(10,57,43,0.06)'
                     }}>
+                    {/* شريط لوني علوي بلون المسار */}
+                    <div style={{ height: 5, backgroundColor: s.color }}></div>
                     {/* Badge نمط الشخصية */}
                     <div className="px-4 pt-4 flex items-center justify-between">
                       <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ backgroundColor: primaryType.color + '18', color: primaryType.color }}>
@@ -664,11 +704,32 @@ export default function BioPath() {
           </div>
         )}
       </div>
+
+      {/* ============ الفوتر ============ */}
+      <footer className="mt-8" style={{ backgroundColor: '#0A392B', borderTop: '3px solid transparent', borderImage: 'linear-gradient(90deg, #0A392B, #8B5CF6, #34D399) 1' }}>
+        <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-white">
+            <img src="/logo.png" alt="Bio Path" className="w-8 object-contain" />
+            <span className="font-bold">Bio Path</span>
+          </div>
+          <p className="text-purple-100 text-sm flex items-center gap-1.5">
+            {t.footerMade} <Heart className="w-4 h-4 fill-current" style={{ color: '#8B5CF6' }} />
+          </p>
+          <div className="flex gap-2">
+            <a href="https://www.linkedin.com/in/randa-alwadai-b4baa8359" target="_blank" rel="noopener noreferrer"
+              className="p-2 rounded-lg transition hover:opacity-80" style={{ backgroundColor: 'rgba(139,92,246,0.25)' }}>
+              <Linkedin className="w-4 h-4 text-white" />
+            </a>
+            <a href="mailto:s202338470@kfupm.edu.sa"
+              className="p-2 rounded-lg transition hover:opacity-80" style={{ backgroundColor: 'rgba(52,211,153,0.25)' }}>
+              <Mail className="w-4 h-4 text-white" />
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
-
-/* ============ مكوّنات مساعدة ============ */
 function Field({ label, name, type = 'text', value, onChange, required, small }) {
   return (
     <div>
@@ -817,8 +878,8 @@ function ResultView({ t, lang, result, getSpecialty, onBack, hideBack }) {
   return (
     <div>
       <div className="text-center mb-6">
-        <div className="inline-flex p-3 rounded-2xl mb-3" style={{ backgroundColor: 'rgba(16,185,129,0.12)' }}>
-          <Compass className="w-16 h-16" style={{ color: '#10B981' }} />
+        <div className="inline-flex p-3 rounded-2xl mb-3" style={{ backgroundColor: 'rgba(139,92,246,0.12)' }}>
+          <Compass className="w-16 h-16" style={{ color: '#8B5CF6' }} />
         </div>
         <h2 className="text-2xl md:text-3xl font-bold" style={{ color: '#0A392B' }}>{t.resultTitle}</h2>
       </div>
