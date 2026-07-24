@@ -1,9 +1,9 @@
 // ============================================================
-// بيانات اختبار هولاند (RIASEC) لتطبيق Bio Path
+// بيانات مقياس الميول لتطبيق Bio Path
 // الأنماط: R الواقعي · I التحليلي · A الابتكاري · S الاجتماعي · E الريادي · C المنظّم
 // ============================================================
 
-export const hollandTypes = {
+export const interestTypes = {
   R: { ar: 'الواقعي', en: 'Realistic', color: '#0A392B', desc_ar: 'عملي، يحب بناء وتشغيل الأشياء بيده', desc_en: 'Practical, likes building and operating things' },
   I: { ar: 'التحليلي', en: 'Investigative', color: '#047857', desc_ar: 'فضولي، يحب البحث والفهم العميق', desc_en: 'Curious, likes research and deep understanding' },
   A: { ar: 'الابتكاري', en: 'Artistic', color: '#059669', desc_ar: 'مبدع، يحب التصميم والأفكار الجديدة', desc_en: 'Creative, likes design and new ideas' },
@@ -13,19 +13,21 @@ export const hollandTypes = {
 };
 
 // ============================================================
-// التخصصات السبعة مع رموز هولاند والمحتوى التعريفي
+// التخصصات السبعة مع رموز الميول والمحتوى التعريفي
 // (المحتوى التعريفي مبدئي — يُحدّث لاحقاً بشات المحتوى)
 // ============================================================
 export const specialties = [
   {
     id: 'genetic', codes: ['I', 'A', 'R'], emoji: '🧬', color: '#0A392B',
     ar: { name: 'الهندسة الوراثية والتخليقية', field: 'أحياء جزيئية', model: 'بكتيريا تنتج الأنسولين',
-      short: 'تعديل وتصميم الجينات لإنتاج مواد ودواء بطرق حيوية.',
+      imagine: 'أنت مُبرمِج — لكن لغتك ليست بايثون بل الحمض النووي، وجهازك ليس حاسوباً بل خليّة حيّة.',
+      yourDay: ['تصمّم مقطعاً جينياً على الحاسب', 'تُدخله في بكتيريا', 'تزرعها في حاضنة', 'تقيس: هل أنتجت ما أردت؟'],
       around: 'الأنسولين المصنّع، المحاصيل المعدّلة وراثياً.',
       fact: 'العلماء برمجوا بكتيريا لإنتاج الأنسولين البشري بدل استخراجه من الحيوانات!',
       career: 'شركات الأدوية الحيوية، مختبرات الأبحاث الجينية.' },
     en: { name: 'Genetic & Synthetic Engineering', field: 'Molecular Biology', model: 'Bacteria producing insulin',
-      short: 'Editing and designing genes to produce materials and medicine biologically.',
+      imagine: "You're a programmer — but your language isn't Python, it's DNA, and your machine isn't a computer, it's a living cell.",
+      yourDay: ['You design a genetic sequence on a computer', 'insert it into bacteria', 'grow them in an incubator', 'measure: did it produce what you wanted?'],
       around: 'Synthetic insulin, genetically modified crops.',
       fact: 'Scientists programmed bacteria to produce human insulin instead of extracting it from animals!',
       career: 'Biopharmaceutical companies, genetic research labs.' }
@@ -33,12 +35,14 @@ export const specialties = [
   {
     id: 'tissue', codes: ['I', 'S', 'R'], emoji: '🧪', color: '#047857',
     ar: { name: 'هندسة الأنسجة والطب التجديدي', field: 'أحياء خلوية / طب', model: 'جلد صناعي للحروق',
-      short: 'بناء وزراعة أنسجة حية بديلة لعلاج الإصابات والأمراض.',
+      imagine: 'أنت بُستانيّ — تبني تعريشة تذوب مع الوقت، وتترك خلايا المريض تتسلّقها حتى تنمو بالشكل الذي رسمته.',
+      yourDay: ['تعزل خلايا المريض', 'تصنع دعامة مسامية', 'تزرع الخلايا عليها', 'تراقب نموّها تحت المجهر أسابيع'],
       around: 'الجلد الصناعي لضحايا الحروق، زراعة الغضاريف.',
       fact: 'صار ممكن طباعة أنسجة حية بطابعات ثلاثية الأبعاد!',
       career: 'مستشفيات، مراكز الطب التجديدي، شركات التقنية الحيوية.' },
     en: { name: 'Tissue Engineering & Regenerative Medicine', field: 'Cell Biology / Medicine', model: 'Artificial skin for burns',
-      short: 'Building and growing living replacement tissue to treat injuries and diseases.',
+      imagine: "You're a gardener — you build a trellis that dissolves over time, letting the patient's cells climb it until they grow into the shape you drew.",
+      yourDay: ["You isolate the patient's cells", 'fabricate a porous scaffold', 'seed the cells onto it', 'monitor their growth under a microscope for weeks'],
       around: 'Artificial skin for burn victims, cartilage growth.',
       fact: 'It is now possible to 3D-print living tissues!',
       career: 'Hospitals, regenerative medicine centers, biotech companies.' }
@@ -46,38 +50,44 @@ export const specialties = [
   {
     id: 'biomat', codes: ['R', 'I', 'C'], emoji: '🔩', color: '#059669',
     ar: { name: 'المواد الحيوية', field: 'كيمياء / مواد', model: 'غرسة لا يرفضها الجسم',
-      short: 'تصميم مواد آمنة تتوافق مع الجسم ولا يرفضها.',
+      imagine: 'أنت دبلوماسي — مهمتك أن يقبل الجسمُ غريباً، لا بالقوّة بل بتصميم يجعله يبدو من أهل البيت.',
+      yourDay: ['تختبر موادّ مرشّحة', 'تقيس كيف تلتصق بها الخلايا', 'تعدّل سطحها كيميائياً', 'تفحص: هل تتآكل بعد سنوات؟'],
       around: 'مفاصل صناعية، غرز جراحية قابلة للذوبان.',
       fact: 'فيه مواد حديثة تلتحم مع العظم وتختفي بعد الشفاء تلقائياً!',
       career: 'شركات المستلزمات الطبية، مختبرات المواد المتقدمة.' },
-    en: { name: 'Biomaterials', field: 'Chemistry / Materials', model: 'An implant the body won\'t reject',
-      short: 'Designing safe materials compatible with the body that it won\'t reject.',
+    en: { name: 'Biomaterials', field: 'Chemistry / Materials', model: "An implant the body won't reject",
+      imagine: "You're a diplomat — your job is to make the body accept a stranger, not by force but through a design that makes it look like family.",
+      yourDay: ['You test candidate materials', 'measure how cells adhere to them', 'chemically modify their surface', 'check: will it corrode after years?'],
       around: 'Artificial joints, dissolvable surgical stitches.',
       fact: 'Some modern materials bond with bone and disappear automatically after healing!',
       career: 'Medical supply companies, advanced materials labs.' }
   },
   {
     id: 'process', codes: ['R', 'C', 'E'], emoji: '⚙️', color: '#10B981',
-    ar: { name: 'العمليات والتصنيع الحيوي', field: 'صناعة حيوية', model: 'مفاعل ينتج لقاحاً',
-      short: 'إدارة وتشغيل خطوط إنتاج المنتجات الحيوية بكميات كبيرة.',
+    ar: { name: 'هندسة العمليات والتصنيع الحيوي', field: 'صناعة حيوية', model: 'مفاعل ينتج لقاحاً',
+      imagine: 'أنت مدير مصنع — لكن عمّالك كائنات حيّة: تضبط لهم الحرارة والغذاء والأكسجين، وإن أخطأت في درجة واحدة توقّف الخط.',
+      yourDay: ['تضبط ظروف المفاعل الحيوي', 'تسحب عيّنات وتقيسها', 'ترفع الإنتاجية دون قتل الخلايا', 'تنقّي المنتج النهائي'],
       around: 'مصانع اللقاحات، إنتاج الأدوية الحيوية.',
       fact: 'مفاعل حيوي واحد ينتج ملايين جرعات اللقاح في وقت قصير!',
       career: 'مصانع الأدوية، منشآت الإنتاج الحيوي.' },
     en: { name: 'Bioprocess & Biomanufacturing', field: 'Bio-industry', model: 'A reactor producing vaccines',
-      short: 'Managing and operating large-scale production lines of biological products.',
+      imagine: "You're a factory manager — except your workers are living organisms: you control their heat, food, and oxygen, and one degree off shuts the line down.",
+      yourDay: ['You control bioreactor conditions', 'draw and test samples', 'raise yield without killing the cells', 'purify the final product'],
       around: 'Vaccine factories, biopharmaceutical production.',
       fact: 'A single bioreactor can produce millions of vaccine doses in a short time!',
       career: 'Pharmaceutical plants, bio-production facilities.' }
   },
   {
     id: 'bioinfo', codes: ['I', 'C', 'A'], emoji: '💻', color: '#34D399',
-    ar: { name: 'المعلوماتية الحيوية', field: 'حوسبة', model: 'تحليل DNA لاكتشاف طفرة',
-      short: 'استخدام البرمجة والحاسوب لتحليل البيانات الجينية والحيوية.',
+    ar: { name: 'المعلوماتية الحيوية والبيولوجيا الحاسوبية', field: 'حوسبة', model: 'تحليل DNA لاكتشاف طفرة',
+      imagine: 'أنت مُحقّق — أمامك كتاب من ثلاثة مليارات حرف، وتبحث عن خطأ مطبعي واحد. عينك لن تكفي، تحتاج خوارزمية.',
+      yourDay: ['تكتب كوداً لتحليل التسلسلات', 'تقارنها بقواعد بيانات عالمية', 'تستخرج النمط المتكرر', 'تفسّر علاقته بالمرض'],
       around: 'فحوصات النسب الجينية، اكتشاف الأمراض الوراثية.',
       fact: 'الذكاء الاصطناعي صار يتنبأ بشكل البروتينات خلال ثواني بدل سنوات بحث!',
       career: 'شركات التقنية، مراكز الجينوم، أبحاث الأدوية.' },
-    en: { name: 'Bioinformatics', field: 'Computing', model: 'Analyzing DNA to detect a mutation',
-      short: 'Using programming and computers to analyze genetic and biological data.',
+    en: { name: 'Bioinformatics & Computational Biology', field: 'Computing', model: 'Analyzing DNA to detect a mutation',
+      imagine: "You're a detective — in front of you is a book of three billion letters, and you're hunting a single typo. Your eyes won't do it; you need an algorithm.",
+      yourDay: ['You write code to analyze sequences', 'compare them against global databases', 'extract the recurring pattern', 'explain its link to disease'],
       around: 'Ancestry DNA tests, genetic disease discovery.',
       fact: 'AI can now predict protein shapes in seconds instead of years of research!',
       career: 'Tech companies, genome centers, drug research.' }
@@ -85,25 +95,29 @@ export const specialties = [
   {
     id: 'biomech', codes: ['R', 'I', 'A'], emoji: '🦾', color: '#0A392B',
     ar: { name: 'الميكانيكا الحيوية', field: 'فيزياء / حركة', model: 'طرف اصطناعي',
-      short: 'دراسة حركة الجسم وتصميم أجهزة تساعد أو تعوّض الحركة.',
+      imagine: 'أنت مهندس ميكانيكا — لكن الآلة التي تدرسها جسمُ إنسان: العظام روافع، والمفاصل مفصّلات، والعضلات محرّكات.',
+      yourDay: ['تصوّر الحركة بكاميرات وحسّاسات', 'تحسب القوى على كل مفصل', 'تصمّم الطرف أو الجهاز', 'تختبره على أرض الواقع'],
       around: 'الأطراف الصناعية، تحليل حركة الرياضيين.',
       fact: 'بعض الأطراف الصناعية الحديثة تتحرك بإشارات مباشرة من الدماغ!',
       career: 'مراكز التأهيل، شركات الأطراف الصناعية والروبوتات الطبية.' },
     en: { name: 'Biomechanics', field: 'Physics / Motion', model: 'A prosthetic limb',
-      short: 'Studying body movement and designing devices that assist or replace motion.',
+      imagine: "You're a mechanical engineer — but the machine you study is a human body: bones are levers, joints are hinges, muscles are motors.",
+      yourDay: ['You capture motion with cameras and sensors', 'calculate the forces on each joint', 'design the limb or device', 'test it in the real world'],
       around: 'Prosthetic limbs, athlete movement analysis.',
       fact: 'Some modern prosthetics move directly from brain signals!',
       career: 'Rehab centers, prosthetics and medical robotics companies.' }
   },
   {
     id: 'environ', codes: ['R', 'I', 'E'], emoji: '🌱', color: '#047857',
-    ar: { name: 'الهندسة البيئية والزراعية الحيوية', field: 'بيئة / زراعة', model: 'ميكروبات تنقّي المياه',
-      short: 'استخدام الكائنات الحية لحل مشاكل البيئة والزراعة.',
+    ar: { name: 'الهندسة الحيوية البيئية والزراعية', field: 'بيئة / زراعة', model: 'ميكروبات تنقّي المياه',
+      imagine: 'أنت تُوظّف عمال نظافة — لكنهم كائنات دقيقة: تأكل التلوّث وتترك ماءً أنظف، وأجرها الوجبة نفسها.',
+      yourDay: ['تعزل ميكروبات من البيئة', 'تختبر ما تستطيع هضمه', 'تصمّم النظام حولها', 'تقيس أداءه في الميدان لا في المختبر'],
       around: 'محطات معالجة المياه، الأسمدة الحيوية.',
       fact: 'فيه ميكروبات تأكل الملوثات وتنظّف المياه والتربة طبيعياً!',
       career: 'شركات البيئة، محطات المعالجة، مشاريع الزراعة الحيوية.' },
     en: { name: 'Environmental & Agricultural Bioengineering', field: 'Environment / Agriculture', model: 'Microbes purifying water',
-      short: 'Using living organisms to solve environmental and agricultural problems.',
+      imagine: "You're hiring a cleaning crew — except they're microbes: they eat pollution and leave cleaner water, and their wage is the meal itself.",
+      yourDay: ['You isolate microbes from the environment', 'test what they can digest', 'design the system around them', 'measure performance in the field, not the lab'],
       around: 'Water treatment plants, bio-fertilizers.',
       fact: 'Some microbes eat pollutants and clean water and soil naturally!',
       career: 'Environmental companies, treatment plants, bio-agriculture projects.' }
@@ -327,12 +341,12 @@ export const forcedChoiceQuestions = [
 ];
 
 // ============================================================
-// دالة حساب النتيجة — تحترم ترتيب أحرف هولاند
+// دالة حساب النتيجة — تحترم ترتيب أحرف نمط الميول
 // المنطق: الحرف الأول (العائلة) له أعلى وزن، ثم الثاني، ثم الثالث.
 // نطابق كود الطالب المرتّب مع كود كل تخصص بحسب موقع كل حرف.
 // أسئلة المفاضلة (وزن +2) ترجّح الكفّة عند تقارب العائلة.
 // ============================================================
-export function computeHollandResult(answers) {
+export function computeResult(answers) {
   // 1) جمع نقاط كل نمط
   const scores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
 

@@ -4,7 +4,7 @@ import {
   Home, Compass, Star, ChevronDown, ChevronUp, ArrowLeft
 } from 'lucide-react';
 import {
-  hollandTypes, specialties, quizQuestions, forcedChoiceQuestions, computeHollandResult
+  interestTypes, specialties, quizQuestions, forcedChoiceQuestions, computeResult
 } from './quizData.js';
 
 /* ============ الترجمة ============ */
@@ -28,17 +28,36 @@ const translations = {
     noAccount: 'ليس لديك حساب؟', signupNow: 'اشترك الآن',
     haveAccount: 'لديك حساب بالفعل؟', loginNow: 'تسجيل الدخول',
     profile: 'ملفي', navHome: 'الرئيسية', navSpecialties: 'المسارات', navQuiz: 'الاختبار', navResults: 'النتائج',
-    welcomeBack: 'أهلاً', homeIntro: 'هذا الموقع يساعدك تكتشف أي مسار دقيق داخل الهندسة الحيوية يناسب ميولك وشخصيتك، عن طريق اختبار علمي يعتمد على نموذج هولاند للميول المهنية.',
+    welcomeBack: 'أهلاً', homeIntro: 'هذا الموقع يساعدك تكتشف أي مسار دقيق داخل الهندسة الحيوية يناسب ميولك وشخصيتك.',
     startJourney: 'ابدأ الاختبار الآن', retakeQuiz: 'أعد الاختبار', seeMyResult: 'شوف نتيجتك', browseSpecialties: 'تصفح المسارات',
     specialtiesTitle: 'المسارات الدقيقة', specialtiesDesc: 'تعرف على كل مسار بلغة بسيطة — قبل أو بعد الاختبار',
-    suitableType: 'يناسب النمط', inShort: 'باختصار', around: 'تراه حولك في', fact: 'هل تعلم؟', career: 'أين تعمل؟',
+    suitableType: 'يناسب النمط', imagine: 'تخيّلها كذا', yourDay: 'يومك فيه', around: 'تراه حولك في', fact: 'هل تعلم؟', career: 'أين تعمل؟',
+    heroTitle: 'أن تُهندس شيئاً حيّاً',
+    heroBody: 'المهندس المعتاد يعمل بالحديد والإسمنت والسيليكون: مواد صامتة تفعل ما يُملى عليها بالضبط. أمّا أنت فتعمل بمادة تنمو، وتتغيّر، وتقاوم، وتموت. هذا ما يجعل المجال أصعب — وأمتع.',
+    whatIsTitle: 'ما الهندسة الحيوية؟',
+    whatIsP1: 'باختصار: تأخذ أدوات المهندس — التصميم، والقياس، والتحسين — وتطبّقها على الأنظمة الحيّة. الهدف قد يكون علاج مرض، أو إنتاج دواء، أو تنظيف مياه ملوّثة، أو زراعة محصول يتحمّل الملوحة.',
+    whatIsP2: 'الفارق الجوهري أن مادتك الخام لها «رأي». الجسر لا يرفض تصميمك، لكن الخليّة قد ترفضه، والجسم قد يهاجم ما زرعته فيه. لهذا يتعلّم مهندس الحياة شيئاً لا يتعلّمه غيره: كيف يصمّم لشيء يردّ عليه.',
+    noticeText: 'التباس شائع يستحق التوضيح: الهندسة الطبية الحيوية فرعٌ يركّز على الأجهزة والتطبيقات الطبية. أمّا الهندسة الحيوية فأوسع — الطب أحد ميادينها، ومعه الزراعة والبيئة والصناعة والحوسبة. أنت في المظلّة الكبرى، لا في الفرع.',
+    whyTitle: 'لماذا تعرف التخصصات الدقيقة؟',
+    why1T: 'الاسم واحد، والمهن مختلفة تماماً',
+    why1B: 'تحت مظلّة «هندسة حيوية» يجلس من يقضي يومه كاتباً كوداً، ومن يقضيه تحت مجهر، ومن يقضيه في مصنع. الفرق بين يومَي اثنين منهم أكبر من الفرق بين كليّتين مختلفتين.',
+    why2T: 'القرار يأتي أبكر ممّا تتوقّع',
+    why2B: 'المواد الاختيارية، ومشروع التخرّج، والتدريب الصيفي — كلّها تبدأ تسألك «أي اتجاه؟» قبل أن تشعر بأنك جاهز للإجابة.',
+    why3T: 'السنة الأولى وقت رخيص للتجربة',
+    why3B: 'أن تكتشف أن مساراً لا يناسبك وأنت في السنة الأولى مكسب. أن تكتشف ذلك في السنة الرابعة مكلف.',
+    purposeTitle: 'ما الذي يفعله هذا الموقع؟',
+    purposeP1: 'هو بوصلة، لا خريطة. لن يقرّر عنك، ولن يقول لك «ادرس هذا». وظيفته أبسط وأهم: أن يجعل الخيارات السبعة واضحة في ذهنك، وأن يريك أيّها يشبه ميولك أنت.',
+    purposeP2: 'لهذا يقوم على جزأين: بطاقات تشرح كل مسار بلغة يفهمها من لا خلفية له، واختبار مبنيّ على مقياس علمي للميول المهنية، مُكيّف خصيصاً لهذا المجال، يقرأ نمط ميولك ويدلّك على أقرب مسار إليه.',
     field: 'المجال', example: 'مثال', takeTestForThis: 'خذ الاختبار لتعرف مدى ملاءمتك لهذا المسار',
     yourMatch: 'الأقرب لك', profileInfo: 'الملف الشخصي', edit: 'تعديل', name: 'الاسم', notEntered: 'لم يُدخل',
     joinDate: 'تاريخ الانضمام', save: 'حفظ', cancel: 'إلغاء',
-    quizTitle: 'اختبار اكتشاف المسار', quizIntro: 'اختبار الميول المهنية (نموذج هولاند)',
+    quizTitle: 'اختبار اكتشاف المسار', quizIntro: 'مقياس ميول مبني على أسس علمية معتمدة',
     quizDesc: 'أجب بصراحة حسب ميولك الحقيقية — ما فيه إجابة صح أو غلط. اختر ما يمثلك أكثر في كل موقف.',
     quizNote: 'الاختبار 33 موقف. آخر 3 مواقف اختيار إجباري بين خيارين.',
-    startQuiz: 'ابدأ الاختبار', forcedSection: 'أسئلة المفاضلة — اختر واحداً فقط',
+    startQuiz: 'ابدأ الاختبار', forcedSection: 'سؤال مفاضلة — اختر واحداً فقط',
+    resumeQuiz: 'أكمل من حيث وقفت', restartQuiz: 'ابدأ من جديد', resumeNote: 'عندك تقدّم محفوظ',
+    questionOf: 'سؤال', prevQ: 'السابق', encourage1: 'ممتاز، أنت في الطريق 🌿', encourage2: 'نصف الطريق! استمر 💚', encourage3: 'اقتربت من النهاية ✨',
+    orChoose: 'أو',
     submitQuiz: 'أظهر نتيجتي', answered: 'أُجيب', of: 'من',
     yourCode: 'رمز شخصيتك المهنية', yourTopMatches: 'أقرب المسارات لك',
     resultTitle: 'نتيجتك', recommendations: 'توصيات وتواصل', internalUni: '🏫 داخل الجامعة', externalUni: '🌍 خارج الجامعة',
@@ -67,17 +86,36 @@ const translations = {
     noAccount: "Don't have an account?", signupNow: 'Sign up now',
     haveAccount: 'Already have an account?', loginNow: 'Login',
     profile: 'Profile', navHome: 'Home', navSpecialties: 'Specialties', navQuiz: 'Quiz', navResults: 'Results',
-    welcomeBack: 'Welcome', homeIntro: 'This site helps you discover which precise bioengineering specialty fits your interests and personality, through a scientific quiz based on the Holland career-interest model.',
+    welcomeBack: 'Welcome', homeIntro: 'This site helps you discover which precise bioengineering specialty fits your interests and personality.',
     startJourney: 'Start the Quiz', retakeQuiz: 'Retake Quiz', seeMyResult: 'See Your Result', browseSpecialties: 'Browse Specialties',
     specialtiesTitle: 'Precise Specialties', specialtiesDesc: 'Learn about each specialty in simple terms — before or after the quiz',
-    suitableType: 'Suits the', inShort: 'Overview', around: 'Real-world examples', fact: 'Did You Know?', career: 'Career Opportunities',
+    suitableType: 'Suits the', imagine: 'Picture it like this', yourDay: 'Your day looks like', around: 'Real-world examples', fact: 'Did You Know?', career: 'Career Opportunities',
+    heroTitle: 'Engineering something alive',
+    heroBody: 'The usual engineer works with steel, concrete, and silicon: silent materials that do exactly what they are told. You, on the other hand, work with material that grows, changes, resists, and dies. That is what makes this field harder — and far more interesting.',
+    whatIsTitle: 'What is Bioengineering?',
+    whatIsP1: 'In short: you take an engineer\u2019s tools — design, measurement, optimization — and apply them to living systems. The goal might be curing a disease, producing a drug, cleaning polluted water, or growing a salt-tolerant crop.',
+    whatIsP2: 'The fundamental difference is that your raw material has an opinion. A bridge does not reject your design, but a cell might, and the body may attack what you implanted in it. That is why a life engineer learns something no one else does: how to design for something that answers back.',
+    noticeText: 'A common confusion worth clearing up: Biomedical Engineering is a branch focused on medical devices and applications. Bioengineering is broader — medicine is one of its fields, alongside agriculture, environment, industry, and computing. You are under the larger umbrella, not the branch.',
+    whyTitle: 'Why learn the precise specialties?',
+    why1T: 'One name, completely different careers',
+    why1B: 'Under the label \u201cbioengineering\u201d sits someone who spends the day writing code, someone under a microscope, and someone in a factory. The gap between any two of their days is bigger than the gap between two different colleges.',
+    why2T: 'The decision comes earlier than you expect',
+    why2B: 'Electives, the graduation project, the summer internship — they all start asking \u201cwhich direction?\u201d before you feel ready to answer.',
+    why3T: 'First year is cheap time to experiment',
+    why3B: 'Discovering a path does not suit you in your first year is a win. Discovering it in your fourth year is expensive.',
+    purposeTitle: 'What does this site do?',
+    purposeP1: 'It is a compass, not a map. It will not decide for you, and it will not tell you \u201cstudy this.\u201d Its job is simpler and more important: to make the seven options clear in your mind, and to show you which one resembles your own interests.',
+    purposeP2: 'That is why it has two parts: cards explaining each path in language anyone can follow, and an assessment built on a scientific career-interest scale, adapted specifically for this field, that reads your interest profile and points you to the closest path.',
     field: 'Field', example: 'Example', takeTestForThis: 'Take the quiz to see how well this path suits you',
     yourMatch: 'Your Match', profileInfo: 'Profile', edit: 'Edit', name: 'Name', notEntered: 'Not entered',
     joinDate: 'Join Date', save: 'Save', cancel: 'Cancel',
-    quizTitle: 'Discover Your Path Quiz', quizIntro: 'Career Interest Assessment (Holland Model)',
+    quizTitle: 'Discover Your Path Quiz', quizIntro: 'A career-interest scale built on established scientific foundations',
     quizDesc: "Answer honestly based on your real interests — there's no right or wrong. Choose what represents you most in each situation.",
     quizNote: 'The quiz has 33 situations. The last 3 are forced choices between two options.',
-    startQuiz: 'Start Quiz', forcedSection: 'Forced-choice questions — pick only one',
+    startQuiz: 'Start Quiz', forcedSection: 'Forced choice — pick only one',
+    resumeQuiz: 'Resume where you left off', restartQuiz: 'Start over', resumeNote: 'You have saved progress',
+    questionOf: 'Question', prevQ: 'Previous', encourage1: "Great, you're on your way 🌿", encourage2: 'Halfway there! Keep going 💚', encourage3: "Almost done ✨",
+    orChoose: 'or',
     submitQuiz: 'Show My Result', answered: 'Answered', of: 'of',
     yourCode: 'Your Career Personality Code', yourTopMatches: 'Your Closest Specialties',
     resultTitle: 'Your Result', recommendations: 'Recommendations & Contacts', internalUni: '🏫 Inside University', externalUni: '🌍 Outside University',
@@ -106,6 +144,8 @@ export default function BioPath() {
   const [isQuizStarted, setIsQuizStarted] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState({});
   const [quizResult, setQuizResult] = useState(null);
+  const [quizIndex, setQuizIndex] = useState(0);
+  const [savedProgress, setSavedProgress] = useState(0);
   const [expanded, setExpanded] = useState(null);
 
   const [formData, setFormData] = useState({ email: '', password: '', name: '', bio: '' });
@@ -115,6 +155,14 @@ export default function BioPath() {
     if (savedUser) { setCurrentUser(JSON.parse(savedUser)); setIsLoggedIn(true); }
     const savedLang = localStorage.getItem('appLang');
     if (savedLang) setLang(savedLang);
+    try {
+      const prog = JSON.parse(localStorage.getItem('quizProgress') || 'null');
+      if (prog && prog.answers && Object.keys(prog.answers).length > 0) {
+        setQuizAnswers(prog.answers);
+        setSavedProgress(Object.keys(prog.answers).length);
+        setQuizIndex(prog.index || 0);
+      }
+    } catch (e) { /* تجاهل أي بيانات تالفة */ }
   }, []);
 
   const toggleLang = () => {
@@ -195,13 +243,15 @@ export default function BioPath() {
 
   const handleSubmitQuiz = () => {
     if (!allAnswered) { alert(t.mustAnswerAll); return; }
-    const result = computeHollandResult(quizAnswers);
+    const result = computeResult(quizAnswers);
     const attempt = {
       date: new Date().toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US'),
       time: new Date().toLocaleTimeString(lang === 'ar' ? 'ar-SA' : 'en-US'),
       ...result
     };
     setQuizResult(attempt);
+    localStorage.removeItem('quizProgress');
+    setSavedProgress(0);
     const u = { ...currentUser, quizAttempts: [...(currentUser.quizAttempts || []), attempt] };
     localStorage.setItem('currentUser', JSON.stringify(u));
     // نحفظ في سجل الحسابات فقط لمن ثبّت حسابه بإيميل
@@ -214,7 +264,7 @@ export default function BioPath() {
   };
 
   const getSpecialty = (id) => specialties.find(s => s.id === id);
-  // نقبل فقط المحاولات السليمة (بنظام هولاند الجديد) ونتجاهل أي بيانات قديمة تالفة
+  // نقبل فقط المحاولات السليمة بالنظام الجديد ونتجاهل أي بيانات قديمة تالفة
   const validAttempts = (currentUser?.quizAttempts || []).filter(
     a => a && Array.isArray(a.topCode) && Array.isArray(a.matches) && a.matches.length > 0
   );
@@ -404,20 +454,56 @@ export default function BioPath() {
 
         {/* ============ الرئيسية ============ */}
         {currentPage === 'home' && (
-          <div className="rounded-2xl shadow-xl p-8 md:p-12 text-white text-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0A392B 0%, #047857 55%, #10B981 100%)' }}>
-            <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-10" style={{ backgroundColor: '#10B981', transform: 'translate(30%,-30%)' }}></div>
-            <div className="relative">
-              <div className="inline-flex mb-4">
-                <img src="/logo.png" alt="Bio Path" className="w-44 object-contain" style={{ filter: 'drop-shadow(0 16px 32px rgba(16,185,129,0.5))' }} />
+          <div className="space-y-6">
+
+            {/* القسم ب — العنوان الرئيسي */}
+            <div className="rounded-2xl shadow-xl p-8 md:p-12 text-white text-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0A392B 0%, #047857 55%, #10B981 100%)' }}>
+              <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-10" style={{ backgroundColor: '#10B981', transform: 'translate(30%,-30%)' }}></div>
+              <div className="relative">
+                <div className="inline-flex mb-3">
+                  <img src="/logo.png" alt="Bio Path" className="w-40 object-contain" style={{ filter: 'drop-shadow(0 16px 32px rgba(16,185,129,0.5))' }} />
+                </div>
+                <p className="text-emerald-100 mb-2">{t.welcomeBack}، {currentUser.name} 👋</p>
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">{t.heroTitle}</h2>
+                <p className="text-emerald-50 max-w-2xl mx-auto leading-relaxed">{t.heroBody}</p>
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-3">{t.welcomeBack}، {currentUser.name}! 👋</h2>
-              <p className="text-emerald-50 max-w-xl mx-auto mb-8 leading-relaxed">{t.homeIntro}</p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <button onClick={() => setCurrentPage('quiz')} className="font-bold px-6 py-3 rounded-lg transition hover:opacity-90" style={{ backgroundColor: '#10B981', color: '#04231A' }}>
+            </div>
+
+            {/* القسم ج — ما الهندسة الحيوية؟ */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+              <h3 className="text-2xl font-bold mb-4" style={{ color: '#0A392B' }}>{t.whatIsTitle}</h3>
+              <p className="text-gray-700 leading-relaxed mb-3">{t.whatIsP1}</p>
+              <p className="text-gray-700 leading-relaxed mb-5">{t.whatIsP2}</p>
+              <div className="rounded-xl p-4 border-s-4" style={{ backgroundColor: 'rgba(16,185,129,0.07)', borderColor: '#10B981' }}>
+                <p className="text-gray-700 text-sm leading-relaxed">💡 {t.noticeText}</p>
+              </div>
+            </div>
+
+            {/* القسم د — لماذا تعرف التخصصات الدقيقة؟ */}
+            <div>
+              <h3 className="text-2xl font-bold mb-4" style={{ color: '#0A392B' }}>{t.whyTitle}</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[[t.why1T, t.why1B], [t.why2T, t.why2B], [t.why3T, t.why3B]].map(([title, body], i) => (
+                  <div key={i} className="bg-white rounded-2xl shadow-md p-5 border-t-4" style={{ borderColor: ['#0A392B', '#059669', '#10B981'][i] }}>
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold mb-3 text-white" style={{ backgroundColor: ['#0A392B', '#059669', '#10B981'][i] }}>{i + 1}</div>
+                    <p className="font-bold mb-2" style={{ color: '#0A392B' }}>{title}</p>
+                    <p className="text-gray-600 text-sm leading-relaxed">{body}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* القسم هـ — الهدف من الموقع + زر الاختبار */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+              <h3 className="text-2xl font-bold mb-4" style={{ color: '#0A392B' }}>{t.purposeTitle}</h3>
+              <p className="text-gray-700 leading-relaxed mb-3">{t.purposeP1}</p>
+              <p className="text-gray-700 leading-relaxed mb-6">{t.purposeP2}</p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button onClick={() => setCurrentPage('quiz')} className="font-bold px-6 py-3 rounded-xl transition hover:opacity-90 text-white" style={{ background: 'linear-gradient(90deg, #0A392B 0%, #059669 100%)' }}>
                   {hasAttempts ? t.retakeQuiz : t.startJourney}
                 </button>
-                {hasAttempts && <button onClick={() => setCurrentPage('results')} className="bg-white/15 hover:bg-white/25 font-bold px-6 py-3 rounded-lg transition">{t.seeMyResult}</button>}
-                <button onClick={() => setCurrentPage('specialties')} className="bg-white/15 hover:bg-white/25 font-bold px-6 py-3 rounded-lg transition">{t.browseSpecialties}</button>
+                {hasAttempts && <button onClick={() => setCurrentPage('results')} className="font-bold px-6 py-3 rounded-xl transition" style={{ backgroundColor: 'rgba(16,185,129,0.12)', color: '#047857' }}>{t.seeMyResult}</button>}
+                <button onClick={() => setCurrentPage('specialties')} className="font-bold px-6 py-3 rounded-xl transition" style={{ backgroundColor: 'rgba(16,185,129,0.12)', color: '#047857' }}>{t.browseSpecialties}</button>
               </div>
             </div>
           </div>
@@ -435,7 +521,7 @@ export default function BioPath() {
                 const isExp = expanded === s.id;
                 const isTop = topMatchId === s.id;
                 const d = s[lang];
-                const primaryType = hollandTypes[s.codes[0]];
+                const primaryType = interestTypes[s.codes[0]];
                 return (
                   <div key={s.id}
                     className="rounded-2xl overflow-hidden transition-all duration-300 backdrop-blur-sm"
@@ -465,10 +551,11 @@ export default function BioPath() {
 
                     {isExp && (
                       <div className="px-4 pb-4 space-y-2.5">
-                        <MiniCard title={t.inShort} text={d.short} color="#0A392B" />
-                        <MiniCard title={`📍 ${t.around}`} text={d.around} color="#047857" />
-                        <MiniCard title={`🔬 ${t.fact}`} text={d.fact} color="#059669" />
-                        <MiniCard title={`💼 ${t.career}`} text={d.career} color="#10B981" />
+                        <MiniCard title={`💡 ${t.imagine}`} text={d.imagine} color="#0A392B" />
+                        <MiniCard title={`🗓️ ${t.yourDay}`} steps={d.yourDay} color="#047857" />
+                        <MiniCard title={`📍 ${t.around}`} text={d.around} color="#059669" />
+                        <MiniCard title={`🔬 ${t.fact}`} text={d.fact} color="#10B981" />
+                        <MiniCard title={`💼 ${t.career}`} text={d.career} color="#34D399" />
                         <button onClick={() => { setCurrentPage('quiz'); setExpanded(null); }}
                           className="w-full mt-2 text-white text-sm font-semibold py-2.5 rounded-lg transition hover:opacity-90 flex items-center justify-center gap-1"
                           style={{ background: 'linear-gradient(180deg, #0A392B 0%, #065F46 100%)' }}>
@@ -483,7 +570,7 @@ export default function BioPath() {
           </div>
         )}
 
-        {/* ============ الاختبار ============ */}
+        {/* ============ الاختبار — سؤال واحد بالشاشة ============ */}
         {currentPage === 'quiz' && (
           <div>
             {!isQuizStarted && !quizResult ? (
@@ -495,38 +582,44 @@ export default function BioPath() {
                 <p className="font-semibold mb-3" style={{ color: '#059669' }}>{t.quizIntro}</p>
                 <p className="text-gray-600 mb-2 max-w-lg mx-auto">{t.quizDesc}</p>
                 <p className="text-gray-400 text-sm mb-6">{t.quizNote}</p>
-                <button onClick={() => { setIsQuizStarted(true); setQuizAnswers({}); }} className="text-white px-8 py-3 rounded-lg font-bold transition hover:opacity-90" style={{ backgroundColor: '#059669' }}>{t.startQuiz}</button>
+                {savedProgress > 0 && (
+                  <p className="text-sm mb-4" style={{ color: '#047857' }}>💾 {t.resumeNote} ({savedProgress}/{allQuestions.length})</p>
+                )}
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  {savedProgress > 0 && (
+                    <button onClick={() => { setIsQuizStarted(true); setQuizIndex(Math.min(savedProgress, allQuestions.length - 1)); }}
+                      className="text-white px-8 py-3 rounded-xl font-bold transition hover:opacity-90" style={{ backgroundColor: '#059669' }}>{t.resumeQuiz}</button>
+                  )}
+                  <button onClick={() => { setIsQuizStarted(true); setQuizAnswers({}); setQuizIndex(0); localStorage.removeItem('quizProgress'); }}
+                    className="px-8 py-3 rounded-xl font-bold transition hover:opacity-90"
+                    style={savedProgress > 0 ? { backgroundColor: 'rgba(16,185,129,0.12)', color: '#047857' } : { backgroundColor: '#059669', color: 'white' }}>
+                    {savedProgress > 0 ? t.restartQuiz : t.startQuiz}
+                  </button>
+                </div>
               </div>
             ) : isQuizStarted && !quizResult ? (
-              <div className="bg-white rounded-2xl shadow-lg p-5 md:p-8">
-                <h2 className="text-2xl font-bold mb-6" style={{ color: '#0A392B' }}>{t.quizTitle}</h2>
-                <div className="space-y-5">
-                  {quizQuestions.map((q, index) => (
-                    <QuestionCard key={q.id} q={q} index={index} total={allQuestions.length} lang={lang}
-                      selected={quizAnswers[q.id]} onSelect={(type) => setQuizAnswers(prev => ({ ...prev, [q.id]: type }))} />
-                  ))}
-
-                  {/* قسم المفاضلة */}
-                  <div className="pt-4">
-                    <div className="rounded-xl p-4 mb-4" style={{ background: 'linear-gradient(180deg, #0A392B 0%, #065F46 100%)' }}>
-                      <p className="text-white font-bold text-center">⚖️ {t.forcedSection}</p>
-                    </div>
-                    {forcedChoiceQuestions.map((q, i) => (
-                      <QuestionCard key={q.id} q={q} index={quizQuestions.length + i} total={allQuestions.length} lang={lang} forced
-                        selected={quizAnswers[q.id]} onSelect={(type) => setQuizAnswers(prev => ({ ...prev, [q.id]: type }))} />
-                    ))}
-                  </div>
-                </div>
-
-                <button onClick={handleSubmitQuiz} disabled={!allAnswered}
-                  className="w-full mt-8 text-white font-bold py-3 rounded-lg transition disabled:opacity-40" style={{ backgroundColor: allAnswered ? '#059669' : '#9CA3AF' }}>
-                  {t.submitQuiz} ({answeredCount}/{allQuestions.length})
-                </button>
-              </div>
+              <QuizRunner
+                t={t} lang={lang}
+                questions={allQuestions}
+                forcedStart={quizQuestions.length}
+                index={quizIndex}
+                answers={quizAnswers}
+                onAnswer={(qid, type) => {
+                  const next = { ...quizAnswers, [qid]: type };
+                  setQuizAnswers(next);
+                  const nextIdx = quizIndex + 1;
+                  localStorage.setItem('quizProgress', JSON.stringify({ answers: next, index: Math.min(nextIdx, allQuestions.length - 1) }));
+                  if (nextIdx < allQuestions.length) setTimeout(() => setQuizIndex(nextIdx), 180);
+                }}
+                onBack={() => setQuizIndex(Math.max(0, quizIndex - 1))}
+                onSubmit={handleSubmitQuiz}
+                allAnswered={allAnswered}
+                answeredCount={answeredCount}
+              />
             ) : quizResult && (
               <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
                 <ResultView t={t} lang={lang} result={quizResult} getSpecialty={getSpecialty}
-                  onBack={() => { setIsQuizStarted(false); setQuizResult(null); setQuizAnswers({}); setCurrentPage('results'); }} />
+                  onBack={() => { setIsQuizStarted(false); setQuizResult(null); setQuizAnswers({}); setQuizIndex(0); setCurrentPage('results'); }} />
               </div>
             )}
           </div>
@@ -563,7 +656,7 @@ export default function BioPath() {
               </>
             ) : (
               <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
-                <Award className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <Compass className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <p className="text-gray-500 text-lg">{t.noQuizzes}</p>
                 <p className="text-gray-400 text-sm">{t.startFirst}</p>
               </div>
@@ -587,39 +680,135 @@ function Field({ label, name, type = 'text', value, onChange, required, small })
   );
 }
 
-function MiniCard({ title, text, color }) {
+function MiniCard({ title, text, steps, color }) {
   return (
     <div className="rounded-lg p-3" style={{ backgroundColor: color + '0D' }}>
-      <p className="font-semibold text-sm mb-0.5" style={{ color }}>{title}</p>
-      <p className="text-gray-600 text-sm leading-relaxed">{text}</p>
+      <p className="font-semibold text-sm mb-1" style={{ color }}>{title}</p>
+      {steps ? (
+        <ul className="space-y-1">
+          {steps.map((st, i) => (
+            <li key={i} className="text-gray-600 text-sm leading-relaxed flex gap-2">
+              <span style={{ color }}>·</span><span>{st}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-gray-600 text-sm leading-relaxed">{text}</p>
+      )}
     </div>
   );
 }
 
-function QuestionCard({ q, index, total, lang, selected, onSelect, forced }) {
+function QuizRunner({ t, lang, questions, forcedStart, index, answers, onAnswer, onBack, onSubmit, allAnswered, answeredCount }) {
+  const safeIndex = Math.max(0, Math.min(index, questions.length - 1));
+  const q = questions[safeIndex];
+  if (!q) return null;
+  const isForced = safeIndex >= forcedStart;
+  const total = questions.length;
+  const progress = Math.round((answeredCount / total) * 100);
+  const isLast = safeIndex === total - 1;
+
+  // رسالة تشجيع عند محطات معيّنة
+  let encourage = null;
+  if (answeredCount === 10) encourage = t.encourage1;
+  else if (answeredCount === Math.floor(total / 2)) encourage = t.encourage2;
+  else if (answeredCount === total - 5) encourage = t.encourage3;
+
   return (
-    <div className="border rounded-xl p-5" style={{ borderColor: forced ? '#10B981' : 'rgba(10,57,43,0.12)', backgroundColor: forced ? 'rgba(16,185,129,0.03)' : 'white' }}>
-      <div className="flex items-center gap-3 mb-4">
-        <div className="text-white px-2.5 py-1 rounded-full text-xs font-bold shrink-0" style={{ backgroundColor: '#0A392B' }}>{index + 1}/{total}</div>
-        <p className="font-semibold text-gray-800 flex-1">{q[lang]}</p>
+    <div className="bg-white rounded-2xl shadow-lg p-5 md:p-8">
+      {/* شريط التقدّم */}
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-2 text-sm">
+          <span className="font-semibold" style={{ color: '#0A392B' }}>{t.questionOf} {safeIndex + 1} / {total}</span>
+          <span className="font-bold" style={{ color: '#059669' }}>{progress}%</span>
+        </div>
+        <div className="w-full rounded-full h-2.5" style={{ backgroundColor: 'rgba(10,57,43,0.08)' }}>
+          <div className="h-2.5 rounded-full transition-all duration-500"
+            style={{ width: `${progress}%`, background: 'linear-gradient(90deg, #0A392B 0%, #10B981 100%)' }} />
+        </div>
       </div>
-      <div className="grid grid-cols-1 gap-2">
-        {q.options.map((opt, i) => {
-          const isSel = selected === opt.type;
-          return (
-            <button key={i} onClick={() => onSelect(opt.type)}
-              className="text-start px-4 py-2.5 rounded-lg text-sm font-medium transition border"
-              style={isSel
-                ? { backgroundColor: '#10B981', color: '#04231A', borderColor: '#10B981' }
-                : { backgroundColor: '#F9FAFB', color: '#374151', borderColor: 'rgba(10,57,43,0.08)' }}>
-              {opt[lang]}
-            </button>
-          );
-        })}
+
+      {encourage && (
+        <div className="text-center mb-4 py-2 rounded-lg text-sm font-semibold"
+          style={{ backgroundColor: 'rgba(16,185,129,0.1)', color: '#047857' }}>{encourage}</div>
+      )}
+
+      {isForced && (
+        <div className="rounded-xl p-3 mb-5 text-center" style={{ background: 'linear-gradient(180deg, #0A392B 0%, #065F46 100%)' }}>
+          <p className="text-white font-bold text-sm">⚖️ {t.forcedSection}</p>
+        </div>
+      )}
+
+      {/* نص السؤال */}
+      <div key={q.id} className="animate-[fadeIn_0.25s_ease]">
+        <p className="text-lg md:text-xl font-bold mb-6 leading-relaxed text-center" style={{ color: '#0A392B' }}>
+          {q[lang]}
+        </p>
+
+        {/* الخيارات */}
+        {isForced ? (
+          /* كفّتا ميزان للمفاضلة */
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
+            {q.options.map((opt, i) => {
+              const sel = answers[q.id] === opt.type;
+              return (
+                <button key={i} onClick={() => onAnswer(q.id, opt.type)}
+                  className="p-6 rounded-2xl text-center font-semibold transition-all duration-200 border-2 hover:scale-[1.02]"
+                  style={sel
+                    ? { backgroundColor: '#10B981', color: '#04231A', borderColor: '#059669', boxShadow: '0 8px 24px rgba(16,185,129,0.3)' }
+                    : { backgroundColor: '#F9FAFB', color: '#374151', borderColor: 'rgba(10,57,43,0.12)' }}>
+                  <div className="text-2xl mb-2">{i === 0 ? '⚖️' : '⚖️'}</div>
+                  {opt[lang]}
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          /* بطاقات كبيرة للخيارات الأربعة */
+          <div className="space-y-3">
+            {q.options.map((opt, i) => {
+              const sel = answers[q.id] === opt.type;
+              const letter = ['أ', 'ب', 'ج', 'د'][i];
+              const letterEn = ['A', 'B', 'C', 'D'][i];
+              return (
+                <button key={i} onClick={() => onAnswer(q.id, opt.type)}
+                  className="w-full text-start p-4 rounded-2xl transition-all duration-200 border-2 flex items-start gap-3 hover:scale-[1.01]"
+                  style={sel
+                    ? { backgroundColor: '#10B981', color: '#04231A', borderColor: '#059669', boxShadow: '0 8px 24px rgba(16,185,129,0.28)' }
+                    : { backgroundColor: '#F9FAFB', color: '#374151', borderColor: 'rgba(10,57,43,0.1)' }}>
+                  <span className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm"
+                    style={sel ? { backgroundColor: '#04231A', color: '#10B981' } : { backgroundColor: 'rgba(10,57,43,0.08)', color: '#0A392B' }}>
+                    {lang === 'ar' ? letter : letterEn}
+                  </span>
+                  <span className="font-medium leading-relaxed pt-1">{opt[lang]}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* أزرار التنقّل */}
+      <div className="flex items-center justify-between mt-7 gap-3">
+        <button onClick={onBack} disabled={safeIndex === 0}
+          className="px-5 py-2.5 rounded-xl text-sm font-semibold transition disabled:opacity-30"
+          style={{ backgroundColor: 'rgba(10,57,43,0.07)', color: '#0A392B' }}>
+          ‹ {t.prevQ}
+        </button>
+
+        {isLast && (
+          <button onClick={onSubmit} disabled={!allAnswered}
+            className="flex-1 text-white font-bold py-3 rounded-xl transition disabled:opacity-40"
+            style={{ background: allAnswered ? 'linear-gradient(90deg, #0A392B 0%, #10B981 100%)' : '#9CA3AF' }}>
+            {t.submitQuiz} ({answeredCount}/{total})
+          </button>
+        )}
       </div>
     </div>
   );
 }
+
+
 
 function ResultView({ t, lang, result, getSpecialty, onBack, hideBack }) {
   const top3 = result.matches.slice(0, 3);
@@ -629,7 +818,7 @@ function ResultView({ t, lang, result, getSpecialty, onBack, hideBack }) {
     <div>
       <div className="text-center mb-6">
         <div className="inline-flex p-3 rounded-2xl mb-3" style={{ backgroundColor: 'rgba(16,185,129,0.12)' }}>
-          <Award className="w-16 h-16" style={{ color: '#10B981' }} />
+          <Compass className="w-16 h-16" style={{ color: '#10B981' }} />
         </div>
         <h2 className="text-2xl md:text-3xl font-bold" style={{ color: '#0A392B' }}>{t.resultTitle}</h2>
       </div>
@@ -640,7 +829,7 @@ function ResultView({ t, lang, result, getSpecialty, onBack, hideBack }) {
         <div className="flex justify-center gap-2">
           {result.topCode.map(code => (
             <div key={code} className="px-4 py-2 rounded-lg font-bold text-lg" style={{ backgroundColor: 'rgba(16,185,129,0.25)', color: 'white' }}>
-              {code} · {lang === 'ar' ? hollandTypes[code].ar : hollandTypes[code].en}
+              {code} · {lang === 'ar' ? interestTypes[code].ar : interestTypes[code].en}
             </div>
           ))}
         </div>
@@ -655,7 +844,7 @@ function ResultView({ t, lang, result, getSpecialty, onBack, hideBack }) {
             return (
               <div key={m.id}>
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="font-semibold text-gray-800">{i === 0 && '🏆 '}{s.emoji} {s[lang].name}</span>
+                  <span className="font-semibold text-gray-800">{i === 0 && '🧭 '}{s.emoji} {s[lang].name}</span>
                   <span className="font-bold" style={{ color: s.color }}>{m.percentage}%</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2.5">
