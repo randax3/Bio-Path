@@ -232,49 +232,49 @@ export default function BioPath() {
   if (!isLoggedIn) {
     return (
       <div dir={t.dir} className="min-h-screen flex flex-col items-center justify-center p-5 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #04231A 0%, #0A392B 45%, #065F46 100%)' }}>
+        style={{ background: 'linear-gradient(160deg, #0A392B 0%, #047857 50%, #10B981 100%)' }}>
 
-        {/* توهج خلفي ناعم */}
-        <div className="absolute rounded-full pointer-events-none" style={{ width: 520, height: 520, top: '-14%', insetInlineEnd: '-16%', background: 'radial-gradient(circle, rgba(16,185,129,0.28) 0%, transparent 68%)' }} />
-        <div className="absolute rounded-full pointer-events-none" style={{ width: 420, height: 420, bottom: '-12%', insetInlineStart: '-12%', background: 'radial-gradient(circle, rgba(52,211,153,0.18) 0%, transparent 70%)' }} />
+        {/* توهج زمردي ناعم */}
+        <div className="absolute rounded-full pointer-events-none" style={{ width: 560, height: 560, top: '-16%', insetInlineEnd: '-18%', background: 'radial-gradient(circle, rgba(52,211,153,0.45) 0%, transparent 68%)' }} />
+        <div className="absolute rounded-full pointer-events-none" style={{ width: 460, height: 460, bottom: '-14%', insetInlineStart: '-14%', background: 'radial-gradient(circle, rgba(16,185,129,0.4) 0%, transparent 70%)' }} />
 
-        <div className="absolute top-5 inset-inline-end-5" style={{ insetInlineEnd: 20 }}>
+        <div className="absolute top-5" style={{ insetInlineEnd: 20 }}>
           <LangToggle dark />
         </div>
 
         <div className="w-full max-w-sm relative z-10">
-          {/* اللوقو مدموج بالخلفية */}
+          {/* اللوقو الشفاف مدموج بالخلفية */}
           <div className="flex flex-col items-center mb-8">
-            <img src="/logo.jpg" alt="Bio Path"
-              className="w-36 h-36 object-contain"
-              style={{ mixBlendMode: 'screen', filter: 'drop-shadow(0 18px 34px rgba(16,185,129,0.45))' }} />
-            <h1 className="text-4xl font-bold text-white -mt-2 tracking-wide">Bio Path</h1>
-            <p className="text-emerald-200/90 mt-2 text-center text-sm">{t.appSubtitle}</p>
+            <img src="/logo.png" alt="Bio Path"
+              className="w-52 object-contain"
+              style={{ filter: 'drop-shadow(0 20px 40px rgba(16,185,129,0.55))' }} />
+            <h1 className="text-4xl font-bold text-white tracking-wide" style={{ textShadow: '0 2px 20px rgba(16,185,129,0.6)' }}>Bio Path</h1>
+            <p className="text-emerald-100 mt-2 text-center text-sm">{t.appSubtitle}</p>
           </div>
 
           {!isSignUp ? (
             /* الدخول السريع بالاسم فقط */
             <form onSubmit={handleQuickStart} className="space-y-4">
               <div>
-                <label className="block text-emerald-100 font-medium mb-2 text-center">{t.yourName}</label>
+                <label className="block text-white font-medium mb-2 text-center">{t.yourName}</label>
                 <input
                   type="text" name="name" value={formData.name} onChange={handleInputChange}
                   placeholder={t.namePlaceholder} autoFocus
                   className="w-full px-5 py-4 rounded-2xl text-center text-lg outline-none transition"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.95)', border: '2px solid rgba(16,185,129,0.5)' }} />
+                  style={{ backgroundColor: 'rgba(255,255,255,0.97)', border: '2px solid #34D399', boxShadow: '0 4px 20px rgba(4,35,26,0.25)' }} />
               </div>
 
               <button type="submit"
-                className="w-full font-bold py-4 rounded-2xl text-lg transition hover:opacity-90 active:scale-[0.99]"
-                style={{ backgroundColor: '#10B981', color: '#04231A', boxShadow: '0 10px 26px rgba(16,185,129,0.35)' }}>
+                className="w-full font-bold py-4 rounded-2xl text-lg transition hover:opacity-95 active:scale-[0.99]"
+                style={{ background: 'linear-gradient(90deg, #10B981 0%, #34D399 100%)', color: '#04231A', boxShadow: '0 12px 30px rgba(4,35,26,0.35)' }}>
                 {t.startNow} ✨
               </button>
 
-              <p className="text-center text-emerald-200/70 text-xs pt-1">{t.quickNote}</p>
+              <p className="text-center text-emerald-50/85 text-xs pt-1">{t.quickNote}</p>
 
               <div className="pt-3 text-center">
                 <button type="button" onClick={() => { setIsSignUp(true); setFormData({ email: '', password: '', name: '', bio: '' }); }}
-                  className="text-emerald-300/80 text-sm hover:text-emerald-200 transition underline underline-offset-4">
+                  className="text-white/85 text-sm hover:text-white transition underline underline-offset-4">
                   {t.haveSavedAccount} {t.loginHere}
                 </button>
               </div>
@@ -283,14 +283,14 @@ export default function BioPath() {
             /* دخول لمن ثبّت حسابه */
             <form onSubmit={handleLogin} className="space-y-3">
               <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder={t.email} required
-                className="w-full px-5 py-3.5 rounded-2xl outline-none" style={{ backgroundColor: 'rgba(255,255,255,0.95)', border: '2px solid rgba(16,185,129,0.4)' }} />
+                className="w-full px-5 py-3.5 rounded-2xl outline-none" style={{ backgroundColor: 'rgba(255,255,255,0.97)', border: '2px solid #34D399' }} />
               <input type="password" name="password" value={formData.password} onChange={handleInputChange} placeholder={t.password} required
-                className="w-full px-5 py-3.5 rounded-2xl outline-none" style={{ backgroundColor: 'rgba(255,255,255,0.95)', border: '2px solid rgba(16,185,129,0.4)' }} />
-              <button type="submit" className="w-full font-bold py-3.5 rounded-2xl transition hover:opacity-90"
-                style={{ backgroundColor: '#10B981', color: '#04231A' }}>{t.login}</button>
+                className="w-full px-5 py-3.5 rounded-2xl outline-none" style={{ backgroundColor: 'rgba(255,255,255,0.97)', border: '2px solid #34D399' }} />
+              <button type="submit" className="w-full font-bold py-3.5 rounded-2xl transition hover:opacity-95"
+                style={{ background: 'linear-gradient(90deg, #10B981 0%, #34D399 100%)', color: '#04231A' }}>{t.login}</button>
               <div className="text-center pt-2">
                 <button type="button" onClick={() => { setIsSignUp(false); setFormData({ email: '', password: '', name: '', bio: '' }); }}
-                  className="text-emerald-300/80 text-sm hover:text-emerald-200 transition">{t.backToQuickStart}</button>
+                  className="text-white/85 text-sm hover:text-white transition">{t.backToQuickStart}</button>
               </div>
             </form>
           )}
@@ -303,11 +303,11 @@ export default function BioPath() {
   return (
     <div dir={t.dir} className="min-h-screen" style={{ backgroundColor: '#F9FAFB' }}>
       {/* Navbar */}
-      <nav className="sticky top-0 z-20 shadow-lg" style={{ backgroundColor: '#0A392B' }}>
+      <nav className="sticky top-0 z-20 shadow-lg" style={{ background: 'linear-gradient(180deg, #0A392B 0%, #065F46 100%)' }}>
         <div className="max-w-6xl mx-auto px-4 py-3">
           <div className="flex justify-between items-center mb-3">
             <div className="flex items-center gap-2">
-              <img src="/logo.jpg" alt="Bio Path" className="w-9 h-9 object-contain rounded-lg" />
+              <img src="/logo.png" alt="Bio Path" className="w-11 object-contain" />
               <h1 className="text-xl font-bold text-white">{t.appName}</h1>
             </div>
             <div className="flex items-center gap-2">
@@ -404,11 +404,11 @@ export default function BioPath() {
 
         {/* ============ الرئيسية ============ */}
         {currentPage === 'home' && (
-          <div className="rounded-2xl shadow-xl p-8 md:p-12 text-white text-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0A392B 0%, #047857 100%)' }}>
+          <div className="rounded-2xl shadow-xl p-8 md:p-12 text-white text-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0A392B 0%, #047857 55%, #10B981 100%)' }}>
             <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-10" style={{ backgroundColor: '#10B981', transform: 'translate(30%,-30%)' }}></div>
             <div className="relative">
               <div className="inline-flex mb-4">
-                <img src="/logo.jpg" alt="Bio Path" className="w-32 h-32 object-contain drop-shadow-lg" />
+                <img src="/logo.png" alt="Bio Path" className="w-44 object-contain" style={{ filter: 'drop-shadow(0 16px 32px rgba(16,185,129,0.5))' }} />
               </div>
               <h2 className="text-3xl md:text-4xl font-bold mb-3">{t.welcomeBack}، {currentUser.name}! 👋</h2>
               <p className="text-emerald-50 max-w-xl mx-auto mb-8 leading-relaxed">{t.homeIntro}</p>
@@ -471,7 +471,7 @@ export default function BioPath() {
                         <MiniCard title={`💼 ${t.career}`} text={d.career} color="#10B981" />
                         <button onClick={() => { setCurrentPage('quiz'); setExpanded(null); }}
                           className="w-full mt-2 text-white text-sm font-semibold py-2.5 rounded-lg transition hover:opacity-90 flex items-center justify-center gap-1"
-                          style={{ backgroundColor: '#0A392B' }}>
+                          style={{ background: 'linear-gradient(180deg, #0A392B 0%, #065F46 100%)' }}>
                           {t.takeTestForThis} <ArrowLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
                         </button>
                       </div>
@@ -508,7 +508,7 @@ export default function BioPath() {
 
                   {/* قسم المفاضلة */}
                   <div className="pt-4">
-                    <div className="rounded-xl p-4 mb-4" style={{ backgroundColor: '#0A392B' }}>
+                    <div className="rounded-xl p-4 mb-4" style={{ background: 'linear-gradient(180deg, #0A392B 0%, #065F46 100%)' }}>
                       <p className="text-white font-bold text-center">⚖️ {t.forcedSection}</p>
                     </div>
                     {forcedChoiceQuestions.map((q, i) => (
@@ -635,7 +635,7 @@ function ResultView({ t, lang, result, getSpecialty, onBack, hideBack }) {
       </div>
 
       {/* رمز الشخصية */}
-      <div className="rounded-xl p-5 mb-6 text-center" style={{ background: 'linear-gradient(135deg, #0A392B 0%, #047857 100%)' }}>
+      <div className="rounded-xl p-5 mb-6 text-center" style={{ background: 'linear-gradient(135deg, #0A392B 0%, #047857 55%, #10B981 100%)' }}>
         <p className="text-emerald-100 text-sm mb-2">{t.yourCode}</p>
         <div className="flex justify-center gap-2">
           {result.topCode.map(code => (
