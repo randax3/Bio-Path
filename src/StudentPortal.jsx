@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   LogOut, Edit2, Save, X, User, ClipboardList, Award, Languages,
-  Home, Compass, Star, ChevronDown, ChevronUp, ArrowLeft, Mail, Linkedin, Heart
+  Home, Compass, Star, ChevronDown, ChevronUp, ArrowLeft, Mail, Linkedin
 } from 'lucide-react';
 import {
   interestTypes, specialties, quizQuestions, forcedChoiceQuestions, computeResult
@@ -17,7 +17,7 @@ const translations = {
     login: 'تسجيل الدخول', signup: 'إنشاء حساب',
     yourName: 'وش اسمك؟', namePlaceholder: 'اكتب اسمك الأول',
     startNow: 'ابدأ الآن',
-    quickNote: 'ما تحتاج إيميل ولا كلمة مرور — بس اسمك ونبدأ 🌿',
+    quickNote: 'ما تحتاج إيميل ولا كلمة مرور، بس اسمك ونبدأ 🌿',
     haveSavedAccount: 'عندك حساب محفوظ؟', loginHere: 'سجّل دخولك',
     backToQuickStart: '← رجوع للدخول السريع',
     enterNameFirst: 'اكتب اسمك أولاً 🙂',
@@ -30,37 +30,37 @@ const translations = {
     profile: 'ملفي', navHome: 'الرئيسية', navSpecialties: 'المسارات', navQuiz: 'الاختبار', navResults: 'النتائج',
     welcomeBack: 'أهلاً', homeIntro: 'هذا الموقع يساعدك تكتشف أي مسار دقيق داخل الهندسة الحيوية يناسب ميولك وشخصيتك.',
     startJourney: 'ابدأ الاختبار الآن', retakeQuiz: 'أعد الاختبار', seeMyResult: 'شوف نتيجتك', browseSpecialties: 'تصفح المسارات',
-    specialtiesTitle: 'المسارات الدقيقة', specialtiesDesc: 'تعرف على كل مسار بلغة بسيطة — قبل أو بعد الاختبار',
+    specialtiesTitle: 'المسارات الدقيقة', specialtiesDesc: 'تعرف على كل مسار بلغة بسيطة، قبل أو بعد الاختبار',
     suitableType: 'يناسب النمط', imagine: 'تخيّلها كذا', yourDay: 'يومك فيه', around: 'تراه حولك في', fact: 'هل تعلم؟', career: 'أين تعمل؟',
     heroTitle: 'أن تُهندس شيئاً حيّاً',
-    heroBody: 'المهندس المعتاد يعمل بالحديد والإسمنت والسيليكون: مواد صامتة تفعل ما يُملى عليها بالضبط. أمّا أنت فتعمل بمادة تنمو، وتتغيّر، وتقاوم، وتموت. هذا ما يجعل المجال أصعب — وأمتع.',
+    heroBody: 'المهندس المعتاد يعمل بالحديد والإسمنت والسيليكون: مواد صامتة تفعل ما يُملى عليها بالضبط. أمّا أنت فتعمل بمادة تنمو، وتتغيّر، وتقاوم، وتموت. وهذا ما يجعل المجال أصعب وأمتع.',
     whatIsTitle: 'ما الهندسة الحيوية؟',
-    whatIsP1: 'باختصار: تأخذ أدوات المهندس — التصميم، والقياس، والتحسين — وتطبّقها على الأنظمة الحيّة. الهدف قد يكون علاج مرض، أو إنتاج دواء، أو تنظيف مياه ملوّثة، أو زراعة محصول يتحمّل الملوحة.',
+    whatIsP1: 'باختصار: تأخذ أدوات المهندس (التصميم، والقياس، والتحسين) وتطبّقها على الأنظمة الحيّة. الهدف قد يكون علاج مرض، أو إنتاج دواء، أو تنظيف مياه ملوّثة، أو زراعة محصول يتحمّل الملوحة.',
     whatIsP2: 'الفارق الجوهري أن مادتك الخام لها «رأي». الجسر لا يرفض تصميمك، لكن الخليّة قد ترفضه، والجسم قد يهاجم ما زرعته فيه. لهذا يتعلّم مهندس الحياة شيئاً لا يتعلّمه غيره: كيف يصمّم لشيء يردّ عليه.',
-    noticeText: 'التباس شائع يستحق التوضيح: الهندسة الطبية الحيوية فرعٌ يركّز على الأجهزة والتطبيقات الطبية. أمّا الهندسة الحيوية فأوسع — الطب أحد ميادينها، ومعه الزراعة والبيئة والصناعة والحوسبة. أنت في المظلّة الكبرى، لا في الفرع.',
+    noticeText: 'التباس شائع يستحق التوضيح: الهندسة الطبية الحيوية فرعٌ يركّز على الأجهزة والتطبيقات الطبية. أمّا الهندسة الحيوية فأوسع، فالطب أحد ميادينها، ومعه الزراعة والبيئة والصناعة والحوسبة. أنت في المظلّة الكبرى، لا في الفرع.',
     whyTitle: 'لماذا تعرف التخصصات الدقيقة؟',
     why1T: 'الاسم واحد، والمهن مختلفة تماماً',
     why1B: 'تحت مظلّة «هندسة حيوية» يجلس من يقضي يومه كاتباً كوداً، ومن يقضيه تحت مجهر، ومن يقضيه في مصنع. الفرق بين يومَي اثنين منهم أكبر من الفرق بين كليّتين مختلفتين.',
     why2T: 'القرار يأتي أبكر ممّا تتوقّع',
-    why2B: 'المواد الاختيارية، ومشروع التخرّج، والتدريب الصيفي — كلّها تبدأ تسألك «أي اتجاه؟» قبل أن تشعر بأنك جاهز للإجابة.',
+    why2B: 'المواد الاختيارية، ومشروع التخرّج، والتدريب الصيفي، كلّها تبدأ تسألك «أي اتجاه؟» قبل أن تشعر بأنك جاهز للإجابة.',
     why3T: 'السنة الأولى وقت رخيص للتجربة',
     why3B: 'أن تكتشف أن مساراً لا يناسبك وأنت في السنة الأولى مكسب. أن تكتشف ذلك في السنة الرابعة مكلف.',
     purposeTitle: 'ما الذي يفعله هذا الموقع؟',
     purposeP1: 'هو بوصلة، لا خريطة. لن يقرّر عنك، ولن يقول لك «ادرس هذا». وظيفته أبسط وأهم: أن يجعل الخيارات السبعة واضحة في ذهنك، وأن يريك أيّها يشبه ميولك أنت.',
     purposeP2: 'لهذا يقوم على جزأين: بطاقات تشرح كل مسار بلغة يفهمها من لا خلفية له، واختبار مبنيّ على مقياس علمي للميول المهنية، مُكيّف خصيصاً لهذا المجال، يقرأ نمط ميولك ويدلّك على أقرب مسار إليه.',
     aboutTitle: 'عن المشروع',
-    aboutBody: 'طالبة هندسة حيوية في جامعة الملك فهد للبترول والمعادن. أنشأتُ Bio Path لمساعدة الطلاب على اكتشاف المسار الدقيق الذي يناسب ميولهم داخل الهندسة الحيوية — قبل أن يفوت وقت الاختيار. أؤمن أن معرفة الاتجاه مبكراً تُوفّر سنوات من التردد.',
+    aboutBody: 'طالبة هندسة حيوية في جامعة الملك فهد للبترول والمعادن. أنشأتُ Bio Path لمساعدة الطلاب على اكتشاف المسار الدقيق الذي يناسب ميولهم داخل الهندسة الحيوية، قبل أن يفوت وقت الاختيار. أؤمن أن معرفة الاتجاه مبكراً تُوفّر سنوات من التردد.',
     aboutMaker: 'رندا الوادعي',
     aboutRole: 'طالبة هندسة حيوية · جامعة الملك فهد للبترول والمعادن',
-    footerMade: 'صُمّم بواسطة رندا الوادعي',
+    footerMade: 'رندا الوادعي',
     contactMe: 'تواصل معي',
     field: 'المجال', example: 'مثال', takeTestForThis: 'خذ الاختبار لتعرف مدى ملاءمتك لهذا المسار',
     yourMatch: 'الأقرب لك', profileInfo: 'الملف الشخصي', edit: 'تعديل', name: 'الاسم', notEntered: 'لم يُدخل',
     joinDate: 'تاريخ الانضمام', save: 'حفظ', cancel: 'إلغاء',
     quizTitle: 'اختبار اكتشاف المسار', quizIntro: 'مقياس ميول مبني على أسس علمية معتمدة',
-    quizDesc: 'أجب بصراحة حسب ميولك الحقيقية — ما فيه إجابة صح أو غلط. اختر ما يمثلك أكثر في كل موقف.',
+    quizDesc: 'أجب بصراحة حسب ميولك الحقيقية، فما فيه إجابة صح أو غلط. اختر ما يمثلك أكثر في كل موقف.',
     quizNote: 'الاختبار 33 موقف. آخر 3 مواقف اختيار إجباري بين خيارين.',
-    startQuiz: 'ابدأ الاختبار', forcedSection: 'سؤال مفاضلة — اختر واحداً فقط',
+    startQuiz: 'ابدأ الاختبار', forcedSection: 'سؤال مفاضلة، اختر واحداً فقط',
     resumeQuiz: 'أكمل من حيث وقفت', restartQuiz: 'ابدأ من جديد', resumeNote: 'عندك تقدّم محفوظ',
     questionOf: 'سؤال', prevQ: 'السابق', encourage1: 'ممتاز، أنت في الطريق 🌿', encourage2: 'نصف الطريق! استمر 💚', encourage3: 'اقتربت من النهاية ✨',
     orChoose: 'أو',
@@ -81,7 +81,7 @@ const translations = {
     login: 'Login', signup: 'Sign Up',
     yourName: "What's your name?", namePlaceholder: 'Enter your first name',
     startNow: 'Start Now',
-    quickNote: 'No email or password needed — just your name 🌿',
+    quickNote: 'No email or password needed, just your name 🌿',
     haveSavedAccount: 'Have a saved account?', loginHere: 'Log in',
     backToQuickStart: '← Back to quick start',
     enterNameFirst: 'Please enter your name first 🙂',
@@ -94,37 +94,37 @@ const translations = {
     profile: 'Profile', navHome: 'Home', navSpecialties: 'Specialties', navQuiz: 'Quiz', navResults: 'Results',
     welcomeBack: 'Welcome', homeIntro: 'This site helps you discover which precise bioengineering specialty fits your interests and personality.',
     startJourney: 'Start the Quiz', retakeQuiz: 'Retake Quiz', seeMyResult: 'See Your Result', browseSpecialties: 'Browse Specialties',
-    specialtiesTitle: 'Precise Specialties', specialtiesDesc: 'Learn about each specialty in simple terms — before or after the quiz',
+    specialtiesTitle: 'Precise Specialties', specialtiesDesc: 'Learn about each specialty in simple terms, before or after the quiz',
     suitableType: 'Suits the', imagine: 'Picture it like this', yourDay: 'Your day looks like', around: 'Real-world examples', fact: 'Did You Know?', career: 'Career Opportunities',
     heroTitle: 'Engineering something alive',
-    heroBody: 'The usual engineer works with steel, concrete, and silicon: silent materials that do exactly what they are told. You, on the other hand, work with material that grows, changes, resists, and dies. That is what makes this field harder — and far more interesting.',
+    heroBody: 'The usual engineer works with steel, concrete, and silicon: silent materials that do exactly what they are told. You, on the other hand, work with material that grows, changes, resists, and dies. And that is what makes this field harder and far more interesting.',
     whatIsTitle: 'What is Bioengineering?',
-    whatIsP1: 'In short: you take an engineer\u2019s tools — design, measurement, optimization — and apply them to living systems. The goal might be curing a disease, producing a drug, cleaning polluted water, or growing a salt-tolerant crop.',
+    whatIsP1: 'In short: you take an engineer\u2019s tools (design, measurement, optimization) and apply them to living systems. The goal might be curing a disease, producing a drug, cleaning polluted water, or growing a salt-tolerant crop.',
     whatIsP2: 'The fundamental difference is that your raw material has an opinion. A bridge does not reject your design, but a cell might, and the body may attack what you implanted in it. That is why a life engineer learns something no one else does: how to design for something that answers back.',
-    noticeText: 'A common confusion worth clearing up: Biomedical Engineering is a branch focused on medical devices and applications. Bioengineering is broader — medicine is one of its fields, alongside agriculture, environment, industry, and computing. You are under the larger umbrella, not the branch.',
+    noticeText: 'A common confusion worth clearing up: Biomedical Engineering is a branch focused on medical devices and applications. Bioengineering is broader; medicine is one of its fields, alongside agriculture, environment, industry, and computing. You are under the larger umbrella, not the branch.',
     whyTitle: 'Why learn the precise specialties?',
     why1T: 'One name, completely different careers',
     why1B: 'Under the label \u201cbioengineering\u201d sits someone who spends the day writing code, someone under a microscope, and someone in a factory. The gap between any two of their days is bigger than the gap between two different colleges.',
     why2T: 'The decision comes earlier than you expect',
-    why2B: 'Electives, the graduation project, the summer internship — they all start asking \u201cwhich direction?\u201d before you feel ready to answer.',
+    why2B: 'Electives, the graduation project, the summer internship all start asking \u201cwhich direction?\u201d before you feel ready to answer.',
     why3T: 'First year is cheap time to experiment',
     why3B: 'Discovering a path does not suit you in your first year is a win. Discovering it in your fourth year is expensive.',
     purposeTitle: 'What does this site do?',
     purposeP1: 'It is a compass, not a map. It will not decide for you, and it will not tell you \u201cstudy this.\u201d Its job is simpler and more important: to make the seven options clear in your mind, and to show you which one resembles your own interests.',
     purposeP2: 'That is why it has two parts: cards explaining each path in language anyone can follow, and an assessment built on a scientific career-interest scale, adapted specifically for this field, that reads your interest profile and points you to the closest path.',
     aboutTitle: 'About the Project',
-    aboutBody: 'A bioengineering student at King Fahd University of Petroleum and Minerals. I created Bio Path to help students discover the precise specialty that fits their interests within bioengineering — before the choice is made for them. I believe knowing your direction early saves years of hesitation.',
+    aboutBody: 'A bioengineering student at King Fahd University of Petroleum and Minerals. I created Bio Path to help students discover the precise specialty that fits their interests within bioengineering, before the choice is made for them. I believe knowing your direction early saves years of hesitation.',
     aboutMaker: 'Randa Alwadai',
     aboutRole: 'Bioengineering Student · KFUPM',
-    footerMade: 'Made by Randa Alwadai',
+    footerMade: 'Randa Alwadai',
     contactMe: 'Contact me',
     field: 'Field', example: 'Example', takeTestForThis: 'Take the quiz to see how well this path suits you',
     yourMatch: 'Your Match', profileInfo: 'Profile', edit: 'Edit', name: 'Name', notEntered: 'Not entered',
     joinDate: 'Join Date', save: 'Save', cancel: 'Cancel',
     quizTitle: 'Discover Your Path Quiz', quizIntro: 'A career-interest scale built on established scientific foundations',
-    quizDesc: "Answer honestly based on your real interests — there's no right or wrong. Choose what represents you most in each situation.",
+    quizDesc: "Answer honestly based on your real interests; there's no right or wrong. Choose what represents you most in each situation.",
     quizNote: 'The quiz has 33 situations. The last 3 are forced choices between two options.',
-    startQuiz: 'Start Quiz', forcedSection: 'Forced choice — pick only one',
+    startQuiz: 'Start Quiz', forcedSection: 'Forced choice, pick only one',
     resumeQuiz: 'Resume where you left off', restartQuiz: 'Start over', resumeNote: 'You have saved progress',
     questionOf: 'Question', prevQ: 'Previous', encourage1: "Great, you're on your way 🌿", encourage2: 'Halfway there! Keep going 💚', encourage3: "Almost done ✨",
     orChoose: 'or',
@@ -294,7 +294,7 @@ export default function BioPath() {
   if (!isLoggedIn) {
     return (
       <div dir={t.dir} className="min-h-screen flex flex-col items-center justify-center p-5 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #0A392B 0%, #3B1F6B 55%, #7C3AED 100%)' }}>
+        style={{ background: 'linear-gradient(165deg, #0A392B 0%, #14503A 28%, #35276B 62%, #6D3FC7 100%)' }}>
 
         {/* توهج زمردي ناعم */}
         <div className="absolute rounded-full pointer-events-none" style={{ width: 560, height: 560, top: '-16%', insetInlineEnd: '-18%', background: 'radial-gradient(circle, rgba(167,139,250,0.5) 0%, transparent 68%)' }} />
@@ -363,7 +363,7 @@ export default function BioPath() {
 
   /* ============ لوحة التحكم ============ */
   return (
-    <div dir={t.dir} className="min-h-screen" style={{ backgroundColor: '#F9FAFB' }}>
+    <div dir={t.dir} className="min-h-screen flex flex-col" style={{ backgroundColor: '#F9FAFB' }}>
       {/* Navbar */}
       <nav className="sticky top-0 z-20 shadow-lg" style={{ background: 'linear-gradient(180deg, #0A392B 0%, #065F46 100%)' }}>
         <div className="max-w-6xl mx-auto px-4 py-3">
@@ -462,19 +462,19 @@ export default function BioPath() {
         )}
       </nav>
 
-      <div className="max-w-6xl mx-auto px-4 py-6">
+      <div className="max-w-6xl mx-auto px-4 py-6 w-full flex-1">
 
         {/* ============ الرئيسية ============ */}
         {currentPage === 'home' && (
           <div className="space-y-6">
 
             {/* القسم ب — العنوان الرئيسي */}
-            <div className="rounded-2xl shadow-xl p-8 md:p-12 text-white text-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0A392B 0%, #3B1F6B 60%, #7C3AED 100%)' }}>
+            <div className="rounded-2xl shadow-xl p-8 md:p-12 text-white text-center relative overflow-hidden" style={{ background: 'linear-gradient(140deg, #0A392B 0%, #1E4D3A 30%, #3B2A6B 65%, #6D3Fc7 100%)' }}>
               <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-20" style={{ backgroundColor: '#A78BFA', transform: 'translate(30%,-30%)' }}></div>
               <div className="absolute bottom-0 left-0 w-56 h-56 rounded-full opacity-15" style={{ backgroundColor: '#34D399', transform: 'translate(-30%,30%)' }}></div>
               <div className="relative">
                 <div className="inline-flex mb-3">
-                  <img src="/logo.png" alt="Bio Path" className="w-40 object-contain" style={{ filter: 'drop-shadow(0 16px 32px rgba(16,185,129,0.5))' }} />
+                  <img src="/logo.png" alt="Bio Path" className="w-28 object-contain" style={{ filter: 'drop-shadow(0 14px 28px rgba(52,211,153,0.45))' }} />
                 </div>
                 <p className="text-purple-100 mb-2">{t.welcomeBack}، {currentUser.name} 👋</p>
                 <h2 className="text-3xl md:text-4xl font-bold mb-4">{t.heroTitle}</h2>
@@ -706,22 +706,23 @@ export default function BioPath() {
       </div>
 
       {/* ============ الفوتر ============ */}
-      <footer className="mt-8" style={{ backgroundColor: '#0A392B', borderTop: '3px solid transparent', borderImage: 'linear-gradient(90deg, #0A392B, #8B5CF6, #34D399) 1' }}>
-        <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-white">
-            <img src="/logo.png" alt="Bio Path" className="w-8 object-contain" />
-            <span className="font-bold">Bio Path</span>
+      <footer className="mt-10" style={{ backgroundColor: '#0A392B', borderTop: '3px solid transparent', borderImage: 'linear-gradient(90deg, #0A392B, #8B5CF6, #34D399) 1' }}>
+        <div className="max-w-6xl mx-auto px-4 py-5 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2.5">
+            <img src="/logo.png" alt="Bio Path" className="w-7 object-contain" />
+            <div className="leading-tight">
+              <p className="font-bold text-white text-sm">Bio Path</p>
+              <p className="text-purple-200/70 text-xs">{t.footerMade}</p>
+            </div>
           </div>
-          <p className="text-purple-100 text-sm flex items-center gap-1.5">
-            {t.footerMade} <Heart className="w-4 h-4 fill-current" style={{ color: '#8B5CF6' }} />
-          </p>
           <div className="flex gap-2">
             <a href="https://www.linkedin.com/in/randa-alwadai-b4baa8359" target="_blank" rel="noopener noreferrer"
-              className="p-2 rounded-lg transition hover:opacity-80" style={{ backgroundColor: 'rgba(139,92,246,0.25)' }}>
+              aria-label="LinkedIn"
+              className="p-2 rounded-lg transition hover:opacity-80" style={{ backgroundColor: 'rgba(139,92,246,0.22)' }}>
               <Linkedin className="w-4 h-4 text-white" />
             </a>
-            <a href="mailto:s202338470@kfupm.edu.sa"
-              className="p-2 rounded-lg transition hover:opacity-80" style={{ backgroundColor: 'rgba(52,211,153,0.25)' }}>
+            <a href="mailto:s202338470@kfupm.edu.sa" aria-label="Email"
+              className="p-2 rounded-lg transition hover:opacity-80" style={{ backgroundColor: 'rgba(52,211,153,0.22)' }}>
               <Mail className="w-4 h-4 text-white" />
             </a>
           </div>
@@ -919,7 +920,7 @@ function ResultView({ t, lang, result, getSpecialty, onBack, hideBack }) {
 
       {/* توصيات */}
       <div className="rounded-xl p-5 mb-6" style={{ backgroundColor: '#F9FAFB' }}>
-        <h3 className="font-bold mb-3" style={{ color: '#0A392B' }}>{t.recommendations} — {topSpecialty.emoji} {topSpecialty[lang].name}</h3>
+        <h3 className="font-bold mb-3" style={{ color: '#0A392B' }}>{t.recommendations}: {topSpecialty.emoji} {topSpecialty[lang].name}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <div className="bg-white rounded-lg p-4 border" style={{ borderColor: 'rgba(10,57,43,0.1)' }}>
             <p className="font-semibold text-gray-700 mb-2">{t.internalUni}</p>

@@ -14,19 +14,19 @@ export const interestTypes = {
 
 // ============================================================
 // التخصصات السبعة مع رموز الميول والمحتوى التعريفي
-// (المحتوى التعريفي مبدئي — يُحدّث لاحقاً بشات المحتوى)
+// (المحتوى التعريفي مبدئي، يُحدّث لاحقاً)
 // ============================================================
 export const specialties = [
   {
     id: 'genetic', codes: ['I', 'A', 'R'], emoji: '🧬', color: '#8B5CF6',
     ar: { name: 'الهندسة الوراثية والتخليقية', field: 'أحياء جزيئية', model: 'بكتيريا تنتج الأنسولين',
-      imagine: 'أنت مُبرمِج — لكن لغتك ليست بايثون بل الحمض النووي، وجهازك ليس حاسوباً بل خليّة حيّة.',
+      imagine: 'أنت مُبرمِج، لكن لغتك ليست بايثون بل الحمض النووي، وجهازك ليس حاسوباً بل خليّة حيّة.',
       yourDay: ['تصمّم مقطعاً جينياً على الحاسب', 'تُدخله في بكتيريا', 'تزرعها في حاضنة', 'تقيس: هل أنتجت ما أردت؟'],
       around: 'الأنسولين المصنّع، المحاصيل المعدّلة وراثياً.',
       fact: 'العلماء برمجوا بكتيريا لإنتاج الأنسولين البشري بدل استخراجه من الحيوانات!',
       career: 'شركات الأدوية الحيوية، مختبرات الأبحاث الجينية.' },
     en: { name: 'Genetic & Synthetic Engineering', field: 'Molecular Biology', model: 'Bacteria producing insulin',
-      imagine: "You're a programmer — but your language isn't Python, it's DNA, and your machine isn't a computer, it's a living cell.",
+      imagine: "You're a programmer, but your language isn't Python, it's DNA, and your machine isn't a computer, it's a living cell.",
       yourDay: ['You design a genetic sequence on a computer', 'insert it into bacteria', 'grow them in an incubator', 'measure: did it produce what you wanted?'],
       around: 'Synthetic insulin, genetically modified crops.',
       fact: 'Scientists programmed bacteria to produce human insulin instead of extracting it from animals!',
@@ -35,13 +35,13 @@ export const specialties = [
   {
     id: 'tissue', codes: ['I', 'S', 'R'], emoji: '🧪', color: '#F43F5E',
     ar: { name: 'هندسة الأنسجة والطب التجديدي', field: 'أحياء خلوية / طب', model: 'جلد صناعي للحروق',
-      imagine: 'أنت بُستانيّ — تبني تعريشة تذوب مع الوقت، وتترك خلايا المريض تتسلّقها حتى تنمو بالشكل الذي رسمته.',
+      imagine: 'أنت بُستانيّ يبني تعريشة تذوب مع الوقت، وتترك خلايا المريض تتسلّقها حتى تنمو بالشكل الذي رسمته.',
       yourDay: ['تعزل خلايا المريض', 'تصنع دعامة مسامية', 'تزرع الخلايا عليها', 'تراقب نموّها تحت المجهر أسابيع'],
       around: 'الجلد الصناعي لضحايا الحروق، زراعة الغضاريف.',
       fact: 'صار ممكن طباعة أنسجة حية بطابعات ثلاثية الأبعاد!',
       career: 'مستشفيات، مراكز الطب التجديدي، شركات التقنية الحيوية.' },
     en: { name: 'Tissue Engineering & Regenerative Medicine', field: 'Cell Biology / Medicine', model: 'Artificial skin for burns',
-      imagine: "You're a gardener — you build a trellis that dissolves over time, letting the patient's cells climb it until they grow into the shape you drew.",
+      imagine: "You're a gardener who builds a trellis that dissolves over time, letting the patient's cells climb it until they grow into the shape you drew.",
       yourDay: ["You isolate the patient's cells", 'fabricate a porous scaffold', 'seed the cells onto it', 'monitor their growth under a microscope for weeks'],
       around: 'Artificial skin for burn victims, cartilage growth.',
       fact: 'It is now possible to 3D-print living tissues!',
@@ -50,13 +50,13 @@ export const specialties = [
   {
     id: 'biomat', codes: ['R', 'I', 'C'], emoji: '🔩', color: '#F59E0B',
     ar: { name: 'المواد الحيوية', field: 'كيمياء / مواد', model: 'غرسة لا يرفضها الجسم',
-      imagine: 'أنت دبلوماسي — مهمتك أن يقبل الجسمُ غريباً، لا بالقوّة بل بتصميم يجعله يبدو من أهل البيت.',
+      imagine: 'أنت دبلوماسي مهمتك أن يقبل الجسمُ غريباً، لا بالقوّة بل بتصميم يجعله يبدو من أهل البيت.',
       yourDay: ['تختبر موادّ مرشّحة', 'تقيس كيف تلتصق بها الخلايا', 'تعدّل سطحها كيميائياً', 'تفحص: هل تتآكل بعد سنوات؟'],
       around: 'مفاصل صناعية، غرز جراحية قابلة للذوبان.',
       fact: 'فيه مواد حديثة تلتحم مع العظم وتختفي بعد الشفاء تلقائياً!',
       career: 'شركات المستلزمات الطبية، مختبرات المواد المتقدمة.' },
     en: { name: 'Biomaterials', field: 'Chemistry / Materials', model: "An implant the body won't reject",
-      imagine: "You're a diplomat — your job is to make the body accept a stranger, not by force but through a design that makes it look like family.",
+      imagine: "You're a diplomat whose job is to make the body accept a stranger, not by force but through a design that makes it look like family.",
       yourDay: ['You test candidate materials', 'measure how cells adhere to them', 'chemically modify their surface', 'check: will it corrode after years?'],
       around: 'Artificial joints, dissolvable surgical stitches.',
       fact: 'Some modern materials bond with bone and disappear automatically after healing!',
@@ -65,13 +65,13 @@ export const specialties = [
   {
     id: 'process', codes: ['R', 'C', 'E'], emoji: '⚙️', color: '#2563EB',
     ar: { name: 'هندسة العمليات والتصنيع الحيوي', field: 'صناعة حيوية', model: 'مفاعل ينتج لقاحاً',
-      imagine: 'أنت مدير مصنع — لكن عمّالك كائنات حيّة: تضبط لهم الحرارة والغذاء والأكسجين، وإن أخطأت في درجة واحدة توقّف الخط.',
+      imagine: 'أنت مدير مصنع، لكن عمّالك كائنات حيّة: تضبط لهم الحرارة والغذاء والأكسجين، وإن أخطأت في درجة واحدة توقّف الخط.',
       yourDay: ['تضبط ظروف المفاعل الحيوي', 'تسحب عيّنات وتقيسها', 'ترفع الإنتاجية دون قتل الخلايا', 'تنقّي المنتج النهائي'],
       around: 'مصانع اللقاحات، إنتاج الأدوية الحيوية.',
       fact: 'مفاعل حيوي واحد ينتج ملايين جرعات اللقاح في وقت قصير!',
       career: 'مصانع الأدوية، منشآت الإنتاج الحيوي.' },
     en: { name: 'Bioprocess & Biomanufacturing', field: 'Bio-industry', model: 'A reactor producing vaccines',
-      imagine: "You're a factory manager — except your workers are living organisms: you control their heat, food, and oxygen, and one degree off shuts the line down.",
+      imagine: "You're a factory manager, except your workers are living organisms: you control their heat, food, and oxygen, and one degree off shuts the line down.",
       yourDay: ['You control bioreactor conditions', 'draw and test samples', 'raise yield without killing the cells', 'purify the final product'],
       around: 'Vaccine factories, biopharmaceutical production.',
       fact: 'A single bioreactor can produce millions of vaccine doses in a short time!',
@@ -80,13 +80,13 @@ export const specialties = [
   {
     id: 'bioinfo', codes: ['I', 'C', 'A'], emoji: '💻', color: '#06B6D4',
     ar: { name: 'المعلوماتية الحيوية والبيولوجيا الحاسوبية', field: 'حوسبة', model: 'تحليل DNA لاكتشاف طفرة',
-      imagine: 'أنت مُحقّق — أمامك كتاب من ثلاثة مليارات حرف، وتبحث عن خطأ مطبعي واحد. عينك لن تكفي، تحتاج خوارزمية.',
+      imagine: 'أنت مُحقّق، أمامك كتاب من ثلاثة مليارات حرف، وتبحث عن خطأ مطبعي واحد. عينك لن تكفي، تحتاج خوارزمية.',
       yourDay: ['تكتب كوداً لتحليل التسلسلات', 'تقارنها بقواعد بيانات عالمية', 'تستخرج النمط المتكرر', 'تفسّر علاقته بالمرض'],
       around: 'فحوصات النسب الجينية، اكتشاف الأمراض الوراثية.',
       fact: 'الذكاء الاصطناعي صار يتنبأ بشكل البروتينات خلال ثواني بدل سنوات بحث!',
       career: 'شركات التقنية، مراكز الجينوم، أبحاث الأدوية.' },
     en: { name: 'Bioinformatics & Computational Biology', field: 'Computing', model: 'Analyzing DNA to detect a mutation',
-      imagine: "You're a detective — in front of you is a book of three billion letters, and you're hunting a single typo. Your eyes won't do it; you need an algorithm.",
+      imagine: "You're a detective. In front of you is a book of three billion letters, and you're hunting a single typo. Your eyes won't do it; you need an algorithm.",
       yourDay: ['You write code to analyze sequences', 'compare them against global databases', 'extract the recurring pattern', 'explain its link to disease'],
       around: 'Ancestry DNA tests, genetic disease discovery.',
       fact: 'AI can now predict protein shapes in seconds instead of years of research!',
@@ -95,13 +95,13 @@ export const specialties = [
   {
     id: 'biomech', codes: ['R', 'I', 'A'], emoji: '🦾', color: '#EA580C',
     ar: { name: 'الميكانيكا الحيوية', field: 'فيزياء / حركة', model: 'طرف اصطناعي',
-      imagine: 'أنت مهندس ميكانيكا — لكن الآلة التي تدرسها جسمُ إنسان: العظام روافع، والمفاصل مفصّلات، والعضلات محرّكات.',
+      imagine: 'أنت مهندس ميكانيكا، لكن الآلة التي تدرسها جسمُ إنسان: العظام روافع، والمفاصل مفصّلات، والعضلات محرّكات.',
       yourDay: ['تصوّر الحركة بكاميرات وحسّاسات', 'تحسب القوى على كل مفصل', 'تصمّم الطرف أو الجهاز', 'تختبره على أرض الواقع'],
       around: 'الأطراف الصناعية، تحليل حركة الرياضيين.',
       fact: 'بعض الأطراف الصناعية الحديثة تتحرك بإشارات مباشرة من الدماغ!',
       career: 'مراكز التأهيل، شركات الأطراف الصناعية والروبوتات الطبية.' },
     en: { name: 'Biomechanics', field: 'Physics / Motion', model: 'A prosthetic limb',
-      imagine: "You're a mechanical engineer — but the machine you study is a human body: bones are levers, joints are hinges, muscles are motors.",
+      imagine: "You're a mechanical engineer, but the machine you study is a human body: bones are levers, joints are hinges, muscles are motors.",
       yourDay: ['You capture motion with cameras and sensors', 'calculate the forces on each joint', 'design the limb or device', 'test it in the real world'],
       around: 'Prosthetic limbs, athlete movement analysis.',
       fact: 'Some modern prosthetics move directly from brain signals!',
@@ -110,13 +110,13 @@ export const specialties = [
   {
     id: 'environ', codes: ['R', 'I', 'E'], emoji: '🌱', color: '#10B981',
     ar: { name: 'الهندسة الحيوية البيئية والزراعية', field: 'بيئة / زراعة', model: 'ميكروبات تنقّي المياه',
-      imagine: 'أنت تُوظّف عمال نظافة — لكنهم كائنات دقيقة: تأكل التلوّث وتترك ماءً أنظف، وأجرها الوجبة نفسها.',
+      imagine: 'أنت تُوظّف عمال نظافة، لكنهم كائنات دقيقة: تأكل التلوّث وتترك ماءً أنظف، وأجرها الوجبة نفسها.',
       yourDay: ['تعزل ميكروبات من البيئة', 'تختبر ما تستطيع هضمه', 'تصمّم النظام حولها', 'تقيس أداءه في الميدان لا في المختبر'],
       around: 'محطات معالجة المياه، الأسمدة الحيوية.',
       fact: 'فيه ميكروبات تأكل الملوثات وتنظّف المياه والتربة طبيعياً!',
       career: 'شركات البيئة، محطات المعالجة، مشاريع الزراعة الحيوية.' },
     en: { name: 'Environmental & Agricultural Bioengineering', field: 'Environment / Agriculture', model: 'Microbes purifying water',
-      imagine: "You're hiring a cleaning crew — except they're microbes: they eat pollution and leave cleaner water, and their wage is the meal itself.",
+      imagine: "You're hiring a cleaning crew, except they're microbes: they eat pollution and leave cleaner water, and their wage is the meal itself.",
       yourDay: ['You isolate microbes from the environment', 'test what they can digest', 'design the system around them', 'measure performance in the field, not the lab'],
       around: 'Water treatment plants, bio-fertilizers.',
       fact: 'Some microbes eat pollutants and clean water and soil naturally!',
@@ -129,7 +129,7 @@ export const specialties = [
 // كل خيار يعطي نقطة لنمط معيّن
 // ============================================================
 export const quizQuestions = [
-  // القسم 1 — المستهدف: الواقعي (R)
+  // القسم 1: المستهدف: الواقعي (R)
   { id: 1, ar: 'في مشروع لبناء نموذج جهاز مساعد، أي دور تختار؟', en: 'In a project to build a prototype assistive device, which role do you choose?',
     options: [
       { ar: 'أجمّع القطع وأبني النموذج بيدي حتى يعمل', en: 'I assemble the parts and build the prototype by hand until it works', type: 'R' },
@@ -161,7 +161,7 @@ export const quizQuestions = [
       { ar: 'تصوّر الفكرة وتصميم شكلها', en: 'Envisioning the idea and designing its form', type: 'A' },
       { ar: 'عرض المشروع وإقناع الآخرين بقيمته', en: 'Presenting the project and convincing others of its value', type: 'E' } ] },
 
-  // القسم 2 — المستهدف: التحليلي (I)
+  // القسم 2: المستهدف: التحليلي (I)
   { id: 6, ar: 'ظهرت نتيجة غير متوقّعة في تجربة فريقك. أول ما تفعل؟', en: 'An unexpected result appeared in your team\'s experiment. What do you do first?',
     options: [
       { ar: 'أبحث عن السبب وأصمّم تجربة لاختبار احتمالاتي', en: 'I look for the cause and design an experiment to test my hypotheses', type: 'I' },
@@ -193,7 +193,7 @@ export const quizQuestions = [
       { ar: 'أصمّم حلًّا جديدًا مبتكرًا لها', en: 'I design a new innovative solution for it', type: 'A' },
       { ar: 'أنظّم حملة توعية وأدرّب الناس', en: 'I organize an awareness campaign and train people', type: 'S' } ] },
 
-  // القسم 3 — المستهدف: الابتكاري (A)
+  // القسم 3: المستهدف: الابتكاري (A)
   { id: 11, ar: 'طُلب منك تحسين طرف اصطناعي مستخدَم. من أين تبدأ؟', en: 'You\'re asked to improve a prosthetic limb in use. Where do you start?',
     options: [
       { ar: 'أعيد تصميم شكله ليكون أسهل وأكثر راحة', en: 'I redesign its form to be easier and more comfortable', type: 'A' },
@@ -225,7 +225,7 @@ export const quizQuestions = [
       { ar: 'كيف تعمل علميًا وما المبدأ خلفها', en: 'How it works scientifically and the principle behind it', type: 'I' },
       { ar: 'ما الفرصة التجارية فيها', en: 'What the commercial opportunity in it is', type: 'E' } ] },
 
-  // القسم 4 — المستهدف: الاجتماعي (S)
+  // القسم 4: المستهدف: الاجتماعي (S)
   { id: 16, ar: 'شخص يستخدم حلًّا صمّمه فريقك ويجد صعوبة. ردّة فعلك؟', en: 'Someone using your team\'s solution struggles. Your reaction?',
     options: [
       { ar: 'أجلس معه وأدرّبه وأطمئنه', en: 'I sit with them, train them, and reassure them', type: 'S' },
@@ -257,7 +257,7 @@ export const quizQuestions = [
       { ar: 'المبدأ العلمي الذي يقوم عليه', en: 'The scientific principle it\'s based on', type: 'I' },
       { ar: 'شكل يجعله بديهيًا وسهلًا', en: 'A form that makes it intuitive and easy', type: 'A' } ] },
 
-  // القسم 5 — المستهدف: الريادي (E)
+  // القسم 5: المستهدف: الريادي (E)
   { id: 21, ar: 'في عرض مشروع أمام داعمين، أي مهمة تفضّل؟', en: 'In a project pitch to sponsors, which task do you prefer?',
     options: [
       { ar: 'تقديم العرض وإقناع الحضور', en: 'Delivering the pitch and convincing the audience', type: 'E' },
@@ -289,7 +289,7 @@ export const quizQuestions = [
       { ar: 'أدرس المشكلة علميًا قبل أي شيء', en: 'I study the problem scientifically before anything', type: 'I' },
       { ar: 'أستمع للمتأثّرين بها لأفهمها', en: 'I listen to those affected to understand it', type: 'S' } ] },
 
-  // القسم 6 — المستهدف: المنظّم (C)
+  // القسم 6: المستهدف: المنظّم (C)
   { id: 26, ar: 'أمامك كمية كبيرة من بيانات تجربة. ما ميلك الأول؟', en: 'You have a large amount of experiment data. What\'s your first inclination?',
     options: [
       { ar: 'تنظيمها في جداول دقيقة ومراجعتها', en: 'Organizing it into precise tables and reviewing it', type: 'C' },
@@ -341,7 +341,7 @@ export const forcedChoiceQuestions = [
 ];
 
 // ============================================================
-// دالة حساب النتيجة — تحترم ترتيب أحرف نمط الميول
+// دالة حساب النتيجة: تحترم ترتيب أحرف نمط الميول
 // المنطق: الحرف الأول (العائلة) له أعلى وزن، ثم الثاني، ثم الثالث.
 // نطابق كود الطالب المرتّب مع كود كل تخصص بحسب موقع كل حرف.
 // أسئلة المفاضلة (وزن +2) ترجّح الكفّة عند تقارب العائلة.
@@ -382,16 +382,16 @@ export function computeResult(answers) {
     s.codes.forEach((code, pos) => {
       const w = positionWeights[pos];
       if (topCode[pos] === code) {
-        // نفس الحرف بنفس الموقع — أقوى تطابق
+        // نفس الحرف بنفس الموقع: أقوى تطابق
         matchScore += w;
       } else if (topCode.includes(code)) {
-        // الحرف موجود بكود الطالب لكن بموقع مختلف — تطابق جزئي
+        // الحرف موجود بكود الطالب لكن بموقع مختلف: تطابق جزئي
         // كل ما قرب موقعه عند الطالب من موقعه بالتخصص، زادت النقاط
         const studentPos = topCode.indexOf(code);
         const distance = Math.abs(studentPos - pos);
         matchScore += w * (distance === 1 ? 0.6 : 0.35);
       } else {
-        // الحرف من ضمن الستة لكن خارج أعلى 3 عند الطالب — نقاط ضئيلة حسب رتبته
+        // الحرف من ضمن الستة لكن خارج أعلى 3 عند الطالب: نقاط ضئيلة حسب رتبته
         const r = rankOf[code]; // 3,4,5
         matchScore += w * (r <= 3 ? 0.2 : 0.08);
       }
