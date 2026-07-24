@@ -15,6 +15,16 @@ const translations = {
     email: 'البريد الإلكتروني', password: 'كلمة المرور', fullName: 'الاسم الكامل',
     bio: 'النبذة الشخصية', bioPlaceholder: 'أخبرنا عن نفسك...',
     login: 'تسجيل الدخول', signup: 'إنشاء حساب',
+    yourName: 'وش اسمك؟', namePlaceholder: 'اكتب اسمك الأول',
+    startNow: 'ابدأ الآن',
+    quickNote: 'ما تحتاج إيميل ولا كلمة مرور — بس اسمك ونبدأ 🌿',
+    haveSavedAccount: 'عندك حساب محفوظ؟', loginHere: 'سجّل دخولك',
+    backToQuickStart: '← رجوع للدخول السريع',
+    enterNameFirst: 'اكتب اسمك أولاً 🙂',
+    saveAccountTitle: 'ثبّت حسابك (اختياري)',
+    saveAccountDesc: 'أضف إيميل وكلمة مرور عشان ترجع لنتائجك من أي جهاز',
+    saveAccountBtn: 'تثبيت الحساب', accountSaved: 'تم تثبيت حسابك بنجاح ✅',
+    guestBadge: 'حساب مؤقت',
     noAccount: 'ليس لديك حساب؟', signupNow: 'اشترك الآن',
     haveAccount: 'لديك حساب بالفعل؟', loginNow: 'تسجيل الدخول',
     profile: 'ملفي', navHome: 'الرئيسية', navSpecialties: 'المسارات', navQuiz: 'الاختبار', navResults: 'النتائج',
@@ -44,6 +54,16 @@ const translations = {
     email: 'Email', password: 'Password', fullName: 'Full Name',
     bio: 'Bio', bioPlaceholder: 'Tell us about yourself...',
     login: 'Login', signup: 'Sign Up',
+    yourName: "What's your name?", namePlaceholder: 'Enter your first name',
+    startNow: 'Start Now',
+    quickNote: 'No email or password needed — just your name 🌿',
+    haveSavedAccount: 'Have a saved account?', loginHere: 'Log in',
+    backToQuickStart: '← Back to quick start',
+    enterNameFirst: 'Please enter your name first 🙂',
+    saveAccountTitle: 'Save your account (optional)',
+    saveAccountDesc: 'Add an email and password to access your results from any device',
+    saveAccountBtn: 'Save Account', accountSaved: 'Account saved successfully ✅',
+    guestBadge: 'Temporary account',
     noAccount: "Don't have an account?", signupNow: 'Sign up now',
     haveAccount: 'Already have an account?', loginNow: 'Login',
     profile: 'Profile', navHome: 'Home', navSpecialties: 'Specialties', navQuiz: 'Quiz', navResults: 'Results',
@@ -78,6 +98,7 @@ export default function BioPath() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isSavingAccount, setIsSavingAccount] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -106,6 +127,25 @@ export default function BioPath() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  // دخول سريع بالاسم فقط (بدون إيميل أو كلمة مرور)
+  const handleQuickStart = (e) => {
+    e.preventDefault();
+    if (!formData.name.trim()) { alert(t.enterNameFirst); return; }
+    const u = {
+      id: 'guest_' + Date.now(),
+      name: formData.name.trim(),
+      email: '', password: '', bio: '',
+      isGuest: true,
+      quizAttempts: [],
+      createdAt: new Date().toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US')
+    };
+    setCurrentUser(u);
+    localStorage.setItem('currentUser', JSON.stringify(u));
+    setIsLoggedIn(true);
+    setFormData({ email: '', password: '', name: '', bio: '' });
+  };
+
+  // تسجيل دخول لمن سبق وثبّت حسابه
   const handleLogin = (e) => {
     e.preventDefault();
     const users = JSON.parse(localStorage.getItem('users') || '{}');
@@ -116,17 +156,20 @@ export default function BioPath() {
     } else alert(t.invalidLogin);
   };
 
-  const handleSignUp = (e) => {
+  // تثبيت الحساب (اختياري) — يحوّل الزائر لحساب محفوظ
+  const handleSaveAccount = (e) => {
     e.preventDefault();
-    if (!formData.email || !formData.password || !formData.name) { alert(t.fillRequired); return; }
+    if (!formData.email || !formData.password) { alert(t.fillRequired); return; }
     const users = JSON.parse(localStorage.getItem('users') || '{}');
     if (users[formData.email]) { alert(t.emailExists); return; }
-    const u = { email: formData.email, password: formData.password, name: formData.name, bio: formData.bio,
-      quizAttempts: [], createdAt: new Date().toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US') };
+    const u = { ...currentUser, email: formData.email, password: formData.password, isGuest: false };
     users[formData.email] = u;
     localStorage.setItem('users', JSON.stringify(users));
-    setCurrentUser(u); localStorage.setItem('currentUser', JSON.stringify(u));
-    setIsLoggedIn(true); setIsSignUp(false); setFormData({ email: '', password: '', name: '', bio: '' });
+    localStorage.setItem('currentUser', JSON.stringify(u));
+    setCurrentUser(u);
+    setIsSavingAccount(false);
+    setFormData({ email: '', password: '', name: '', bio: '' });
+    alert(t.accountSaved);
   };
 
   const handleLogout = () => {
@@ -136,11 +179,13 @@ export default function BioPath() {
 
   const handleUpdateProfile = (e) => {
     e.preventDefault();
-    const users = JSON.parse(localStorage.getItem('users') || '{}');
     const u = { ...currentUser, name: formData.name, bio: formData.bio };
-    users[currentUser.email] = u;
-    localStorage.setItem('users', JSON.stringify(users));
     localStorage.setItem('currentUser', JSON.stringify(u));
+    if (u.email) {
+      const users = JSON.parse(localStorage.getItem('users') || '{}');
+      users[u.email] = u;
+      localStorage.setItem('users', JSON.stringify(users));
+    }
     setCurrentUser(u); setIsEditing(false);
   };
 
@@ -157,17 +202,24 @@ export default function BioPath() {
       ...result
     };
     setQuizResult(attempt);
-    const users = JSON.parse(localStorage.getItem('users') || '{}');
     const u = { ...currentUser, quizAttempts: [...(currentUser.quizAttempts || []), attempt] };
-    users[currentUser.email] = u;
-    localStorage.setItem('users', JSON.stringify(users));
     localStorage.setItem('currentUser', JSON.stringify(u));
+    // نحفظ في سجل الحسابات فقط لمن ثبّت حسابه بإيميل
+    if (u.email) {
+      const users = JSON.parse(localStorage.getItem('users') || '{}');
+      users[u.email] = u;
+      localStorage.setItem('users', JSON.stringify(users));
+    }
     setCurrentUser(u);
   };
 
   const getSpecialty = (id) => specialties.find(s => s.id === id);
-  const hasAttempts = currentUser?.quizAttempts?.length > 0;
-  const lastAttempt = hasAttempts ? currentUser.quizAttempts[currentUser.quizAttempts.length - 1] : null;
+  // نقبل فقط المحاولات السليمة (بنظام هولاند الجديد) ونتجاهل أي بيانات قديمة تالفة
+  const validAttempts = (currentUser?.quizAttempts || []).filter(
+    a => a && Array.isArray(a.topCode) && Array.isArray(a.matches) && a.matches.length > 0
+  );
+  const hasAttempts = validAttempts.length > 0;
+  const lastAttempt = hasAttempts ? validAttempts[validAttempts.length - 1] : null;
   const topMatchId = lastAttempt ? lastAttempt.matches[0].id : null;
 
   const LangToggle = ({ dark }) => (
@@ -176,47 +228,72 @@ export default function BioPath() {
     </button>
   );
 
-  /* ============ تسجيل الدخول ============ */
+  /* ============ شاشة الدخول المبسطة ============ */
   if (!isLoggedIn) {
     return (
-      <div dir={t.dir} className="min-h-screen flex items-center justify-center p-4" style={{ background: 'linear-gradient(135deg, #0A392B 0%, #047857 100%)' }}>
-        <div className="w-full max-w-md">
-          <div className="flex justify-end mb-4"><LangToggle dark /></div>
-          <div className="bg-white rounded-2xl shadow-2xl p-8">
-            <div className="text-center mb-8">
-              <div className="flex justify-center mb-3">
-                <img src="/logo.jpg" alt="Bio Path" className="w-28 h-28 object-contain" />
-              </div>
-              <h1 className="text-3xl font-bold" style={{ color: '#0A392B' }}>{t.appName}</h1>
-              <p className="text-gray-500 mt-2">{t.appSubtitle}</p>
-            </div>
+      <div dir={t.dir} className="min-h-screen flex flex-col items-center justify-center p-5 relative overflow-hidden"
+        style={{ background: 'linear-gradient(160deg, #04231A 0%, #0A392B 45%, #065F46 100%)' }}>
 
-            {!isSignUp ? (
-              <form onSubmit={handleLogin} className="space-y-4">
-                <Field label={t.email} name="email" type="email" value={formData.email} onChange={handleInputChange} required />
-                <Field label={t.password} name="password" type="password" value={formData.password} onChange={handleInputChange} required />
-                <button type="submit" className="w-full text-white font-bold py-2.5 rounded-lg transition hover:opacity-90" style={{ backgroundColor: '#0A392B' }}>{t.login}</button>
-                <p className="text-center text-gray-600 text-sm">{t.noAccount}{' '}
-                  <button type="button" onClick={() => { setIsSignUp(true); setFormData({ email: '', password: '', name: '', bio: '' }); }} className="font-semibold" style={{ color: '#059669' }}>{t.signupNow}</button>
-                </p>
-              </form>
-            ) : (
-              <form onSubmit={handleSignUp} className="space-y-4">
-                <Field label={`${t.fullName} *`} name="name" value={formData.name} onChange={handleInputChange} required />
-                <Field label={`${t.email} *`} name="email" type="email" value={formData.email} onChange={handleInputChange} required />
-                <Field label={`${t.password} *`} name="password" type="password" value={formData.password} onChange={handleInputChange} required />
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">{t.bio}</label>
-                  <textarea name="bio" value={formData.bio} onChange={handleInputChange} rows="3" placeholder={t.bioPlaceholder}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent" style={{ '--tw-ring-color': '#10B981' }} />
-                </div>
-                <button type="submit" className="w-full text-white font-bold py-2.5 rounded-lg transition hover:opacity-90" style={{ backgroundColor: '#059669' }}>{t.signup}</button>
-                <p className="text-center text-gray-600 text-sm">{t.haveAccount}{' '}
-                  <button type="button" onClick={() => { setIsSignUp(false); setFormData({ email: '', password: '', name: '', bio: '' }); }} className="font-semibold" style={{ color: '#059669' }}>{t.loginNow}</button>
-                </p>
-              </form>
-            )}
+        {/* توهج خلفي ناعم */}
+        <div className="absolute rounded-full pointer-events-none" style={{ width: 520, height: 520, top: '-14%', insetInlineEnd: '-16%', background: 'radial-gradient(circle, rgba(16,185,129,0.28) 0%, transparent 68%)' }} />
+        <div className="absolute rounded-full pointer-events-none" style={{ width: 420, height: 420, bottom: '-12%', insetInlineStart: '-12%', background: 'radial-gradient(circle, rgba(52,211,153,0.18) 0%, transparent 70%)' }} />
+
+        <div className="absolute top-5 inset-inline-end-5" style={{ insetInlineEnd: 20 }}>
+          <LangToggle dark />
+        </div>
+
+        <div className="w-full max-w-sm relative z-10">
+          {/* اللوقو مدموج بالخلفية */}
+          <div className="flex flex-col items-center mb-8">
+            <img src="/logo.jpg" alt="Bio Path"
+              className="w-36 h-36 object-contain"
+              style={{ mixBlendMode: 'screen', filter: 'drop-shadow(0 18px 34px rgba(16,185,129,0.45))' }} />
+            <h1 className="text-4xl font-bold text-white -mt-2 tracking-wide">Bio Path</h1>
+            <p className="text-emerald-200/90 mt-2 text-center text-sm">{t.appSubtitle}</p>
           </div>
+
+          {!isSignUp ? (
+            /* الدخول السريع بالاسم فقط */
+            <form onSubmit={handleQuickStart} className="space-y-4">
+              <div>
+                <label className="block text-emerald-100 font-medium mb-2 text-center">{t.yourName}</label>
+                <input
+                  type="text" name="name" value={formData.name} onChange={handleInputChange}
+                  placeholder={t.namePlaceholder} autoFocus
+                  className="w-full px-5 py-4 rounded-2xl text-center text-lg outline-none transition"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.95)', border: '2px solid rgba(16,185,129,0.5)' }} />
+              </div>
+
+              <button type="submit"
+                className="w-full font-bold py-4 rounded-2xl text-lg transition hover:opacity-90 active:scale-[0.99]"
+                style={{ backgroundColor: '#10B981', color: '#04231A', boxShadow: '0 10px 26px rgba(16,185,129,0.35)' }}>
+                {t.startNow} ✨
+              </button>
+
+              <p className="text-center text-emerald-200/70 text-xs pt-1">{t.quickNote}</p>
+
+              <div className="pt-3 text-center">
+                <button type="button" onClick={() => { setIsSignUp(true); setFormData({ email: '', password: '', name: '', bio: '' }); }}
+                  className="text-emerald-300/80 text-sm hover:text-emerald-200 transition underline underline-offset-4">
+                  {t.haveSavedAccount} {t.loginHere}
+                </button>
+              </div>
+            </form>
+          ) : (
+            /* دخول لمن ثبّت حسابه */
+            <form onSubmit={handleLogin} className="space-y-3">
+              <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder={t.email} required
+                className="w-full px-5 py-3.5 rounded-2xl outline-none" style={{ backgroundColor: 'rgba(255,255,255,0.95)', border: '2px solid rgba(16,185,129,0.4)' }} />
+              <input type="password" name="password" value={formData.password} onChange={handleInputChange} placeholder={t.password} required
+                className="w-full px-5 py-3.5 rounded-2xl outline-none" style={{ backgroundColor: 'rgba(255,255,255,0.95)', border: '2px solid rgba(16,185,129,0.4)' }} />
+              <button type="submit" className="w-full font-bold py-3.5 rounded-2xl transition hover:opacity-90"
+                style={{ backgroundColor: '#10B981', color: '#04231A' }}>{t.login}</button>
+              <div className="text-center pt-2">
+                <button type="button" onClick={() => { setIsSignUp(false); setFormData({ email: '', password: '', name: '', bio: '' }); }}
+                  className="text-emerald-300/80 text-sm hover:text-emerald-200 transition">{t.backToQuickStart}</button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     );
@@ -275,9 +352,35 @@ export default function BioPath() {
               {!isEditing ? (
                 <div className="space-y-2 text-sm">
                   <div><span className="text-gray-500">{t.name}: </span><span className="font-semibold text-gray-800">{currentUser.name}</span></div>
-                  <div><span className="text-gray-500">{t.email}: </span><span className="font-semibold text-gray-800">{currentUser.email}</span></div>
+                  {currentUser.email
+                    ? <div><span className="text-gray-500">{t.email}: </span><span className="font-semibold text-gray-800">{currentUser.email}</span></div>
+                    : <span className="inline-block text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#FEF3C7', color: '#92400E' }}>{t.guestBadge}</span>}
                   {currentUser.bio && <div><span className="text-gray-500">{t.bio}: </span><span className="text-gray-800">{currentUser.bio}</span></div>}
-                  <div className="text-gray-400 text-xs pt-2">{t.joinDate}: {currentUser.createdAt}</div>
+                  <div className="text-gray-400 text-xs pt-1">{t.joinDate}: {currentUser.createdAt}</div>
+
+                  {/* تثبيت الحساب — اختياري، يظهر فقط للزوار */}
+                  {!currentUser.email && (
+                    <div className="mt-3 pt-3 border-t">
+                      {!isSavingAccount ? (
+                        <div>
+                          <p className="font-semibold text-sm mb-1" style={{ color: '#0A392B' }}>{t.saveAccountTitle}</p>
+                          <p className="text-gray-500 text-xs mb-2">{t.saveAccountDesc}</p>
+                          <button onClick={() => setIsSavingAccount(true)}
+                            className="text-white px-4 py-1.5 rounded-lg text-sm transition hover:opacity-90"
+                            style={{ backgroundColor: '#10B981' }}>{t.saveAccountBtn}</button>
+                        </div>
+                      ) : (
+                        <form onSubmit={handleSaveAccount} className="space-y-2">
+                          <Field label={t.email} name="email" type="email" value={formData.email} onChange={handleInputChange} small required />
+                          <Field label={t.password} name="password" type="password" value={formData.password} onChange={handleInputChange} small required />
+                          <div className="flex gap-2">
+                            <button type="submit" className="flex items-center gap-1 text-white px-4 py-1.5 rounded-lg text-sm transition hover:opacity-90" style={{ backgroundColor: '#059669' }}><Save className="w-4 h-4" />{t.save}</button>
+                            <button type="button" onClick={() => setIsSavingAccount(false)} className="flex items-center gap-1 bg-gray-400 hover:bg-gray-500 text-white px-4 py-1.5 rounded-lg text-sm transition"><X className="w-4 h-4" />{t.cancel}</button>
+                          </div>
+                        </form>
+                      )}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <form onSubmit={handleUpdateProfile} className="space-y-3">
