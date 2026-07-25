@@ -136,6 +136,36 @@ export const specialties = [
       around: 'Water treatment plants, bio-fertilizers.',
       fact: 'Some microbes eat pollutants and clean water and soil naturally!',
       career: 'Environmental companies, treatment plants, bio-agriculture projects.' }
+  },
+  {
+    id: 'medical', codes: ['R', 'I', 'S'], emoji: '🩺', color: '#E11D48',
+    ar: { name: 'الهندسة الحيوية الطبية', field: 'أجهزة طبية', model: 'جهاز رسم القلب',
+      imagine: 'أنت مهندس، لكن مشروعك جسم إنسان: تبني الأجهزة والأدوات التي تُشخّص المرض وتعالجه، من جهاز رسم القلب إلى المضخّة التي توصّل الدواء.',
+      yourDay: ['تحلّل حاجة طبية مع طبيب', 'تصمّم الجهاز أو تحسّنه', 'تبني نموذجاً وتختبره', 'تتحقّق من أمانه على المريض'],
+      around: 'أجهزة رسم القلب، مضخّات الأنسولين، أجهزة المراقبة في المستشفيات.',
+      fact: 'أول جهاز لتنظيم ضربات القلب القابل للزرع غيّر حياة ملايين المرضى حول العالم!',
+      career: 'المستشفيات، شركات الأجهزة الطبية, هيئات التقييم الصحي.' },
+    en: { name: 'Medical Bioengineering', field: 'Medical Devices', model: 'An ECG machine',
+      imagine: "You're an engineer, but your project is the human body: you build the devices and tools that diagnose and treat disease, from the ECG machine to the pump that delivers medicine.",
+      yourDay: ['You analyze a medical need with a doctor', 'design or improve the device', 'build a prototype and test it', 'verify its safety on the patient'],
+      around: 'ECG machines, insulin pumps, hospital monitoring devices.',
+      fact: 'The first implantable pacemaker changed the lives of millions of patients worldwide!',
+      career: 'Hospitals, medical device companies, health assessment authorities.' }
+  },
+  {
+    id: 'regulatory', codes: ['C', 'I', 'E'], emoji: '🛡️', color: '#0891B2',
+    ar: { name: 'الشؤون التنظيمية للأجهزة الطبية', field: 'جودة وامتثال', model: 'اعتماد جهاز طبي',
+      imagine: 'أنت حارس البوّابة بين المخترع والمريض: لا يصل جهاز لأي إنسان قبل أن تثبت أنه آمن وفعّال أمام الجهات الرسمية.',
+      yourDay: ['تراجع ملفات الجهاز وبياناته', 'تتأكد من مطابقته للمعايير', 'تُعدّ وثائق التقديم للهيئة', 'تتابع الموافقة حتى الاعتماد'],
+      around: 'كل جهاز طبي معتمد مرّ عبر هذا الباب قبل وصوله للسوق.',
+      fact: 'بعض الأجهزة الطبية تحتاج سنوات من المراجعة التنظيمية قبل أن يُسمح ببيعها!',
+      career: 'الهيئات التنظيمية (مثل الهيئة العامة للغذاء والدواء), أقسام الامتثال في الشركات.' },
+    en: { name: 'Regulatory Affairs', field: 'Quality & Compliance', model: 'Medical device approval',
+      imagine: "You're the gatekeeper between the inventor and the patient: no device reaches any human until you prove it's safe and effective before the authorities.",
+      yourDay: ['You review the device files and data', 'ensure it meets the standards', 'prepare the submission documents for the authority', 'follow the approval through to certification'],
+      around: 'Every approved medical device passed through this door before reaching the market.',
+      fact: 'Some medical devices need years of regulatory review before they can be sold!',
+      career: 'Regulatory authorities (like the Food and Drug Authority), compliance departments in companies.' }
   }
 ];
 
