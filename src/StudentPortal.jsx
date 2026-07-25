@@ -73,6 +73,7 @@ const translations = {
     whyPath: 'ليش طلع لك هذا المسار؟', whyClosest: 'طلعت الأقرب لك',
     knowMore: 'اعرف أكثر: وش يميّزك عن المسار القريب؟', knowMoreClose: 'إخفاء التفاصيل',
     vsNearby: 'الفرق عن المسار القريب', reprQuestion: 'تحس النتيجة تمثّلك؟', reprYes: '👍 نعم', reprNo: '👎 لا', reprThanks: 'شكراً لك! رأيك يهمّني 💚',
+    simTitle: 'كم تشعر أن هذه النتيجة تشبهك؟', simHint: 'من ١ (لا تشبهني) إلى ١٠ (تشبهني تماماً)', simThanks: 'شكراً! هذا يساعدني أطوّر دقّة الاختبار 🌿',
     deepTitle: '📚 تعمّق في مسارك', deepSoon: 'قريباً', deepSoonDesc: 'مصادر مختارة بعناية لكل مسار (فيديو · كورس · مقال)، بالتعاون مع مختصين',
     comingSoon: 'سيتم إضافة التوصيات وحسابات المختصين هنا قريباً', date: 'التاريخ', time: 'الوقت',
     viewResult: 'اعرض النتيجة كاملة', backToMenu: 'تم', resultsLog: 'محاولاتك السابقة',
@@ -144,6 +145,7 @@ const translations = {
     whyPath: 'Why did this path come up for you?', whyClosest: 'came out closest to you',
     knowMore: 'Learn more: what sets you apart from the nearby path?', knowMoreClose: 'Hide details',
     vsNearby: 'Difference from the nearby path', reprQuestion: 'Does this result represent you?', reprYes: '👍 Yes', reprNo: '👎 No', reprThanks: 'Thank you! Your feedback matters 💚',
+    simTitle: 'How much does this result resemble you?', simHint: 'From 1 (not at all) to 10 (exactly me)', simThanks: 'Thanks! This helps me improve the quiz accuracy 🌿',
     deepTitle: '📚 Go deeper into your path', deepSoon: 'Coming soon', deepSoonDesc: 'Carefully selected resources for each path (video · course · article), in collaboration with specialists',
     comingSoon: 'Recommendations and expert contacts will be added here soon', date: 'Date', time: 'Time',
     viewResult: 'View Full Result', backToMenu: 'Done', resultsLog: 'Your Past Attempts',
@@ -267,6 +269,28 @@ export default function BioPath() {
   const answeredCount = Object.keys(quizAnswers).length;
   const allAnswered = answeredCount >= allQuestions.length;
 
+  // إرسال الإجابات لجوجل شيت (مجهولة تماماً، بلا أي بيانات شخصية)
+  const sendToSheet = (result, similarity) => {
+    try {
+      const answersObj = {};
+      allQuestions.forEach((q, i) => { answersObj['q' + (i + 1)] = quizAnswers[q.id] || ''; });
+      const payload = {
+        session_id: 's_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+        timestamp: new Date().toISOString(),
+        answers: answersObj,
+        scores: result.scores,
+        top_paths: result.matches.slice(0, 2).map(m => m.id).join(', '),
+        similarity: similarity || ''
+      };
+      fetch('https://script.google.com/macros/s/AKfycbyXeThYzEX4RWrUsP78Uq0dEqHZDz9Hcan5xvCymNBoXNcjxyoacl-PaTGV0_QC0z8u/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      }).catch(() => {});
+    } catch (e) { /* لا نعطّل تجربة الطالب لو فشل الإرسال */ }
+  };
+
   const handleSubmitQuiz = () => {
     if (!allAnswered) { alert(t.mustAnswerAll); return; }
     const result = computeResult(quizAnswers);
@@ -276,6 +300,7 @@ export default function BioPath() {
       ...result
     };
     setQuizResult(attempt);
+    sendToSheet(result); // إرسال أولي (بدون درجة التشابه بعد)
     localStorage.removeItem('quizProgress');
     setSavedProgress(0);
     const u = { ...currentUser, quizAttempts: [...(currentUser.quizAttempts || []), attempt] };
@@ -673,6 +698,7 @@ export default function BioPath() {
             ) : quizResult && (
               <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
                 <ResultView t={t} lang={lang} result={quizResult} getSpecialty={getSpecialty}
+                  onSimilarity={(val) => sendToSheet(quizResult, val)}
                   onBack={() => { setIsQuizStarted(false); setQuizResult(null); setQuizAnswers({}); setQuizIndex(0); setCurrentPage('results'); }} />
               </div>
             )}
@@ -943,9 +969,9 @@ function RadarChart({ typePercents, lang }) {
   );
 }
 
-function ResultView({ t, lang, result, getSpecialty, onBack, hideBack }) {
+function ResultView({ t, lang, result, getSpecialty, onBack, hideBack, onSimilarity }) {
   const [showMore, setShowMore] = useState(false);
-  const [repr, setRepr] = useState(null);
+  const [simVal, setSimVal] = useState(null);
   const top3 = result.matches.slice(0, 3);
   const topSpecialty = getSpecialty(top3[0].id);
   const nearby = top3[1] ? getSpecialty(top3[1].id) : null;
@@ -1063,18 +1089,25 @@ function ResultView({ t, lang, result, getSpecialty, onBack, hideBack }) {
         </div>
       )}
 
-      {/* ⑥ هل تمثّلك؟ */}
+      {/* ⑥ كم تشبهك النتيجة؟ (١-١٠) — يُرسل لجوجل شيت */}
       <div className="rounded-xl p-4 mb-5" style={{ backgroundColor: '#FAFAFA', border: '1px solid #E5E7EB' }}>
-        {repr === null ? (
-          <div className="flex items-center justify-between">
-            <span className="font-bold text-sm" style={{ color: '#0A392B' }}>{t.reprQuestion}</span>
-            <div className="flex gap-2">
-              <button onClick={() => setRepr('no')} className="px-4 py-2 rounded-lg text-sm transition hover:opacity-80" style={{ backgroundColor: '#F3F4F6', color: '#6B7280' }}>{t.reprNo}</button>
-              <button onClick={() => setRepr('yes')} className="px-4 py-2 rounded-lg text-sm transition hover:opacity-80" style={{ backgroundColor: '#D1FAE5', color: '#047857' }}>{t.reprYes}</button>
+        {simVal === null ? (
+          <div>
+            <p className="font-bold text-sm mb-1" style={{ color: '#0A392B' }}>{t.simTitle}</p>
+            <p className="text-xs text-gray-400 mb-3">{t.simHint}</p>
+            <div className="flex gap-1.5 justify-center flex-wrap">
+              {[1,2,3,4,5,6,7,8,9,10].map(n => (
+                <button key={n}
+                  onClick={() => { setSimVal(n); if (onSimilarity) onSimilarity(n); }}
+                  className="w-9 h-9 rounded-lg text-sm font-bold transition hover:scale-110"
+                  style={{ backgroundColor: n >= 8 ? '#D1FAE5' : (n >= 5 ? '#EDE9FE' : '#F3F4F6'), color: n >= 8 ? '#047857' : (n >= 5 ? '#6D28D9' : '#6B7280') }}>
+                  {n}
+                </button>
+              ))}
             </div>
           </div>
         ) : (
-          <p className="text-center text-sm font-semibold" style={{ color: '#047857' }}>{t.reprThanks}</p>
+          <p className="text-center text-sm font-semibold" style={{ color: '#047857' }}>{t.simThanks}</p>
         )}
       </div>
 
