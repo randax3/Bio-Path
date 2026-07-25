@@ -4,7 +4,7 @@ import {
   Home, Compass, Star, ChevronDown, ChevronUp, ArrowLeft, Mail, Linkedin
 } from 'lucide-react';
 import {
-  interestTypes, specialties, quizQuestions, forcedChoiceQuestions, computeResult
+  interestTypes, specialties, quizQuestions, forcedChoiceQuestions, computeResult, personalitySummary
 } from './quizData.js';
 
 /* ============ الترجمة ============ */
@@ -67,6 +67,13 @@ const translations = {
     submitQuiz: 'أظهر نتيجتي', answered: 'أُجيب', of: 'من',
     yourCode: 'رمز شخصيتك المهنية', yourTopMatches: 'أقرب المسارات لك',
     resultTitle: 'نتيجتك', recommendations: 'توصيات وتواصل', internalUni: '🏫 داخل الجامعة', externalUni: '🌍 خارج الجامعة',
+    feedbackTitle: 'رأيك يهمّني 💚', feedbackDesc: 'دقيقة واحدة من وقتك تساعدني أطوّر Bio Path لزملائك', feedbackBtn: 'شاركني رأيك (٣ أسئلة)',
+    personalityLabel: '✦ شخصيتك المهنية', codeHint: 'أعلى ٣ ميول لديك، مرتّبة من الأقوى',
+    interestMap: 'خريطة ميولك', interestMapHint: 'من وين طلعت نتيجتك؟ هذي نسبك في الميول الستة',
+    whyPath: 'ليش طلع لك هذا المسار؟', whyClosest: 'طلعت الأقرب لك',
+    knowMore: 'اعرف أكثر: وش يميّزك عن المسار القريب؟', knowMoreClose: 'إخفاء التفاصيل',
+    vsNearby: 'الفرق عن المسار القريب', reprQuestion: 'تحس النتيجة تمثّلك؟', reprYes: '👍 نعم', reprNo: '👎 لا', reprThanks: 'شكراً لك! رأيك يهمّني 💚',
+    deepTitle: '📚 تعمّق في مسارك', deepSoon: 'قريباً', deepSoonDesc: 'مصادر مختارة بعناية لكل مسار (فيديو · كورس · مقال)، بالتعاون مع مختصين',
     comingSoon: 'سيتم إضافة التوصيات وحسابات المختصين هنا قريباً', date: 'التاريخ', time: 'الوقت',
     viewResult: 'اعرض النتيجة كاملة', backToMenu: 'تم', resultsLog: 'محاولاتك السابقة',
     noQuizzes: 'لم تأخذ الاختبار بعد', startFirst: 'ابدأ من تبويب الاختبار', attempt: 'محاولة',
@@ -131,6 +138,13 @@ const translations = {
     submitQuiz: 'Show My Result', answered: 'Answered', of: 'of',
     yourCode: 'Your Career Personality Code', yourTopMatches: 'Your Closest Specialties',
     resultTitle: 'Your Result', recommendations: 'Recommendations & Contacts', internalUni: '🏫 Inside University', externalUni: '🌍 Outside University',
+    feedbackTitle: 'Your opinion matters 💚', feedbackDesc: 'One minute of your time helps me improve Bio Path for your peers', feedbackBtn: 'Share your feedback (3 questions)',
+    personalityLabel: '✦ Your Career Personality', codeHint: 'Your top 3 interests, ordered from strongest',
+    interestMap: 'Your Interest Map', interestMapHint: 'Where did your result come from? These are your scores across the six interests',
+    whyPath: 'Why did this path come up for you?', whyClosest: 'came out closest to you',
+    knowMore: 'Learn more: what sets you apart from the nearby path?', knowMoreClose: 'Hide details',
+    vsNearby: 'Difference from the nearby path', reprQuestion: 'Does this result represent you?', reprYes: '👍 Yes', reprNo: '👎 No', reprThanks: 'Thank you! Your feedback matters 💚',
+    deepTitle: '📚 Go deeper into your path', deepSoon: 'Coming soon', deepSoonDesc: 'Carefully selected resources for each path (video · course · article), in collaboration with specialists',
     comingSoon: 'Recommendations and expert contacts will be added here soon', date: 'Date', time: 'Time',
     viewResult: 'View Full Result', backToMenu: 'Done', resultsLog: 'Your Past Attempts',
     noQuizzes: "You haven't taken the quiz yet", startFirst: 'Start from the Quiz tab', attempt: 'Attempt',
@@ -872,33 +886,131 @@ function QuizRunner({ t, lang, questions, forcedStart, index, answers, onAnswer,
 
 
 
+// ============ عجلة الرادار للميول الستة ============
+function RadarChart({ typePercents, lang }) {
+  const order = ['I', 'R', 'A', 'C', 'S', 'E']; // ترتيب حول السداسية
+  const cx = 160, cy = 150, R = 105;
+  // زوايا الرؤوس الستة (تبدأ من الأعلى)
+  const angleFor = (i) => (-90 + i * 60) * Math.PI / 180;
+  const pointAt = (i, radius) => ({
+    x: cx + radius * Math.cos(angleFor(i)),
+    y: cy + radius * Math.sin(angleFor(i))
+  });
+  // شبكة (3 حلقات)
+  const rings = [1, 0.66, 0.33].map(scale =>
+    order.map((_, i) => { const p = pointAt(i, R * scale); return `${p.x},${p.y}`; }).join(' ')
+  );
+  // مضلع الطالب
+  const dataPts = order.map((code, i) => {
+    const val = (typePercents[code] || 0) / 100;
+    const p = pointAt(i, R * Math.max(val, 0.05));
+    return `${p.x},${p.y}`;
+  }).join(' ');
+
+  return (
+    <svg viewBox="0 0 320 300" className="w-full" style={{ maxWidth: 340, margin: '0 auto', display: 'block' }}>
+      <defs>
+        <radialGradient id="radarFill" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="rgba(139,92,246,0.35)" />
+          <stop offset="100%" stopColor="rgba(52,211,153,0.15)" />
+        </radialGradient>
+      </defs>
+      {rings.map((pts, i) => (
+        <polygon key={i} points={pts} fill="none" stroke="#E5E7EB" strokeWidth="1" />
+      ))}
+      {order.map((_, i) => {
+        const p = pointAt(i, R);
+        return <line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke="#F1F5F9" strokeWidth="1" />;
+      })}
+      <polygon points={dataPts} fill="url(#radarFill)" stroke="#8B5CF6" strokeWidth="2.5" />
+      {order.map((code, i) => {
+        const val = (typePercents[code] || 0) / 100;
+        const p = pointAt(i, R * Math.max(val, 0.05));
+        return <circle key={i} cx={p.x} cy={p.y} r="4" fill="#8B5CF6" />;
+      })}
+      {order.map((code, i) => {
+        const lp = pointAt(i, R + 26);
+        const tp = interestTypes[code];
+        const isTop = (typePercents[code] || 0) >= 70;
+        return (
+          <text key={code} x={lp.x} y={lp.y} textAnchor="middle" dominantBaseline="middle"
+            fontSize="12" fontWeight={isTop ? 'bold' : 'normal'} fill={isTop ? tp.color : '#9CA3AF'}>
+            {code} {lang === 'ar' ? tp.ar : tp.en}
+          </text>
+        );
+      })}
+    </svg>
+  );
+}
+
 function ResultView({ t, lang, result, getSpecialty, onBack, hideBack }) {
+  const [showMore, setShowMore] = useState(false);
+  const [repr, setRepr] = useState(null);
   const top3 = result.matches.slice(0, 3);
   const topSpecialty = getSpecialty(top3[0].id);
+  const nearby = top3[1] ? getSpecialty(top3[1].id) : null;
+  const summary = personalitySummary(result.topCode, lang);
+  const tp = result.typePercents || {};
+
+  // ليش هذا المسار: نربط أعلى نمطين بالمسار الأول
+  const t1 = interestTypes[result.topCode[0]], t2 = interestTypes[result.topCode[1]];
+  const whyText = lang === 'ar'
+    ? `لأن نمطك ${t1.ar} العالي (${tp[result.topCode[0]]}٪) و${t2.ar} يناسبان طبيعة هذا المسار وأسلوب العمل فيه.`
+    : `Because your strong ${t1.en} (${tp[result.topCode[0]]}%) and ${t2.en} tendencies match the nature of this path and how you work in it.`;
 
   return (
     <div>
+      {/* اللوقو + العنوان */}
       <div className="text-center mb-6">
-        <div className="inline-flex p-3 rounded-2xl mb-3" style={{ backgroundColor: 'rgba(139,92,246,0.12)' }}>
-          <Compass className="w-16 h-16" style={{ color: '#8B5CF6' }} />
+        <div className="inline-flex mb-2">
+          <img src="/logo.png" alt="Bio Path" className="w-24 object-contain"
+            style={{ filter: 'drop-shadow(0 10px 26px rgba(139,92,246,0.5))' }} />
         </div>
         <h2 className="text-2xl md:text-3xl font-bold" style={{ color: '#0A392B' }}>{t.resultTitle}</h2>
       </div>
 
-      {/* رمز الشخصية */}
-      <div className="rounded-xl p-5 mb-6 text-center" style={{ background: 'linear-gradient(135deg, #0A392B 0%, #047857 55%, #10B981 100%)' }}>
-        <p className="text-emerald-100 text-sm mb-2">{t.yourCode}</p>
-        <div className="flex justify-center gap-2">
-          {result.topCode.map(code => (
-            <div key={code} className="px-4 py-2 rounded-lg font-bold text-lg" style={{ backgroundColor: 'rgba(16,185,129,0.25)', color: 'white' }}>
-              {code} · {lang === 'ar' ? interestTypes[code].ar : interestTypes[code].en}
-            </div>
+      {/* ① ملخّص الشخصية */}
+      <div className="rounded-xl p-5 mb-5" style={{ backgroundColor: '#F5F3FF', border: '1px solid #DDD6FE' }}>
+        <p className="text-xs font-bold mb-1.5" style={{ color: '#7C3AED' }}>{t.personalityLabel}</p>
+        <p className="font-bold text-lg mb-1.5" style={{ color: '#6D28D9' }}>{summary.title}</p>
+        <p className="text-sm leading-relaxed text-gray-600">{summary.body}</p>
+      </div>
+
+      {/* ② رمز الشخصية + شرح كل حرف */}
+      <div className="rounded-xl p-5 mb-5 text-center" style={{ background: 'linear-gradient(135deg, #0A392B 0%, #4C1D95 100%)' }}>
+        <p className="text-purple-100 text-sm mb-3">{t.yourCode}</p>
+        <div className="flex justify-center gap-2 mb-3">
+          {result.topCode.map((code, idx) => {
+            const bg = ['#8B5CF6', '#A78BFA', '#34D399'][idx];
+            const fg = idx === 2 ? '#04231A' : (idx === 1 ? '#1E1B4B' : '#fff');
+            return (
+              <div key={code} className="flex-1 rounded-xl py-2.5 px-1" style={{ backgroundColor: bg, color: fg }}>
+                <span className="block font-bold text-sm">{code} · {interestTypes[code].ar}</span>
+                <span className="block text-[10px] opacity-75 mt-0.5">{interestTypes[code].en}</span>
+              </div>
+            );
+          })}
+        </div>
+        <div className="text-right space-y-0.5">
+          {result.topCode.map((code, idx) => (
+            <p key={code} className="text-xs" style={{ color: idx === 2 ? '#A7F3D0' : '#E9D5FF' }}>
+              {code}: {interestTypes[code][lang === 'ar' ? 'verb_ar' : 'verb_en']}
+            </p>
           ))}
         </div>
       </div>
 
+      {/* ③ خريطة ميولك (عجلة الرادار) */}
+      <div className="mb-5">
+        <h3 className="font-bold mb-0.5" style={{ color: '#0A392B' }}>🧭 {t.interestMap}</h3>
+        <p className="text-xs text-gray-400 mb-2">{t.interestMapHint}</p>
+        <div className="rounded-xl p-3 border" style={{ borderColor: 'rgba(10,57,43,0.1)' }}>
+          <RadarChart typePercents={tp} lang={lang} />
+        </div>
+      </div>
+
       {/* أقرب المسارات */}
-      <div className="mb-6">
+      <div className="mb-5">
         <h3 className="font-bold mb-4" style={{ color: '#0A392B' }}>{t.yourTopMatches}</h3>
         <div className="space-y-3">
           {top3.map((m, i) => {
@@ -906,10 +1018,10 @@ function ResultView({ t, lang, result, getSpecialty, onBack, hideBack }) {
             return (
               <div key={m.id}>
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="font-semibold text-gray-800">{i === 0 && '🧭 '}{s.emoji} {s[lang].name}</span>
+                  <span className="font-semibold text-gray-800">{i === 0 && '🏆 '}{s.emoji} {s[lang].name}</span>
                   <span className="font-bold" style={{ color: s.color }}>{m.percentage}%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2.5">
+                <div className="w-full rounded-full h-2.5" style={{ backgroundColor: '#F1F5F9' }}>
                   <div className="h-2.5 rounded-full transition-all" style={{ width: `${m.percentage}%`, backgroundColor: s.color }}></div>
                 </div>
               </div>
@@ -918,8 +1030,66 @@ function ResultView({ t, lang, result, getSpecialty, onBack, hideBack }) {
         </div>
       </div>
 
+      {/* ④ ليش طلع لك هذا المسار */}
+      <div className="rounded-xl p-5 mb-5" style={{ backgroundColor: '#ECFDF5', border: '1px solid #A7F3D0' }}>
+        <p className="font-bold text-sm mb-1.5" style={{ color: '#047857' }}>💡 {topSpecialty.emoji} {topSpecialty[lang].name} {t.whyClosest}</p>
+        <p className="text-sm leading-relaxed" style={{ color: '#065F46' }}>{whyText}</p>
+      </div>
+
+      {/* ⑤ اعرف أكثر (يفتح الفرق عن المسار القريب) */}
+      {nearby && (
+        <div className="mb-5">
+          <button onClick={() => setShowMore(!showMore)}
+            className="w-full flex items-center justify-between px-4 py-3 rounded-xl border transition"
+            style={{ backgroundColor: '#F9FAFB', borderColor: '#E5E7EB', color: '#6B7280' }}>
+            <span className="text-sm font-bold">{showMore ? t.knowMoreClose : t.knowMore}</span>
+            {showMore ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+          {showMore && (
+            <div className="mt-2 rounded-xl p-4 border animate-[fadeIn_0.25s_ease]" style={{ backgroundColor: '#fff', borderColor: '#E5E7EB' }}>
+              <p className="text-xs font-bold mb-2" style={{ color: '#0A392B' }}>{t.vsNearby}</p>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="font-semibold" style={{ color: topSpecialty.color }}>{topSpecialty.emoji} {topSpecialty[lang].name}</span>
+                <span className="text-gray-400">↔</span>
+                <span className="font-semibold" style={{ color: nearby.color }}>{nearby.emoji} {nearby[lang].name}</span>
+              </div>
+              <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+                {lang === 'ar'
+                  ? `${topSpecialty.ar.name}: ${topSpecialty.ar.imagine} بينما ${nearby.ar.name}: ${nearby.ar.imagine}`
+                  : `${topSpecialty.en.name}: ${topSpecialty.en.imagine} While ${nearby.en.name}: ${nearby.en.imagine}`}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ⑥ هل تمثّلك؟ */}
+      <div className="rounded-xl p-4 mb-5" style={{ backgroundColor: '#FAFAFA', border: '1px solid #E5E7EB' }}>
+        {repr === null ? (
+          <div className="flex items-center justify-between">
+            <span className="font-bold text-sm" style={{ color: '#0A392B' }}>{t.reprQuestion}</span>
+            <div className="flex gap-2">
+              <button onClick={() => setRepr('no')} className="px-4 py-2 rounded-lg text-sm transition hover:opacity-80" style={{ backgroundColor: '#F3F4F6', color: '#6B7280' }}>{t.reprNo}</button>
+              <button onClick={() => setRepr('yes')} className="px-4 py-2 rounded-lg text-sm transition hover:opacity-80" style={{ backgroundColor: '#D1FAE5', color: '#047857' }}>{t.reprYes}</button>
+            </div>
+          </div>
+        ) : (
+          <p className="text-center text-sm font-semibold" style={{ color: '#047857' }}>{t.reprThanks}</p>
+        )}
+      </div>
+
+      {/* تعمّق في مسارك (قريباً) */}
+      <div className="mb-5">
+        <h3 className="font-bold mb-2" style={{ color: '#0A392B' }}>{t.deepTitle}</h3>
+        <div className="rounded-xl p-5 text-center text-white" style={{ background: 'linear-gradient(135deg, #1E1B4B 0%, #4C1D95 100%)' }}>
+          <div className="text-3xl mb-1">🔜</div>
+          <p className="font-bold mb-1">{t.deepSoon}</p>
+          <p className="text-xs" style={{ color: '#C4B5FD' }}>{t.deepSoonDesc}</p>
+        </div>
+      </div>
+
       {/* توصيات */}
-      <div className="rounded-xl p-5 mb-6" style={{ backgroundColor: '#F9FAFB' }}>
+      <div className="rounded-xl p-5 mb-5" style={{ backgroundColor: '#F9FAFB' }}>
         <h3 className="font-bold mb-3" style={{ color: '#0A392B' }}>{t.recommendations}: {topSpecialty.emoji} {topSpecialty[lang].name}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <div className="bg-white rounded-lg p-4 border" style={{ borderColor: 'rgba(10,57,43,0.1)' }}>
@@ -931,6 +1101,18 @@ function ResultView({ t, lang, result, getSpecialty, onBack, hideBack }) {
             <p className="text-gray-400 text-xs">{t.comingSoon}</p>
           </div>
         </div>
+      </div>
+
+      {/* بطاقة التقييم */}
+      <div className="rounded-xl p-5 mb-6 text-center" style={{ background: 'linear-gradient(135deg, #0A392B 0%, #4C1D95 100%)' }}>
+        <p className="text-white font-bold mb-1">{t.feedbackTitle}</p>
+        <p className="text-purple-100 text-sm mb-4">{t.feedbackDesc}</p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfGiN4Wwg_A17CgNBY6RKXU3poPgpBFZXKiOsDu5EyutGzCeA/viewform"
+          target="_blank" rel="noopener noreferrer"
+          className="inline-block font-bold px-6 py-2.5 rounded-lg transition hover:opacity-90"
+          style={{ backgroundColor: '#34D399', color: '#04231A' }}>
+          {t.feedbackBtn}
+        </a>
       </div>
 
       <div className="text-xs text-gray-400 mb-4">{result.date} - {result.time}</div>

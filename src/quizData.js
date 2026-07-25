@@ -4,13 +4,28 @@
 // ============================================================
 
 export const interestTypes = {
-  R: { ar: 'الواقعي', en: 'Realistic', color: '#0A392B', desc_ar: 'عملي، يحب بناء وتشغيل الأشياء بيده', desc_en: 'Practical, likes building and operating things' },
-  I: { ar: 'التحليلي', en: 'Investigative', color: '#7C3AED', desc_ar: 'فضولي، يحب البحث والفهم العميق', desc_en: 'Curious, likes research and deep understanding' },
-  A: { ar: 'الابتكاري', en: 'Artistic', color: '#8B5CF6', desc_ar: 'مبدع، يحب التصميم والأفكار الجديدة', desc_en: 'Creative, likes design and new ideas' },
-  S: { ar: 'الاجتماعي', en: 'Social', color: '#059669', desc_ar: 'متعاون، يحب مساعدة وتعليم الناس', desc_en: 'Cooperative, likes helping and teaching people' },
-  E: { ar: 'الريادي', en: 'Enterprising', color: '#A78BFA', desc_ar: 'قيادي، يحب المشاريع والإقناع', desc_en: 'Leader, likes projects and persuasion' },
-  C: { ar: 'المنظّم', en: 'Conventional', color: '#10B981', desc_ar: 'دقيق، يحب التنظيم والمعايير', desc_en: 'Precise, likes organization and standards' }
+  R: { ar: 'الواقعي', en: 'Realistic', color: '#0A392B', verb_ar: 'تبني بيدك وتحب العمل التطبيقي', verb_en: 'you build and love hands-on work', adj_ar: 'عملي', adj_en: 'practical', desc_ar: 'عملي، يحب بناء وتشغيل الأشياء بيده', desc_en: 'Practical, likes building and operating things' },
+  I: { ar: 'التحليلي', en: 'Investigative', color: '#7C3AED', verb_ar: 'تبحث وتحلّل وتحب الفهم العميق', verb_en: 'you research, analyze, and love deep understanding', adj_ar: 'تحليلي', adj_en: 'analytical', desc_ar: 'فضولي، يحب البحث والفهم العميق', desc_en: 'Curious, likes research and deep understanding' },
+  A: { ar: 'الابتكاري', en: 'Artistic', color: '#8B5CF6', verb_ar: 'تصمّم وتبتكر أفكاراً جديدة', verb_en: 'you design and invent new ideas', adj_ar: 'مبتكر', adj_en: 'creative', desc_ar: 'مبدع، يحب التصميم والأفكار الجديدة', desc_en: 'Creative, likes design and new ideas' },
+  S: { ar: 'الاجتماعي', en: 'Social', color: '#059669', verb_ar: 'تحب مساعدة الناس وتعليمهم', verb_en: 'you love helping and teaching people', adj_ar: 'اجتماعي', adj_en: 'social', desc_ar: 'متعاون، يحب مساعدة وتعليم الناس', desc_en: 'Cooperative, likes helping and teaching people' },
+  E: { ar: 'الريادي', en: 'Enterprising', color: '#A78BFA', verb_ar: 'تقود وتحب المشاريع والإقناع', verb_en: 'you lead and love projects and persuasion', adj_ar: 'ريادي', adj_en: 'enterprising', desc_ar: 'قيادي، يحب المشاريع والإقناع', desc_en: 'Leader, likes projects and persuasion' },
+  C: { ar: 'المنظّم', en: 'Conventional', color: '#10B981', verb_ar: 'تنظّم وتحب الدقة والمعايير', verb_en: 'you organize and love precision and standards', adj_ar: 'منظّم', adj_en: 'organized', desc_ar: 'دقيق، يحب التنظيم والمعايير', desc_en: 'Precise, likes organization and standards' }
 };
+
+// ملخّص الشخصية: يبني جملة من أعلى نمطين
+export function personalitySummary(topCode, lang) {
+  const t1 = interestTypes[topCode[0]], t2 = interestTypes[topCode[1]];
+  if (lang === 'ar') {
+    return {
+      title: `أنت شخص ${t1.adj_ar} و${t2.adj_ar}`,
+      body: `${t1.verb_ar.charAt(0).toUpperCase() + t1.verb_ar.slice(1)}، وبنفس الوقت ${t2.verb_ar}. هذا المزيج يوجّهك نحو مسارات تجمع بين هذين الجانبين.`
+    };
+  }
+  return {
+    title: `You're a ${t1.adj_en} and ${t2.adj_en} person`,
+    body: `${t1.verb_en.charAt(0).toUpperCase() + t1.verb_en.slice(1)}, and at the same time ${t2.verb_en}. This mix points you toward paths that combine both sides.`
+  };
+}
 
 // ============================================================
 // التخصصات السبعة مع رموز الميول والمحتوى التعريفي
@@ -405,5 +420,12 @@ export function computeResult(answers) {
     .map(m => ({ id: m.id, percentage: Math.round((m.score / maxScore) * 100) }))
     .sort((a, b) => b.percentage - a.percentage);
 
-  return { scores, topCode, matches };
+  // نسب الأنماط المئوية (لعجلة الرادار) — أعلى نمط = 100%
+  const maxTypeScore = Math.max(...Object.values(scores), 1);
+  const typePercents = {};
+  Object.keys(scores).forEach(k => {
+    typePercents[k] = Math.round((scores[k] / maxTypeScore) * 100);
+  });
+
+  return { scores, topCode, matches, typePercents };
 }
