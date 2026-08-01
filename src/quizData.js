@@ -170,6 +170,58 @@ export const specialties = [
 ];
 
 // ============================================================
+// توفّر التخصص الدقيق في جامعة الملك فهد (KFUPM)
+// status: 'now' متاح | 'soon' تحت التطوير | 'none' لا يوجد تخصص مطابق
+// ============================================================
+export const availability = {
+  bioinfo:    { status: 'now',  ar: 'متاح الآن',                 en: 'Available now',            cx: 'CX — Bioinformatics' },
+  medical:    { status: 'soon', ar: 'قريباً · خريف ٢٠٢٧–٢٠٢٨',   en: 'Coming · Fall 2027–2028',  cx: 'CX — Biomedical Devices' },
+  process:    { status: 'soon', ar: 'قريباً · خريف ٢٠٢٧–٢٠٢٨',   en: 'Coming · Fall 2027–2028',  cx: 'CX — Biologics Engineering' },
+  genetic:    { status: 'none', ar: 'لا يوجد تخصص دقيق مطابق بعد', en: 'No matching concentration yet', cx: '' },
+  tissue:     { status: 'none', ar: 'لا يوجد تخصص دقيق مطابق بعد', en: 'No matching concentration yet', cx: '' },
+  biomat:     { status: 'none', ar: 'لا يوجد تخصص دقيق مطابق بعد', en: 'No matching concentration yet', cx: '' },
+  biomech:    { status: 'none', ar: 'لا يوجد تخصص دقيق مطابق بعد', en: 'No matching concentration yet', cx: '' },
+  environ:    { status: 'none', ar: 'لا يوجد تخصص دقيق مطابق بعد', en: 'No matching concentration yet', cx: '' },
+  regulatory: { status: 'none', ar: 'لا يوجد تخصص دقيق مطابق بعد', en: 'No matching concentration yet', cx: '' },
+};
+
+// اختصارات أسماء المسارات (لوسوم كروت الدكاترة)
+export const specialtyShort = {
+  genetic:{ar:'وراثية وتخليقية',en:'Genetic'}, tissue:{ar:'أنسجة وتجديدي',en:'Tissue Eng'},
+  biomat:{ar:'مواد حيوية',en:'Biomaterials'}, process:{ar:'تصنيع حيوي',en:'Bioprocess'},
+  bioinfo:{ar:'معلوماتية حيوية',en:'Bioinformatics'}, biomech:{ar:'ميكانيكا حيوية',en:'Biomechanics'},
+  environ:{ar:'بيئية وزراعية',en:'Environmental'}, medical:{ar:'هندسة حيوية طبية',en:'Biomedical'},
+  regulatory:{ar:'شؤون تنظيمية',en:'Regulatory'},
+};
+
+// ============================================================
+// أعضاء هيئة التدريس — قسم الهندسة الحيوية (KFUPM)
+// fields: مسارات مرتبطة | coord: مسار ينسّقه | img: صورة القسم (fallback = الأحرف الأولى)
+// المصدر: bioe.kfupm.edu.sa/people/faculty  +  صفحة مجالات البحث الرسمية
+// ملاحظة: لتثبيت الصور محلياً لاحقاً، نزّليها في public/faculty/ وبدّلي img بالمسار المحلي.
+// ============================================================
+const KF = 'https://bioe.kfupm.edu.sa/images/default-source/';
+export const faculty = [
+  { id:'mahnashi', ar:'د. يعقوب المنشي', role_ar:'رئيس القسم', role_en:'Chairman', room:'مبنى ٧، غرفة ١٣١', ph:'013 860 7032', em:'ymahnashi@kfupm.edu.sa', color:'#0A392B', initials:'يم', img:KF+'faculty/dr.-yaqub(1).tmb-people.jpeg?Culture=en&sfvrsn=2b5df501_1', fields:['medical'], coord:null },
+  { id:'ying', ar:'أ. جاكي ينغ', role_ar:'أستاذة زائرة متميزة', role_en:'Visiting Distinguished Professor', room:'مبنى ٧، غرفة ٢٢٩', ph:'013 860 7741', em:'Jyying@kfupm.edu.sa', color:'#6B5CF6', initials:'JY', img:KF+'faculty/prof--jackie-ying.tmb-people.webp?Culture=en&sfvrsn=d1a9a144_3', fields:['biomat','tissue'], coord:null },
+  { id:'georg', ar:'د. جورج ويزلثالر', role_ar:'استشاري', role_en:'Consultant', room:'مبنى ٧، غرفة ١٢٩', ph:'—', em:'gewie@gmx.com', color:'#0891B2', initials:'GW', img:KF+'alumni/dr-georg.tmb-people.png?Culture=en&sfvrsn=1b47483a_1', fields:[], coord:null },
+  { id:'naib', ar:'د. إبراهيم النايب', role_ar:'أستاذ', role_en:'Professor', room:'مبنى ٧، غرفة ١٢٦-٣', ph:'013 860 5518', em:'ibraheem.naib@kfupm.edu.sa', color:'#E11D48', initials:'إن', img:KF+'faculty/dr--ib.tmb-people.jpg?Culture=en&sfvrsn=1849b2e1_3', fields:['medical'], coord:null },
+  { id:'khalil', ar:'د. أمجد باجس خليل', role_ar:'أستاذ', role_en:'Professor', room:'مبنى ٧، غرفة ١٢٦-٣', ph:'013 860 7152', em:'amjadb@kfupm.edu.sa', color:'#F59E0B', initials:'أخ', img:KF+'bioe_curriculum/dr-khalil.tmb-people.jpg?Culture=en&sfvrsn=20869e4e_2', fields:['environ'], coord:null },
+  { id:'nzila', ar:'د. أليكسيس نزيلا', role_ar:'أستاذ', role_en:'Professor', room:'مبنى ٧، غرفة ١٢٠/٣', ph:'013 860 7716', em:'alexisnzila@kfupm.edu.sa', color:'#2563EB', initials:'أن', img:KF+'faculty/dr--alexis.tmb-people.jpg?Culture=en&sfvrsn=bb3a19df_2', fields:['environ'], coord:null },
+  { id:'irshad', ar:'د. إرشاد أحمد', role_ar:'أستاذ', role_en:'Professor', room:'مبنى ٧، غرفة ١٢٥-٢', ph:'013 860 8393', em:'irshad@kfupm.edu.sa', color:'#10B981', initials:'إأ', img:KF+'faculty/prof.irshad.tmb-people.jpg?Culture=en&sfvrsn=a160ca86_1', fields:['environ'], coord:null },
+  { id:'hasan', ar:'د. أنوار الحسن', role_ar:'أستاذ', role_en:'Professor', room:'مبنى ٧، غرفة ١١٠-١', ph:'013 860 5943', em:'mdanwarul.hasan@kfupm.edu.sa', color:'#8B5CF6', initials:'أح', img:KF+'faculty/dr--anwarul-hasan.tmb-people.png?Culture=en&sfvrsn=23f48bd4_1', fields:['biomat','tissue','medical'], coord:null },
+  { id:'dalaq', ar:'د. أحمد دلق', role_ar:'أستاذ مساعد', role_en:'Assistant Professor', room:'مبنى ٧، ١٢٠-٤', ph:'013 860 5527', em:'ahmed.dalaq@kfupm.edu.sa', color:'#EA580C', initials:'أد', img:KF+'faculty/ahmed-dalaq_picture.tmb-people.jpg?Culture=en&sfvrsn=38e234a_5', fields:['medical','biomech'], coord:null },
+  { id:'faizan', ar:'د. محمد فيضان خان', role_ar:'أستاذ مساعد', role_en:'Assistant Professor', room:'مبنى ٧، ١٢٦-٤', ph:'013 860 5563', em:'faizan.khan@kfupm.edu.sa', color:'#0891B2', initials:'مخ', img:KF+'faculty/dr--khan-2.tmb-people.jpg?Culture=en&sfvrsn=c10e4286_2', fields:['environ'], coord:null },
+  { id:'dowaidar', ar:'د. معتز دويدار', role_ar:'أستاذ مساعد', role_en:'Assistant Professor', room:'مبنى ٧، غرفة ١٢٥-١', ph:'013 860 8019', em:'moataz.dowaidar@kfupm.edu.sa', color:'#06B6D4', initials:'مد', img:KF+'faculty/dr--moataz-2.tmb-people.jpg?Culture=en&sfvrsn=2c32ee3c_2', fields:['biomat','environ'], coord:null },
+  { id:'rahman', ar:'د. تنزيل الرحمن', role_ar:'أستاذ مساعد', role_en:'Assistant Professor', room:'مبنى ٧، ١٣٠', ph:'013 860 3286', em:'tanzilur.rahman@kfupm.edu.sa', color:'#F43F5E', initials:'تر', img:KF+'faculty/dr--rahman-2.tmb-people.jpg?Culture=en&sfvrsn=c03736e9_2', fields:['medical'], coord:null },
+  { id:'shihab', ar:'د. شهاب الدين', role_ar:'أستاذ مساعد', role_en:'Assistant Professor', room:'مبنى ٧، غرفة ١٣٤', ph:'013 860 5564', em:'shihab.uddin@kfupm.edu.sa', color:'#2563EB', initials:'شد', img:KF+'faculty/dr--shihab.tmb-people.jpg?Culture=en&sfvrsn=5545b016_2', fields:['environ','biomat'], coord:null },
+  { id:'hawra', ar:'د. حوراء الغافلي', role_ar:'أستاذ مساعد', role_en:'Assistant Professor', room:'مبنى ٧، ١٠٥', ph:'013 860 2268', em:'hawra.ghafli@kfupm.edu.sa', color:'#06B6D4', initials:'حغ', img:KF+'alumni/dr-hawraa1f8ac7ec-0ca3-4e16-a28d-7f0b41092c0a.tmb-people.png?Culture=en&sfvrsn=47b3f752_1', fields:['bioinfo'], coord:'bioinfo' },
+  { id:'nawal', ar:'أ. نوال الشهراني', role_ar:'محاضِرة', role_en:'Lecturer', room:'مبنى ٧، ١١٥', ph:'013 860 5257', em:'nawal.shahrany@kfupm.edu.sa', color:'#A387D9', initials:'نش', img:null, fields:[], coord:null },
+  { id:'tahani', ar:'أ. تهاني الفريد', role_ar:'مساعِدة تدريس', role_en:'Graduate Assistant', room:'مبنى ٧، ١١٠', ph:'013 860 5538', em:'tahani.fareed@kfupm.edu.sa', color:'#10B981', initials:'تف', img:null, fields:[], coord:null },
+  { id:'raneem', ar:'أ. رنيم القحطاني', role_ar:'مساعِدة تدريس', role_en:'Graduate Assistant', room:'مبنى ٧، ١١٠', ph:'013 860 5642', em:'raneem.qahtani@kfupm.edu.sa', color:'#EA580C', initials:'رق', img:null, fields:[], coord:null },
+];
+
+// ============================================================
 // أسئلة الاختبار: 30 سؤال عادي + 3 أسئلة مفاضلة إجبارية (وزن +2)
 // كل خيار يعطي نقطة لنمط معيّن
 // ============================================================

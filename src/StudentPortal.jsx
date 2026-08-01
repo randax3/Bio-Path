@@ -4,7 +4,8 @@ import {
   Home, Compass, Star, ChevronDown, ChevronUp, ArrowLeft, Mail, Linkedin
 } from 'lucide-react';
 import {
-  interestTypes, specialties, quizQuestions, forcedChoiceQuestions, computeResult, personalitySummary
+  interestTypes, specialties, quizQuestions, forcedChoiceQuestions, computeResult, personalitySummary,
+  availability, faculty, specialtyShort
 } from './quizData.js';
 
 /* ============ الترجمة ============ */
@@ -32,6 +33,12 @@ const translations = {
     startJourney: 'ابدأ الاختبار الآن', retakeQuiz: 'أعد الاختبار', seeMyResult: 'شوف نتيجتك', browseSpecialties: 'تصفح المسارات',
     specialtiesTitle: 'المسارات الدقيقة', specialtiesDesc: 'تعرف على كل مسار بلغة بسيطة، قبل أو بعد الاختبار',
     suitableType: 'يناسب النمط', imagine: 'تخيّلها كذا', yourDay: 'يومك فيه', around: 'تراه حولك في', fact: 'هل تعلم؟', career: 'أين تعمل؟',
+    tabBrief: 'نبذة سريعة', tabFaculty: 'أعضاء هيئة التدريس', learnMore: 'تعرف أكثر',
+    cxLabel: 'التخصص الدقيق في KFUPM', coordinator: 'منسّق التخصص', toBeAnnounced: 'يُعلن لاحقاً',
+    facultyInField: 'دكاترة القسم في هذا المجال', recommendations: 'توصيات ونصائح',
+    recSoon: 'التوصيات تُضاف قريباً', recSoonDesc: 'نصائح من طلبة سبقوك ومن دكاترة المجال حول المواد والأبحاث وفرص التدريب.',
+    deptTitle: 'قسم الهندسة الحيوية — جامعة الملك فهد للبترول والمعادن',
+    pickSpecialty: 'اختر تخصصاً من «نبذة سريعة» لعرض تفاصيله', backToBrief: '→ رجوع للنبذة السريعة',
     heroTitle: 'أن تُهندس شيئاً حيّاً',
     heroBody: 'المهندس المعتاد يعمل بالحديد والإسمنت والسيليكون: مواد صامتة تفعل ما يُملى عليها بالضبط. أمّا أنت فتعمل بمادة تنمو، وتتغيّر، وتقاوم، وتموت. وهذا ما يجعل المجال أصعب وأمتع.',
     whatIsTitle: 'ما الهندسة الحيوية؟',
@@ -104,6 +111,12 @@ const translations = {
     startJourney: 'Start the Quiz', retakeQuiz: 'Retake Quiz', seeMyResult: 'See Your Result', browseSpecialties: 'Browse Specialties',
     specialtiesTitle: 'Precise Specialties', specialtiesDesc: 'Learn about each specialty in simple terms, before or after the quiz',
     suitableType: 'Suits the', imagine: 'Picture it like this', yourDay: 'Your day looks like', around: 'Real-world examples', fact: 'Did You Know?', career: 'Career Opportunities',
+    tabBrief: 'Quick Overview', tabFaculty: 'Faculty', learnMore: 'Learn more',
+    cxLabel: 'Concentration at KFUPM', coordinator: 'Coordinator', toBeAnnounced: 'To be announced',
+    facultyInField: 'Department faculty in this field', recommendations: 'Recommendations & tips',
+    recSoon: 'Recommendations coming soon', recSoonDesc: 'Tips from students before you and from faculty in the field about courses, research, and training.',
+    deptTitle: 'Bioengineering Department — KFUPM',
+    pickSpecialty: 'Pick a specialty from "Quick Overview" to see its details', backToBrief: '← Back to Quick Overview',
     heroTitle: 'Engineering something alive',
     heroBody: 'The usual engineer works with steel, concrete, and silicon: silent materials that do exactly what they are told. You, on the other hand, work with material that grows, changes, resists, and dies. And that is what makes this field harder and far more interesting.',
     whatIsTitle: 'What is Bioengineering?',
@@ -175,6 +188,8 @@ export default function BioPath() {
   const [quizIndex, setQuizIndex] = useState(0);
   const [savedProgress, setSavedProgress] = useState(0);
   const [expanded, setExpanded] = useState(null);
+  const [specialtyTab, setSpecialtyTab] = useState('brief'); // 'brief' | 'detail' | 'faculty'
+  const [selectedSpecialty, setSelectedSpecialty] = useState(specialties[0].id);
 
   const [formData, setFormData] = useState({ email: '', password: '', name: '', bio: '' });
 
@@ -589,63 +604,156 @@ export default function BioPath() {
         {/* ============ المسارات ============ */}
         {currentPage === 'specialties' && (
           <div>
-            <div className="mb-6">
+            <div className="mb-5">
               <h2 className="text-2xl font-bold" style={{ color: '#0A392B' }}>{t.specialtiesTitle}</h2>
               <p className="text-gray-500">{t.specialtiesDesc}</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-              {specialties.map(s => {
-                const isExp = expanded === s.id;
-                const isTop = topMatchId === s.id;
-                const d = s[lang];
-                const primaryType = interestTypes[s.codes[0]];
+
+            {/* شريط التبويبات الفرعية */}
+            <div className="flex gap-2 mb-6 flex-wrap">
+              {[
+                { key: 'brief', label: t.tabBrief },
+                { key: 'detail', label: `${getSpecialty(selectedSpecialty).emoji} ${getSpecialty(selectedSpecialty)[lang].name}` },
+                { key: 'faculty', label: t.tabFaculty }
+              ].map(tb => {
+                const on = specialtyTab === tb.key;
                 return (
-                  <div key={s.id}
-                    className="rounded-2xl overflow-hidden transition-all duration-300"
-                    style={{
-                      background: '#ffffff',
-                      border: `1.5px solid ${isTop ? s.color : 'rgba(10,57,43,0.1)'}`,
-                      boxShadow: isTop ? `0 8px 30px ${s.color}33` : '0 2px 12px rgba(10,57,43,0.06)'
-                    }}>
-                    {/* شريط لوني علوي بلون المسار */}
-                    <div style={{ height: 5, backgroundColor: s.color }}></div>
-                    {/* Badge نمط الشخصية */}
-                    <div className="px-4 pt-4 flex items-center justify-between">
-                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ backgroundColor: primaryType.color + '18', color: primaryType.color }}>
-                        🧬 {t.suitableType} {lang === 'ar' ? primaryType.ar : primaryType.en}
-                      </span>
-                      {isTop && <Star className="w-4 h-4 fill-emerald-400 text-emerald-400" />}
-                    </div>
-
-                    <button onClick={() => setExpanded(isExp ? null : s.id)} className="w-full px-4 py-3 text-start">
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <p className="font-bold leading-snug" style={{ color: '#0A392B' }}>{s.emoji} {d.name}</p>
-                          <p className="text-xs text-gray-400 mt-0.5" dir="ltr">{s.en.name}</p>
-                          {isTop && <p className="text-xs font-semibold mt-1" style={{ color: '#059669' }}>⭐ {t.yourMatch}</p>}
-                        </div>
-                        {isExp ? <ChevronUp className="w-5 h-5 text-gray-400 shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 shrink-0" />}
-                      </div>
-                    </button>
-
-                    {isExp && (
-                      <div className="px-4 pb-4 space-y-2.5">
-                        <MiniCard title={`💡 ${t.imagine}`} text={d.imagine} color="#0A392B" />
-                        <MiniCard title={`🗓️ ${t.yourDay}`} steps={d.yourDay} color="#047857" />
-                        <MiniCard title={`📍 ${t.around}`} text={d.around} color="#059669" />
-                        <MiniCard title={`🔬 ${t.fact}`} text={d.fact} color="#10B981" />
-                        <MiniCard title={`💼 ${t.career}`} text={d.career} color="#34D399" />
-                        <button onClick={() => { setCurrentPage('quiz'); setExpanded(null); }}
-                          className="w-full mt-2 text-white text-sm font-semibold py-2.5 rounded-lg transition hover:opacity-90 flex items-center justify-center gap-1"
-                          style={{ background: 'linear-gradient(180deg, #0A392B 0%, #065F46 100%)' }}>
-                          {t.takeTestForThis} <ArrowLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                  <button key={tb.key} onClick={() => setSpecialtyTab(tb.key)}
+                    className="text-sm font-bold px-4 py-2 rounded-xl transition"
+                    style={on
+                      ? { background: '#0A392B', color: '#fff' }
+                      : { background: '#fff', color: '#6C6C82', border: '1px solid rgba(10,57,43,0.12)' }}>
+                    {tb.label}
+                  </button>
                 );
               })}
             </div>
+
+            {/* ===== نبذة سريعة ===== */}
+            {specialtyTab === 'brief' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                {specialties.map(s => {
+                  const isTop = topMatchId === s.id;
+                  const d = s[lang];
+                  const av = availability[s.id];
+                  return (
+                    <div key={s.id} className="rounded-2xl overflow-hidden flex flex-col"
+                      style={{
+                        background: '#ffffff',
+                        border: `1.5px solid ${isTop ? s.color : 'rgba(10,57,43,0.1)'}`,
+                        boxShadow: isTop ? `0 8px 30px ${s.color}33` : '0 2px 12px rgba(10,57,43,0.06)'
+                      }}>
+                      <div style={{ height: 5, backgroundColor: s.color }}></div>
+                      <div className="p-4 flex flex-col gap-3 flex-1">
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <p className="font-bold leading-snug" style={{ color: '#0A392B' }}>{s.emoji} {d.name}</p>
+                            <p className="text-xs text-gray-400 mt-0.5" dir="ltr">{s.en.name}</p>
+                            {isTop && <p className="text-xs font-semibold mt-1" style={{ color: '#059669' }}>⭐ {t.yourMatch}</p>}
+                          </div>
+                          {isTop && <Star className="w-4 h-4 fill-emerald-400 text-emerald-400 shrink-0" />}
+                        </div>
+
+                        {/* الخانة المُضافة: توفّر التخصص الدقيق */}
+                        <AvailBox av={av} lang={lang} t={t} />
+
+                        <button onClick={() => { setSelectedSpecialty(s.id); setSpecialtyTab('detail'); }}
+                          className="mt-auto w-full text-white text-sm font-semibold py-2.5 rounded-lg transition hover:opacity-90 flex items-center justify-center gap-1"
+                          style={{ background: 'linear-gradient(180deg, #0A392B 0%, #065F46 100%)' }}>
+                          {t.learnMore} <ArrowLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* ===== صفحة التخصص ===== */}
+            {specialtyTab === 'detail' && (() => {
+              const s = getSpecialty(selectedSpecialty);
+              const d = s[lang];
+              const av = availability[s.id];
+              const coord = faculty.find(f => f.coord === s.id);
+              const fieldFac = faculty.filter(f => f.fields.includes(s.id));
+              return (
+                <div className="max-w-3xl">
+                  <div className="rounded-2xl overflow-hidden mb-4" style={{ border: '1px solid rgba(10,57,43,0.1)' }}>
+                    <div className="p-5 text-white" style={{ background: `linear-gradient(120deg, ${s.color}, ${s.color}cc)` }}>
+                      {av.cx && <p className="text-xs font-bold tracking-wide opacity-90" dir="ltr">{av.cx}</p>}
+                      <h3 className="text-2xl font-bold mt-0.5">{s.emoji} {d.name}</h3>
+                      <p className="text-sm opacity-90" dir="ltr">{s.en.name}</p>
+                    </div>
+                    <div className="p-4 bg-white">
+                      <AvailBox av={av} lang={lang} t={t} />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2.5 mb-4">
+                    <MiniCard title={`💡 ${t.imagine}`} text={d.imagine} color="#0A392B" />
+                    <MiniCard title={`🗓️ ${t.yourDay}`} steps={d.yourDay} color="#047857" />
+                    <MiniCard title={`📍 ${t.around}`} text={d.around} color="#059669" />
+                    <MiniCard title={`🔬 ${t.fact}`} text={d.fact} color="#10B981" />
+                    <MiniCard title={`💼 ${t.career}`} text={d.career} color="#34D399" />
+                  </div>
+
+                  {coord && (
+                    <div className="rounded-xl p-4 mb-4 bg-white" style={{ border: '1px solid rgba(10,57,43,0.1)' }}>
+                      <p className="font-bold text-sm mb-3" style={{ color: '#0A392B' }}>🎓 {t.coordinator}</p>
+                      <div className="flex items-center gap-3">
+                        <Avatar f={coord} size={52} />
+                        <div>
+                          <p className="font-bold text-sm" style={{ color: '#0A392B' }}>{coord.ar}</p>
+                          <p className="text-xs text-gray-500">{lang === 'ar' ? coord.role_ar : coord.role_en} · {coord.room}</p>
+                          <a href={`mailto:${coord.em}`} className="text-xs font-semibold" style={{ color: '#7C3AED' }} dir="ltr">{coord.em}</a>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {fieldFac.length > 0 && (
+                    <div className="rounded-xl p-4 mb-4 bg-white" style={{ border: '1px solid rgba(10,57,43,0.1)' }}>
+                      <p className="font-bold text-sm mb-3" style={{ color: '#0A392B' }}>👥 {t.facultyInField}</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        {fieldFac.map(f => (
+                          <div key={f.id} className="flex items-center gap-2.5 rounded-lg p-2" style={{ background: '#FBFBFE', border: '1px solid rgba(10,57,43,0.06)' }}>
+                            <Avatar f={f} size={40} />
+                            <div className="min-w-0">
+                              <p className="font-semibold text-xs truncate" style={{ color: '#0A392B' }}>{f.ar}</p>
+                              <p className="text-[11px] text-gray-500 truncate">{lang === 'ar' ? f.role_ar : f.role_en}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="rounded-xl p-4 mb-4 bg-white" style={{ border: '1px solid rgba(10,57,43,0.1)' }}>
+                    <p className="font-bold text-sm mb-3" style={{ color: '#0A392B' }}>💬 {t.recommendations}</p>
+                    <div className="rounded-lg p-5 text-center" style={{ border: '1.5px dashed rgba(10,57,43,0.15)', background: '#FBFBFE' }}>
+                      <p className="font-semibold text-sm" style={{ color: '#0A392B' }}>{t.recSoon}</p>
+                      <p className="text-xs text-gray-500 mt-1">{t.recSoonDesc}</p>
+                    </div>
+                  </div>
+
+                  <button onClick={() => setCurrentPage('quiz')}
+                    className="w-full text-white text-sm font-semibold py-3 rounded-lg transition hover:opacity-90 flex items-center justify-center gap-1"
+                    style={{ background: 'linear-gradient(180deg, #0A392B 0%, #065F46 100%)' }}>
+                    {t.takeTestForThis} <ArrowLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
+                  </button>
+                </div>
+              );
+            })()}
+
+            {/* ===== أعضاء هيئة التدريس ===== */}
+            {specialtyTab === 'faculty' && (
+              <div>
+                <p className="text-gray-500 text-sm mb-4">{t.deptTitle}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                  {faculty.map(f => <FacultyCard key={f.id} f={f} lang={lang} t={t} />)}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -797,6 +905,81 @@ function MiniCard({ title, text, steps, color }) {
       ) : (
         <p className="text-gray-600 text-sm leading-relaxed">{text}</p>
       )}
+    </div>
+  );
+}
+
+/* ============ صورة عضو هيئة التدريس (مع بديل الأحرف الأولى) ============ */
+function Avatar({ f, size = 56 }) {
+  const [err, setErr] = useState(false);
+  const base = {
+    width: size, height: size, borderRadius: Math.round(size * 0.26), background: f.color,
+    color: '#fff', fontWeight: 800, fontSize: Math.round(size * 0.34), overflow: 'hidden',
+    flexShrink: 0, display: 'grid', placeItems: 'center'
+  };
+  if (f.img && !err) {
+    return (
+      <div style={base}>
+        <img src={f.img} alt="" onError={() => setErr(true)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+      </div>
+    );
+  }
+  return <div style={base}>{f.initials}</div>;
+}
+
+/* ============ خانة توفّر التخصص الدقيق ============ */
+function AvailBox({ av, lang, t }) {
+  const map = {
+    now: { c: '#0a7a54', bg: 'rgba(16,185,129,0.12)', dot: '#10B981' },
+    soon: { c: '#a06a06', bg: 'rgba(245,158,11,0.14)', dot: '#F59E0B' },
+    none: { c: '#6C6C82', bg: '#F1F1F7', dot: '#c3c3d4' }
+  };
+  const st = map[av.status] || map.none;
+  return (
+    <div className="rounded-xl px-3 py-2 flex items-center gap-2.5" style={{ background: st.bg }}>
+      <span style={{ width: 8, height: 8, borderRadius: '50%', background: st.dot, flexShrink: 0 }}></span>
+      <div className="min-w-0">
+        <p className="text-[11px] font-bold" style={{ color: '#6C6C82' }}>{t.cxLabel}</p>
+        <p className="text-[13px] font-bold" style={{ color: st.c }} dir="auto">
+          {lang === 'ar' ? av.ar : av.en}{av.cx ? ` · ${av.cx}` : ''}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ============ كرت عضو هيئة التدريس ============ */
+function FacultyCard({ f, lang, t }) {
+  return (
+    <div className="rounded-2xl p-4 bg-white" style={{ border: '1px solid rgba(10,57,43,0.1)' }}>
+      <div className="flex items-center gap-3 mb-2">
+        <Avatar f={f} size={56} />
+        <div className="min-w-0">
+          <p className="font-bold text-sm" style={{ color: '#0A392B' }}>{f.ar}</p>
+          <p className="text-xs text-gray-500">{lang === 'ar' ? f.role_ar : f.role_en}</p>
+        </div>
+      </div>
+      {f.coord && (
+        <span className="inline-block text-[11px] font-bold px-2 py-0.5 rounded-md mb-2"
+          style={{ color: '#0a7a54', background: 'rgba(16,185,129,0.12)' }}>
+          {t.coordinator} · {specialtyShort[f.coord][lang]}
+        </span>
+      )}
+      {f.fields.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mb-2">
+          {f.fields.map(fid => (
+            <span key={fid} className="text-[11px] font-bold px-2 py-0.5 rounded-md"
+              style={{ color: '#7C3AED', background: 'rgba(124,58,237,0.10)' }}>
+              {specialtyShort[fid][lang]}
+            </span>
+          ))}
+        </div>
+      )}
+      <div className="text-xs text-gray-500 leading-relaxed">
+        <p>📍 {f.room}</p>
+        <p>☎ {f.ph}</p>
+        <p>✉ <a href={`mailto:${f.em}`} className="font-semibold" style={{ color: '#7C3AED' }} dir="ltr">{f.em}</a></p>
+      </div>
     </div>
   );
 }
