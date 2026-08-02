@@ -37,7 +37,7 @@ const translations = {
     cxLabel: 'التخصص الدقيق في KFUPM', coordinator: 'منسّق التخصص', toBeAnnounced: 'يُعلن لاحقاً',
     facultyInField: 'دكاترة القسم في هذا المجال', recommendations: 'توصيات ونصائح',
     recSoon: 'التوصيات تُضاف قريباً', recSoonDesc: 'نصائح من طلبة سبقوك ومن دكاترة المجال حول المواد والأبحاث وفرص التدريب.',
-    deptTitle: 'قسم الهندسة الحيوية — جامعة الملك فهد للبترول والمعادن',
+    deptTitle: 'قسم الهندسة الحيوية جامعة الملك فهد للبترول والمعادن',
     pickSpecialty: 'اختر تخصصاً من «نبذة سريعة» لعرض تفاصيله', backToBrief: '→ رجوع للنبذة السريعة',
     heroTitle: 'أن تُهندس شيئاً حيّاً',
     heroBody: 'المهندس المعتاد يعمل بالحديد والإسمنت والسيليكون: مواد صامتة تفعل ما يُملى عليها بالضبط. أمّا أنت فتعمل بمادة تنمو، وتتغيّر، وتقاوم، وتموت. وهذا ما يجعل المجال أصعب وأمتع.',
@@ -115,7 +115,7 @@ const translations = {
     cxLabel: 'Concentration at KFUPM', coordinator: 'Coordinator', toBeAnnounced: 'To be announced',
     facultyInField: 'Department faculty in this field', recommendations: 'Recommendations & tips',
     recSoon: 'Recommendations coming soon', recSoonDesc: 'Tips from students before you and from faculty in the field about courses, research, and training.',
-    deptTitle: 'Bioengineering Department — KFUPM',
+    deptTitle: 'Bioengineering Department KFUPM',
     pickSpecialty: 'Pick a specialty from "Quick Overview" to see its details', backToBrief: '← Back to Quick Overview',
     heroTitle: 'Engineering something alive',
     heroBody: 'The usual engineer works with steel, concrete, and silicon: silent materials that do exactly what they are told. You, on the other hand, work with material that grows, changes, resists, and dies. And that is what makes this field harder and far more interesting.',
@@ -247,7 +247,7 @@ export default function BioPath() {
     } else alert(t.invalidLogin);
   };
 
-  // تثبيت الحساب (اختياري) — يحوّل الزائر لحساب محفوظ
+  // تثبيت الحساب (اختياري) يحوّل الزائر لحساب محفوظ
   const handleSaveAccount = (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) { alert(t.fillRequired); return; }
@@ -474,7 +474,7 @@ export default function BioPath() {
                   {currentUser.bio && <div><span className="text-gray-500">{t.bio}: </span><span className="text-gray-800">{currentUser.bio}</span></div>}
                   <div className="text-gray-400 text-xs pt-1">{t.joinDate}: {currentUser.createdAt}</div>
 
-                  {/* تثبيت الحساب — اختياري، يظهر فقط للزوار */}
+                  {/* تثبيت الحساب اختياري، يظهر فقط للزوار */}
                   {!currentUser.email && (
                     <div className="mt-3 pt-3 border-t">
                       {!isSavingAccount ? (
@@ -522,7 +522,7 @@ export default function BioPath() {
         {currentPage === 'home' && (
           <div className="space-y-6">
 
-            {/* القسم ب — العنوان الرئيسي */}
+            {/* القسم ب العنوان الرئيسي */}
             <div className="rounded-2xl shadow-xl p-8 md:p-12 text-white text-center relative overflow-hidden" style={{ background: 'linear-gradient(140deg, #0A392B 0%, #1E4D3A 30%, #3B2A6B 65%, #6D3Fc7 100%)' }}>
               <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-20" style={{ backgroundColor: '#A78BFA', transform: 'translate(30%,-30%)' }}></div>
               <div className="absolute bottom-0 left-0 w-56 h-56 rounded-full opacity-15" style={{ backgroundColor: '#34D399', transform: 'translate(-30%,30%)' }}></div>
@@ -536,7 +536,7 @@ export default function BioPath() {
               </div>
             </div>
 
-            {/* القسم ج — ما الهندسة الحيوية؟ */}
+            {/* القسم ج ما الهندسة الحيوية؟ */}
             <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
               <h3 className="text-2xl font-bold mb-4" style={{ color: '#0A392B' }}>{t.whatIsTitle}</h3>
               <p className="text-gray-700 leading-relaxed mb-3">{t.whatIsP1}</p>
@@ -546,7 +546,7 @@ export default function BioPath() {
               </div>
             </div>
 
-            {/* القسم د — لماذا تعرف التخصصات الدقيقة؟ */}
+            {/* القسم د لماذا تعرف التخصصات الدقيقة؟ */}
             <div>
               <h3 className="text-2xl font-bold mb-4" style={{ color: '#0A392B' }}>{t.whyTitle}</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -560,7 +560,7 @@ export default function BioPath() {
               </div>
             </div>
 
-            {/* القسم هـ — الهدف من الموقع + زر الاختبار */}
+            {/* القسم هـ الهدف من الموقع + زر الاختبار */}
             <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
               <h3 className="text-2xl font-bold mb-4" style={{ color: '#0A392B' }}>{t.purposeTitle}</h3>
               <p className="text-gray-700 leading-relaxed mb-3">{t.purposeP1}</p>
@@ -677,7 +677,7 @@ export default function BioPath() {
               const coord = faculty.find(f => f.coord === s.id);
               const fieldFac = faculty.filter(f => f.fields.includes(s.id));
               return (
-                <div className="max-w-3xl">
+                <div className="max-w-4xl">
                   <div className="rounded-2xl overflow-hidden mb-4" style={{ border: '1px solid rgba(10,57,43,0.1)' }}>
                     <div className="p-5 text-white" style={{ background: `linear-gradient(120deg, ${s.color}, ${s.color}cc)` }}>
                       {av.cx && <p className="text-xs font-bold tracking-wide opacity-90" dir="ltr">{av.cx}</p>}
@@ -689,12 +689,59 @@ export default function BioPath() {
                     </div>
                   </div>
 
-                  <div className="space-y-2.5 mb-4">
-                    <MiniCard title={`💡 ${t.imagine}`} text={d.imagine} color="#0A392B" />
-                    <MiniCard title={`🗓️ ${t.yourDay}`} steps={d.yourDay} color="#047857" />
-                    <MiniCard title={`📍 ${t.around}`} text={d.around} color="#059669" />
-                    <MiniCard title={`🔬 ${t.fact}`} text={d.fact} color="#10B981" />
-                    <MiniCard title={`💼 ${t.career}`} text={d.career} color="#34D399" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                    {/* تخيّلها كذا بطاقة مميزة عريضة */}
+                    <div className="sm:col-span-2 relative rounded-2xl p-5" style={{ background: s.color + '14', border: `1px solid ${s.color}33` }}>
+                      <span className="absolute rounded-full" style={{ top: 16, bottom: 16, insetInlineStart: 0, width: 5, background: s.color }} />
+                      <p className="flex items-center gap-2 font-extrabold text-sm mb-2" style={{ color: s.color }}>
+                        <span className="grid place-items-center rounded-xl" style={{ width: 34, height: 34, background: s.color + '26' }}>💡</span>
+                        {t.imagine}
+                      </p>
+                      <p className="text-base font-semibold leading-loose" style={{ color: '#243b34' }}>{d.imagine}</p>
+                    </div>
+
+                    {/* يومك فيه خطوات مرقّمة */}
+                    <div className="rounded-2xl p-5" style={{ background: '#F7FAF9', border: '1px solid #e8efed' }}>
+                      <p className="flex items-center gap-2 font-extrabold text-sm mb-3" style={{ color: '#0A392B' }}>
+                        <span className="grid place-items-center rounded-xl bg-white" style={{ width: 34, height: 34, border: '1px solid #e2e8e6' }}>🗓️</span>
+                        {t.yourDay}
+                      </p>
+                      <ul className="space-y-2.5">
+                        {d.yourDay.map((st, i) => (
+                          <li key={i} className="flex items-start gap-3 text-sm font-semibold" style={{ color: '#38524a' }}>
+                            <span className="grid place-items-center rounded-full text-white flex-shrink-0" style={{ width: 26, height: 26, background: s.color, fontSize: 13, fontWeight: 800 }}>{i + 1}</span>
+                            <span className="pt-0.5">{st}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* تراه حولك + أين تعمل */}
+                    <div className="flex flex-col gap-3">
+                      <div className="rounded-2xl p-5 flex-1" style={{ background: '#F7FAF9', border: '1px solid #e8efed' }}>
+                        <p className="flex items-center gap-2 font-extrabold text-sm mb-2" style={{ color: '#0A392B' }}>
+                          <span className="grid place-items-center rounded-xl bg-white" style={{ width: 34, height: 34, border: '1px solid #e2e8e6' }}>📍</span>
+                          {t.around}
+                        </p>
+                        <p className="text-sm font-semibold" style={{ color: '#38524a' }}>{d.around}</p>
+                      </div>
+                      <div className="rounded-2xl p-5 flex-1" style={{ background: '#F7FAF9', border: '1px solid #e8efed' }}>
+                        <p className="flex items-center gap-2 font-extrabold text-sm mb-2" style={{ color: '#0A392B' }}>
+                          <span className="grid place-items-center rounded-xl bg-white" style={{ width: 34, height: 34, border: '1px solid #e2e8e6' }}>💼</span>
+                          {t.career}
+                        </p>
+                        <p className="text-sm font-semibold" style={{ color: '#38524a' }}>{d.career}</p>
+                      </div>
+                    </div>
+
+                    {/* هل تعلم؟ شريط ملوّن كامل */}
+                    <div className="sm:col-span-2 rounded-2xl p-5 text-white flex items-center gap-4" style={{ background: `linear-gradient(120deg, ${s.color}, ${s.color}cc)` }}>
+                      <span style={{ fontSize: 26 }}>🔬</span>
+                      <div>
+                        <p className="text-xs font-extrabold opacity-85 mb-0.5" style={{ letterSpacing: '.5px' }}>{t.fact}</p>
+                        <p className="text-base font-bold">{d.fact}</p>
+                      </div>
+                    </div>
                   </div>
 
                   {coord && (
@@ -757,7 +804,7 @@ export default function BioPath() {
           </div>
         )}
 
-        {/* ============ الاختبار — سؤال واحد بالشاشة ============ */}
+        {/* ============ الاختبار سؤال واحد بالشاشة ============ */}
         {currentPage === 'quiz' && (
           <div>
             {!isQuizStarted && !quizResult ? (
@@ -1272,7 +1319,7 @@ function ResultView({ t, lang, result, getSpecialty, onBack, hideBack, onSimilar
         </div>
       )}
 
-      {/* ⑥ كم تشبهك النتيجة؟ (١-١٠) — يُرسل لجوجل شيت */}
+      {/* ⑥ كم تشبهك النتيجة؟ (١-١٠) يُرسل لجوجل شيت */}
       <div className="rounded-xl p-4 mb-5" style={{ backgroundColor: '#FAFAFA', border: '1px solid #E5E7EB' }}>
         {simVal === null ? (
           <div>
