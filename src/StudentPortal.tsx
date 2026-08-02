@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
-  LogOut, Edit2, Save, X, User, ClipboardList, Award, Languages,
+  LogOut, Edit2, Save, X, User, Users, ClipboardList, Award, Languages,
   Home, Compass, Star, ChevronDown, ChevronUp, ArrowLeft, Mail, Linkedin
 } from 'lucide-react';
 import {
   interestTypes, specialties, quizQuestions, forcedChoiceQuestions, computeResult, personalitySummary,
   availability, faculty, specialtyShort
 } from './quizData.js';
+import { CommunityPage, SpecialtyOpportunities } from './community.jsx';
 
 /* ============ الترجمة ============ */
 const translations = {
@@ -28,7 +29,7 @@ const translations = {
     guestBadge: 'حساب مؤقت',
     noAccount: 'ليس لديك حساب؟', signupNow: 'اشترك الآن',
     haveAccount: 'لديك حساب بالفعل؟', loginNow: 'تسجيل الدخول',
-    profile: 'ملفي', navHome: 'الرئيسية', navSpecialties: 'المسارات', navQuiz: 'الاختبار', navResults: 'النتائج',
+    profile: 'ملفي', navHome: 'الرئيسية', navSpecialties: 'المسارات', navQuiz: 'الاختبار', navResults: 'النتائج', navCommunity: 'المجتمع',
     welcomeBack: 'أهلاً', homeIntro: 'هذا الموقع يساعدك تكتشف أي مسار دقيق داخل الهندسة الحيوية يناسب ميولك وشخصيتك.',
     startJourney: 'ابدأ الاختبار الآن', retakeQuiz: 'أعد الاختبار', seeMyResult: 'شوف نتيجتك', browseSpecialties: 'تصفح المسارات',
     specialtiesTitle: 'المسارات الدقيقة', specialtiesDesc: 'تعرف على كل مسار بلغة بسيطة، قبل أو بعد الاختبار',
@@ -106,7 +107,7 @@ const translations = {
     guestBadge: 'Temporary account',
     noAccount: "Don't have an account?", signupNow: 'Sign up now',
     haveAccount: 'Already have an account?', loginNow: 'Login',
-    profile: 'Profile', navHome: 'Home', navSpecialties: 'Specialties', navQuiz: 'Quiz', navResults: 'Results',
+    profile: 'Profile', navHome: 'Home', navSpecialties: 'Specialties', navQuiz: 'Quiz', navResults: 'Results', navCommunity: 'Community',
     welcomeBack: 'Welcome', homeIntro: 'This site helps you discover which precise bioengineering specialty fits your interests and personality.',
     startJourney: 'Start the Quiz', retakeQuiz: 'Retake Quiz', seeMyResult: 'See Your Result', browseSpecialties: 'Browse Specialties',
     specialtiesTitle: 'Precise Specialties', specialtiesDesc: 'Learn about each specialty in simple terms, before or after the quiz',
@@ -438,7 +439,8 @@ export default function BioPath() {
               { key: 'home', label: t.navHome, icon: Home },
               { key: 'specialties', label: t.navSpecialties, icon: Compass },
               { key: 'quiz', label: t.navQuiz, icon: ClipboardList },
-              { key: 'results', label: t.navResults, icon: Award }
+              { key: 'results', label: t.navResults, icon: Award },
+              { key: 'community', label: t.navCommunity, icon: Users }
             ].map(tab => {
               const active = currentPage === tab.key;
               return (
@@ -776,11 +778,8 @@ export default function BioPath() {
                   )}
 
                   <div className="rounded-xl p-4 mb-4 bg-white" style={{ border: '1px solid rgba(10,57,43,0.1)' }}>
-                    <p className="font-bold text-sm mb-3" style={{ color: '#0A392B' }}>💬 {t.recommendations}</p>
-                    <div className="rounded-lg p-5 text-center" style={{ border: '1.5px dashed rgba(10,57,43,0.15)', background: '#FBFBFE' }}>
-                      <p className="font-semibold text-sm" style={{ color: '#0A392B' }}>{t.recSoon}</p>
-                      <p className="text-xs text-gray-500 mt-1">{t.recSoonDesc}</p>
-                    </div>
+                    <p className="font-bold text-sm mb-3" style={{ color: '#0A392B' }}>💡 {t.recommendations}</p>
+                    <SpecialtyOpportunities specialtyId={s.id} lang={lang} />
                   </div>
 
                   <button onClick={() => setCurrentPage('quiz')}
@@ -897,6 +896,11 @@ export default function BioPath() {
               </div>
             )}
           </div>
+        )}
+
+        {/* ============ المجتمع ============ */}
+        {currentPage === 'community' && (
+          <CommunityPage lang={lang} t={t} />
         )}
       </div>
 
