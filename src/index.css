@@ -4,7 +4,11 @@
 
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  font-family: 'Almarai', 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
 }
 
 @keyframes fadeIn {
